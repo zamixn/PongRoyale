@@ -75,7 +75,7 @@ namespace PongRoyale_server
 
                     Console.WriteLine(string.Format("Data received from client id: {0}:\n{1}", p.Id, data));
 
-                    string response = "Pong";
+                    string response = "Pong: " + data;
                     sw.WriteLine(response);
                     sw.Flush();
                 }

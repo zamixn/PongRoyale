@@ -63,7 +63,7 @@ namespace PongRoyale_client
 
         private void SendDataToServer_Click(object sender, EventArgs e)
         {
-            player.SendDataToServer("Ping", waitForResponse: true,
+            player.SendDataToServer("Ping: " + DataToServerTextBox.Text, waitForResponse: true,
                 onResponse: (response) => { LogToServerInfo("Received: " + response); },
                 onException: OnException);
         }
