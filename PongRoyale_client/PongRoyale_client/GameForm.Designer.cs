@@ -1,6 +1,6 @@
 ﻿namespace PongRoyale_client
 {
-    partial class Form1
+    partial class GameForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
             this.GameLoop = new System.Windows.Forms.Timer(this.components);
             this.FrameCountLabel = new System.Windows.Forms.Label();
             this.ConnectToServerButton = new System.Windows.Forms.Button();
@@ -100,7 +101,7 @@
             this.Chat.TabIndex = 5;
             this.Chat.Text = "";
             // 
-            // Form1
+            // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -111,9 +112,10 @@
             this.Controls.Add(this.SendDataToServer);
             this.Controls.Add(this.ConnectToServerButton);
             this.Controls.Add(this.FrameCountLabel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "GameForm";
+            this.Text = "Pong Royale";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
-            this.Name = "Form1";
-            this.Text = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();
 

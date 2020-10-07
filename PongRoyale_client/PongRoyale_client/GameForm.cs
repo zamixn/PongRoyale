@@ -15,11 +15,11 @@ using System.Windows.Forms;
 
 namespace PongRoyale_client
 {
-    public partial class Form1 : Form
+    public partial class GameForm : Form
     {
         private long FrameCount;
 
-        public Form1()
+        public GameForm()
         {
             InitializeComponent();
 
