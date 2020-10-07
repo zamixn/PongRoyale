@@ -32,9 +32,10 @@
             this.GameLoop = new System.Windows.Forms.Timer(this.components);
             this.FrameCountLabel = new System.Windows.Forms.Label();
             this.ConnectToServerButton = new System.Windows.Forms.Button();
-            this.ServerResponseLabel = new System.Windows.Forms.Label();
             this.SendDataToServer = new System.Windows.Forms.Button();
             this.DataToServerTextBox = new System.Windows.Forms.TextBox();
+            this.ChatInput = new System.Windows.Forms.TextBox();
+            this.Chat = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // GameLoop
@@ -63,16 +64,6 @@
             this.ConnectToServerButton.UseVisualStyleBackColor = true;
             this.ConnectToServerButton.Click += new System.EventHandler(this.ConnectToServerButton_Click);
             // 
-            // ServerResponseLabel
-            // 
-            this.ServerResponseLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ServerResponseLabel.Location = new System.Drawing.Point(625, 108);
-            this.ServerResponseLabel.Name = "ServerResponseLabel";
-            this.ServerResponseLabel.Size = new System.Drawing.Size(163, 324);
-            this.ServerResponseLabel.TabIndex = 2;
-            this.ServerResponseLabel.Text = "ServerInfo:\r\nasdfsadfasgdfhfsghfg";
-            this.ServerResponseLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // SendDataToServer
             // 
             this.SendDataToServer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -92,16 +83,35 @@
             this.DataToServerTextBox.Size = new System.Drawing.Size(160, 20);
             this.DataToServerTextBox.TabIndex = 4;
             // 
+            // ChatInput
+            // 
+            this.ChatInput.Location = new System.Drawing.Point(0, 432);
+            this.ChatInput.Name = "ChatInput";
+            this.ChatInput.Size = new System.Drawing.Size(190, 20);
+            this.ChatInput.TabIndex = 6;
+            this.ChatInput.KeyUp += ChatInput_Submitted;
+            // 
+            // Chat
+            // 
+            this.Chat.Location = new System.Drawing.Point(0, 1);
+            this.Chat.Name = "Chat";
+            this.Chat.ReadOnly = true;
+            this.Chat.Size = new System.Drawing.Size(190, 431);
+            this.Chat.TabIndex = 5;
+            this.Chat.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.ChatInput);
+            this.Controls.Add(this.Chat);
             this.Controls.Add(this.DataToServerTextBox);
             this.Controls.Add(this.SendDataToServer);
-            this.Controls.Add(this.ServerResponseLabel);
             this.Controls.Add(this.ConnectToServerButton);
             this.Controls.Add(this.FrameCountLabel);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -114,9 +124,10 @@
         private System.Windows.Forms.Timer GameLoop;
         private System.Windows.Forms.Label FrameCountLabel;
         private System.Windows.Forms.Button ConnectToServerButton;
-        private System.Windows.Forms.Label ServerResponseLabel;
         private System.Windows.Forms.Button SendDataToServer;
         private System.Windows.Forms.TextBox DataToServerTextBox;
+        private System.Windows.Forms.TextBox ChatInput;
+        private System.Windows.Forms.RichTextBox Chat;
     }
 }
 

@@ -7,10 +7,10 @@ namespace PongRoyale_server
 {
     public class Player
     {
-        public int Id { get; private set; }
+        public byte Id { get; private set; }
         public TcpClient TcpClient;
 
-        public Player(int id, TcpClient client)
+        public Player(byte id, TcpClient client)
         {
             Id = id;
             TcpClient = client;

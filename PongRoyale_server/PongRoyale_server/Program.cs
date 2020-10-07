@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -17,7 +18,7 @@ namespace PongRoyale_server
             lock (Lock)
             {
                 if (Players.Count == 0)
-                    return 0;
+                    return 100;
                 return Players.Select(p => p.Id).Max() + 1;
             }
         }
@@ -51,13 +52,15 @@ namespace PongRoyale_server
         public static void HandleClientConnected(object clientObject)
         {
             TcpClient client = clientObject as TcpClient;
-            Player p = new Player(GetNewPlayerID(), client);
-            AddNewPlayer(p);
+            Player player = new Player((byte)GetNewPlayerID(), client);
+            AddNewPlayer(player);
+            NetworkMessage connectedMessage = new NetworkMessage(player.Id, NetworkMessage.MessageType.ConnectedToServer, "200");
+            foreach (Player p in Players)
+                SendMessage(p, connectedMessage);
 
-            Console.WriteLine(string.Format("Client connected: {0}. Id: {1}", client.Client.RemoteEndPoint.ToString(), p.Id));
+            Console.WriteLine(string.Format("Client connected: {0}. Id: {1}", client.Client.RemoteEndPoint.ToString(), player.Id));
 
             NetworkStream stream = client.GetStream();
-            StreamWriter sw = new StreamWriter(client.GetStream());
 
             while (client.Connected)
             {
@@ -65,30 +68,62 @@ namespace PongRoyale_server
                 {
                     byte[] buffer = new byte[1024];
                     stream.Read(buffer, 0, buffer.Length);
-                    int recv = 0;
-                    foreach (byte b in buffer)
-                    {
-                        if (b != 0)
-                            recv++;
-                    }
-                    string data = Encoding.UTF8.GetString(buffer, 0, recv);
+                    NetworkMessage networkMessage = NetworkMessage.FromBytes(buffer);
+                    if (!networkMessage.ValidateSender())
+                        break;
 
-                    Console.WriteLine(string.Format("Data received from client id: {0}:\n{1}", p.Id, data));
+                    Console.WriteLine(string.Format("Data received from client id: {0}:\n{1}", networkMessage.SenderId, networkMessage.Contents));
 
-                    string response = "Pong: " + data;
-                    sw.WriteLine(response);
-                    sw.Flush();
+                    HandleRespondingToMessage(player, networkMessage);
                 }
                 catch
                 {
+                    Console.WriteLine("error");
                     stream.Close();
                     client.Dispose();
                 }
             }
-            Console.WriteLine("Disconnected from client id: {0}", p.Id);
-            RemovePlayer(p);
+            Console.WriteLine("Disconnected from client id: {0}", player.Id);
+            RemovePlayer(player);
             stream.Close();
             client.Dispose();
         }
+
+        private static void HandleRespondingToMessage(Player sender, NetworkMessage networkMessage)
+        {
+            switch (networkMessage.Type)
+            {
+                case NetworkMessage.MessageType.Chat:
+                    NetworkMessage responseMessage = GetResponse(sender, networkMessage);
+                    if (responseMessage != null)
+                        foreach (Player p in Players)
+                            SendMessage(p, responseMessage);
+                    break;
+                default:
+                    Debug.WriteLine($"Exception: could not get repsonse to message of type {networkMessage.Type}");
+                    break;
+            }
+        }
+
+        private static NetworkMessage GetResponse(Player player, NetworkMessage networkMessage)
+        {
+            switch (networkMessage.Type)
+            {
+                case NetworkMessage.MessageType.Chat:
+                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.Chat, networkMessage.Contents);
+                default:
+                    Debug.WriteLine($"Exception: could not get repsonse to message of type {networkMessage.Type}");
+                    break;
+            }
+            return null;
+        }
+
+        public static void SendMessage(Player player, NetworkMessage networkMessage)
+        {
+            NetworkStream stream = player.TcpClient.GetStream();
+            byte[] buffer = networkMessage.ToBytes();
+            stream.Write(buffer, 0, buffer.Length);
+        }
+
     }
 }

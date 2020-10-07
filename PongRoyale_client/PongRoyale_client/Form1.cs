@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_client.Singleton;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,18 +17,24 @@ namespace PongRoyale_client
 {
     public partial class Form1 : Form
     {
-        public static Form1 Instance;
         private long FrameCount;
-        private Player player;
 
         public Form1()
         {
-            Instance = this;
             InitializeComponent();
 
-            player = new Player();
+            SafeInvoke.Instance.Setup(this);
+
+            ChatController.Instance.Setup(Chat, ChatInput);
             ConnectToServerButton.Text = Constants.ConnectToServer;
             GameLoop.Start();
+        }
+
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            Debug.WriteLine("Closing");
+            if (ServerConnection.Instance.IsConnected())
+                ServerConnection.Instance.Disconnect();
         }
 
         private void GameLoop_Tick(object sender, EventArgs e)
@@ -37,45 +44,52 @@ namespace PongRoyale_client
 
         private void ConnectToServerButton_Click(object sender, EventArgs e)
         {
-            if (!player.IsConnected())
+            if (!ServerConnection.Instance.IsConnected())
             {
-                player.Connect(
+                ServerConnection.Instance.Connect(
                     onConnected: () =>
                     {
-                        LogToServerInfo("Connected to server.");
+                        ChatController.Instance.LogInfo("Connected to server.");
+                        ChatController.Instance.LogInfo($"Welcome to the chat: {Player.Instance.PlayerName}!");
                         ConnectToServerButton.Text = Constants.DisconnectFromServer;
 
                     },
-                    onException: OnException);
+                    onException: (ex) =>
+                    {
+                        ChatController.Instance.LogError("Failed to connect to server.");
+                    });
             }
             else
             {
-                player.Disconnect(
+                ServerConnection.Instance.Disconnect(
                     onConnected: () =>
                     {
-                        LogToServerInfo("Disconnected from server.");
+                        ChatController.Instance.LogInfo("Disconnected from server.");
                         ConnectToServerButton.Text = Constants.ConnectToServer;
                     },
-                    onException: OnException);
+                    onException: (ex) => 
+                    {
+                        ChatController.Instance.LogError("Failed to disconnect from server.");
+                    });
 
             }
         }
 
         private void SendDataToServer_Click(object sender, EventArgs e)
         {
-            player.SendDataToServer("Ping: " + DataToServerTextBox.Text, waitForResponse: true,
-                onResponse: (response) => { LogToServerInfo("Received: " + response); },
-                onException: OnException);
+            //ServerConnection.Instance.SendDataToServer("Ping: " + DataToServerTextBox.Text, waitForResponse: true,
+            //    onResponse: (response) =>
+            //    {
+            //        ChatController.Instance.LogInfo(response);
+            //    });
         }
 
-        public void LogToServerInfo(string message)
+        private void ChatInput_Submitted(object sender, KeyEventArgs e)
         {
-            ServerResponseLabel.Text += "\n" + message;
-        }
-
-        public void OnException(Exception ex)
-        {
-            Debug.WriteLine(string.Format("Exception occured: {0}", ex.Message ?? "null"));
+            if (e.KeyCode == Keys.Enter)
+            {
+                ChatController.Instance.OnChatInputSubmitted();
+            }
         }
     }
 }
