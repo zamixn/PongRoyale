@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_client.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -41,8 +42,6 @@ namespace PongRoyale_client.Singleton
             if (ValidateChatInput(input))
             {
                 Player.Instance.SendChatMessage(input);
-                //Output.AppendText($"{playerName}", NormalColor, BoldFont);
-                //Output.AppendText($": {input}\r\n", NormalColor, NormalFont);
                 Input.Clear();
             }
         }

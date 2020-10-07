@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PongRoyale_client.Extensions;
 
 namespace PongRoyale_client
 {

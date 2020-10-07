@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PongRoyale_client
+namespace PongRoyale_client.Extensions
 {
-    public static class Extensions
+    public static class WinFormsExtensions
     {
         public static void AppendText(this RichTextBox box, string text, Color color, Font font)
         {
@@ -19,17 +19,6 @@ namespace PongRoyale_client
             box.SelectionFont = font;
             box.AppendText(text);
             box.SelectionColor = box.ForeColor;
-        }
-
-        public static byte[] PrependBytes(this byte[] bArray, byte[] newBytes)
-        {
-            byte[] newArray = new byte[bArray.Length + newBytes.Length];
-            bArray.CopyTo(newArray, newBytes.Length);
-            for (int i = 0; i < newBytes.Length; i++)
-            {
-                newArray[i] = newBytes[i];
-            }
-            return newArray;
         }
     }
 }

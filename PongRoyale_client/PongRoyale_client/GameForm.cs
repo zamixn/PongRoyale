@@ -1,4 +1,5 @@
-﻿using PongRoyale_client.Singleton;
+﻿using PongRoyale_client.Game;
+using PongRoyale_client.Singleton;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,6 +29,10 @@ namespace PongRoyale_client
             ChatController.Instance.Setup(Chat, ChatInput);
             ConnectToServerButton.Text = Constants.ConnectToServer;
             GameLoop.Start();
+
+
+            // will be deleted
+            GameManager.Instance.InitGame(RoomSettings.Instance.PlayerCount);
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
@@ -73,15 +78,6 @@ namespace PongRoyale_client
                     });
 
             }
-        }
-
-        private void SendDataToServer_Click(object sender, EventArgs e)
-        {
-            //ServerConnection.Instance.SendDataToServer("Ping: " + DataToServerTextBox.Text, waitForResponse: true,
-            //    onResponse: (response) =>
-            //    {
-            //        ChatController.Instance.LogInfo(response);
-            //    });
         }
 
         private void ChatInput_Submitted(object sender, KeyEventArgs e)
