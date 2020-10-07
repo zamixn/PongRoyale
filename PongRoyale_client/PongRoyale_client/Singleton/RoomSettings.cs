@@ -8,6 +8,6 @@ namespace PongRoyale_client.Singleton
 {
     public class RoomSettings : Singleton<RoomSettings>
     {
-        public int PlayerCount { get; private set; } = 8;
+        public int PlayerCount { get; private set; } = 4;
     }
 }

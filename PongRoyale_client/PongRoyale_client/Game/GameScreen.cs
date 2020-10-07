@@ -73,7 +73,6 @@ namespace PongRoyale_client.Game
 
             foreach (Paddle paddle in GameManager.Instance.PlayerPaddles)
             {
-                Debug.WriteLine(paddle.AngularPosition);
                 g.DrawArc(p, Origin.X, Origin.Y, Diameter, Diameter, paddle.AngularPosition, paddle.AngularSize);
             }
 

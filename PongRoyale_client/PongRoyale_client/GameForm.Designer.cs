@@ -72,6 +72,7 @@ namespace PongRoyale_client
             this.ChatInput.Name = "ChatInput";
             this.ChatInput.Size = new System.Drawing.Size(190, 20);
             this.ChatInput.TabIndex = 6;
+            this.ChatInput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ChatInput_Submitted);
             // 
             // Chat
             // 
