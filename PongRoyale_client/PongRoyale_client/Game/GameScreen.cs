@@ -69,14 +69,15 @@ namespace PongRoyale_client.Game
 
         private void DrawPlayers(Graphics g)
         {
-            Pen p = new Pen(PlayerColor, PlayerWidth);
+
 
             foreach (Paddle paddle in GameManager.Instance.PlayerPaddles)
             {
-                g.DrawArc(p, Origin.X, Origin.Y, Diameter, Diameter, paddle.AngularPosition, paddle.AngularSize);
+                Pen p = new Pen(PlayerColor, PlayerWidth);
+                paddle.Render(g, p, Origin, Diameter);
+                p.Dispose();
             }
 
-            p.Dispose();
         }
 
         private void DrawBorder(Graphics g)

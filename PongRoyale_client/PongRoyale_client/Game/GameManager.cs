@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.Paddles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +23,15 @@ namespace PongRoyale_client.Game
             PlayerPaddles = new List<Paddle>();
 
             float deltaAngle = Utilities.PI * 2 / PlayerCount;
-            float angle = (-Utilities.PI + deltaAngle - Utilities.DegToRad(GameSettings.PlayerAngularSize)) / 2f;
+            float angle = (-Utilities.PI + deltaAngle - Utilities.DegToRad(20)) / 2f;
+            Random random = new Random();
+
             for (int i = 0; i < PlayerCount; i++)
             {
-                PlayerPaddles.Add(new Paddle(Utilities.RadToDeg(angle), GameSettings.PlayerAngularSize));
+                PaddleType type = (PaddleType) random.Next((int)PaddleType.Normal, (int)PaddleType.Short+1);
+                Paddle paddle = PaddleFactory.CreatePaddle(type);
+                paddle.SetPosition(Utilities.RadToDeg(angle));
+                PlayerPaddles.Add(paddle);
                 angle += deltaAngle;
             }
             IsInitted = true;

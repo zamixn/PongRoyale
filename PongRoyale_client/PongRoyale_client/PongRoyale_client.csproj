@@ -56,7 +56,12 @@
       <DependentUpon>GameScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\GameSettings.cs" />
-    <Compile Include="Game\Paddle.cs" />
+    <Compile Include="Game\Paddles\LongPaddle.cs" />
+    <Compile Include="Game\Paddles\NormalPaddle.cs" />
+    <Compile Include="Game\Paddles\Paddle.cs" />
+    <Compile Include="Game\Paddles\PaddleFactory.cs" />
+    <Compile Include="Game\Paddles\PaddleType.cs" />
+    <Compile Include="Game\Paddles\ShortPaddle.cs" />
     <Compile Include="NetworkMessage.cs" />
     <Compile Include="Singleton\RoomSettings.cs" />
     <Compile Include="Singleton\SafeInvoke.cs" />
