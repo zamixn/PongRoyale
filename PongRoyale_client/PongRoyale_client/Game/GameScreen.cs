@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Singleton;
 using System;
 using System.Collections.Generic;
@@ -64,13 +65,21 @@ namespace PongRoyale_client.Game
                 DrawBorder(g);
                 DrawArena(g);
                 DrawPlayers(g);
+                DrawBalls(g);
             }
         }
 
+        private void DrawBalls(Graphics g)
+        {
+            foreach (Ball ball in GameManager.Instance.ArenaBalls)
+            {
+                Brush p = new SolidBrush(Color.Yellow);
+                ball.Render(g, p, new PointF(ball.PositionX, ball.PositionY), Diameter);
+                p.Dispose();
+            }
+        }
         private void DrawPlayers(Graphics g)
         {
-
-
             foreach (Paddle paddle in GameManager.Instance.PlayerPaddles)
             {
                 Pen p = new Pen(PlayerColor, PlayerWidth);

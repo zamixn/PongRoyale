@@ -49,6 +49,19 @@
     <Compile Include="Extensions\MiscExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />
     <Compile Include="Game\AbstractFactory.cs" />
+    <Compile Include="Game\ArenaObject.cs" />
+    <Compile Include="Game\Balls\Ball.cs" />
+    <Compile Include="Game\Balls\BallType.cs" />
+    <Compile Include="Game\Balls\DeadlyBall.cs" />
+    <Compile Include="Game\Balls\NormalBall.cs" />
+    <Compile Include="Game\Balls\ReboundStrategy\BallDeadlyStrategy.cs" />
+    <Compile Include="Game\Balls\ReboundStrategy\IReboundStrategy.cs" />
+    <Compile Include="Game\Balls\ReboundStrategy\PaddleMovingLeft.cs" />
+    <Compile Include="Game\Balls\ReboundStrategy\PaddleMovingRight.cs" />
+    <Compile Include="Game\Balls\ReboundStrategy\PaddleNotMoving.cs" />
+    <Compile Include="Game\Builders\IArenaObjectBuilder.cs" />
+    <Compile Include="Game\Builders\ObstacleBuilder.cs" />
+    <Compile Include="Game\Builders\PowerUpBuilder.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="Game\GameScreen.cs">
       <SubType>Component</SubType>
@@ -70,6 +83,9 @@
     <Compile Include="Game\Powerups\PowerupType.cs" />
     <Compile Include="Game\SolidFactory.cs" />
     <Compile Include="NetworkMessage.cs" />
+    <Compile Include="Observers\IObserver.cs" />
+    <Compile Include="Observers\LifeObserver.cs" />
+    <Compile Include="RandomNumber.cs" />
     <Compile Include="Singleton\RoomSettings.cs" />
     <Compile Include="Singleton\SafeInvoke.cs" />
     <Compile Include="Singleton\ChatController.cs" />
@@ -114,5 +130,6 @@
   <ItemGroup>
     <Content Include="Resources\icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

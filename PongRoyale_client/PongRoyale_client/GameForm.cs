@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Game;
+using PongRoyale_client.Observers;
 using PongRoyale_client.Singleton;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace PongRoyale_client
     public partial class GameForm : Form
     {
         private long FrameCount;
+        private LifeObserver LifeObserver;
 
         public GameForm()
         {
@@ -29,7 +31,7 @@ namespace PongRoyale_client
             ChatController.Instance.Setup(Chat, ChatInput);
             ConnectToServerButton.Text = Constants.ConnectToServer;
             GameLoop.Start();
-
+            LifeObserver = new LifeObserver();
 
             // will be deleted
             GameManager.Instance.InitGame(RoomSettings.Instance.PlayerCount);
@@ -56,6 +58,7 @@ namespace PongRoyale_client
                     {
                         ChatController.Instance.LogInfo("Connected to server.");
                         ChatController.Instance.LogInfo($"Welcome to the chat: {Player.Instance.PlayerName}!");
+                        Player.Instance.Register(LifeObserver);
                         ConnectToServerButton.Text = Constants.DisconnectFromServer;
 
                     },
@@ -70,6 +73,7 @@ namespace PongRoyale_client
                     onConnected: () =>
                     {
                         ChatController.Instance.LogInfo("Disconnected from server.");
+                        Player.Instance.Unregister(LifeObserver);
                         ConnectToServerButton.Text = Constants.ConnectToServer;
                     },
                     onException: (ex) => 

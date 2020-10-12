@@ -11,6 +11,7 @@ namespace PongRoyale_client.Game
     {
         public float AngularPosition { get; protected set; }
         public float AngularSize { get; protected set; }
+        public float Speed { get; protected set; }
 
         public Paddle(float angularSize)
         {
