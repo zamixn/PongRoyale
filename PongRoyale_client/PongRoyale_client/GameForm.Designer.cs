@@ -43,7 +43,6 @@ namespace PongRoyale_client
             // GameLoop
             // 
             this.GameLoop.Interval = 10;
-            this.GameLoop.Tick += new System.EventHandler(this.GameLoop_Tick);
             // 
             // FrameCountLabel
             // 
@@ -102,9 +101,13 @@ namespace PongRoyale_client
             this.Controls.Add(this.ConnectToServerButton);
             this.Controls.Add(this.FrameCountLabel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "GameForm";
             this.Text = "Pong Royale";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
+            this.Load += new System.EventHandler(this.GameForm_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GameForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameForm_KeyUp);
             this.ResumeLayout(false);
             this.PerformLayout();
 

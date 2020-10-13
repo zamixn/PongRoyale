@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_client.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace PongRoyale_client.Game.Balls
 {
     class DeadlyBall : Ball
     {
-        public override void Render(Graphics g, Brush b, PointF Origin, float Diameter)
+        public override void Render(Graphics g, Brush b)
         {
             b = new SolidBrush(Color.Black);
-            base.Render(g, b, Origin, 25);
+            base.Render(g, b);
         }
     }
 }

@@ -24,5 +24,13 @@ namespace PongRoyale_client
                 return random.NextDouble();
             }
         }
+
+        public static float NextFloat()
+        {
+            lock (syncLock)
+            {
+                return (float)random.NextDouble();
+            }
+        }
     }
 }

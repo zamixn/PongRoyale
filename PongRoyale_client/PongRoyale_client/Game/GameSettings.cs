@@ -10,12 +10,36 @@ namespace PongRoyale_client.Game
 {
     public class GameSettings
     {
-        public static readonly Dictionary<System.Type, float> PlayerSizes = new Dictionary<System.Type, float>() 
+        public class PaddleSettings
         {
-            {typeof(NormalPaddle), 20},
-            {typeof(LongPaddle), 40},
-            {typeof(ShortPaddle), 10}
+            public int Size;
+            public float Speed;
+            public float Thickness;
+        }
+
+        public static readonly Dictionary<System.Type, PaddleSettings> PaddleSettingsDict =
+            new Dictionary<System.Type, PaddleSettings>()
+        {
+            {typeof(NormalPaddle), new PaddleSettings(){
+                Size = 20,
+                Speed = 1,
+                Thickness = 10
+            }},
+            {typeof(LongPaddle), new PaddleSettings(){
+                Size = 40,
+                Speed = .5f,
+                Thickness = 13
+            }},
+            {typeof(ShortPaddle), new PaddleSettings(){
+                Size = 10,
+                Speed = 2,
+                Thickness = 7
+            }}
         };
+
+
+        public static readonly float DefaultBallSpeed = 1f;
+        public static readonly float DefaultBallSize = 20f;
 
     }
 }

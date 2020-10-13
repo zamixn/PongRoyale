@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Extensions\MiscExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />
+    <Compile Include="Extensions\Vector2.cs" />
     <Compile Include="Game\AbstractFactory.cs" />
     <Compile Include="Game\ArenaObject.cs" />
     <Compile Include="Game\Balls\Ball.cs" />
@@ -70,6 +71,7 @@
       <DependentUpon>GameScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\GameSettings.cs" />
+    <Compile Include="Game\InputManager.cs" />
     <Compile Include="Game\Obstacles\Obstacle.cs" />
     <Compile Include="Game\Obstacles\ObstacleType.cs" />
     <Compile Include="Game\Paddles\LongPaddle.cs" />

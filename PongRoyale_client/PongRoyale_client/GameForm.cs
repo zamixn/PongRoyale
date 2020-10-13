@@ -20,6 +20,10 @@ namespace PongRoyale_client
     public partial class GameForm : Form
     {
         private long FrameCount;
+        private const long FramesToWaitUntilGameStart = 1;
+        EventHandler GameLoopWaitHandler;
+        EventHandler GameLoopHandler;
+
         private LifeObserver LifeObserver;
 
         public GameForm()
@@ -30,23 +34,41 @@ namespace PongRoyale_client
 
             ChatController.Instance.Setup(Chat, ChatInput);
             ConnectToServerButton.Text = Constants.ConnectToServer;
+
+            GameLoopWaitHandler = new EventHandler(this.GameLoopWait_Tick);
+            GameLoop.Tick += GameLoopWaitHandler;
             GameLoop.Start();
             LifeObserver = new LifeObserver();
-
-            // will be deleted
-            GameManager.Instance.InitGame(RoomSettings.Instance.PlayerCount);
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
-            Debug.WriteLine("Closing");
             if (ServerConnection.Instance.IsConnected())
                 ServerConnection.Instance.Disconnect();
         }
 
+        private void GameLoopWait_Tick(object sender, EventArgs e)
+        {
+            FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
+            if (FrameCount > FramesToWaitUntilGameStart)
+            {
+                StartGame();
+            }
+        }
+
+
+        private void StartGame()
+        {
+            GameManager.Instance.InitGame(RoomSettings.Instance.PlayerCount, GameScreen);
+            GameLoop.Tick -= GameLoopWaitHandler;
+            GameLoopHandler = new EventHandler(GameLoop_Tick);
+            GameLoop.Tick += GameLoopHandler;
+        }
         private void GameLoop_Tick(object sender, EventArgs e)
         {
             FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
+
+            GameManager.Instance.UpdateGameLoop();
         }
 
         private void ConnectToServerButton_Click(object sender, EventArgs e)
@@ -90,6 +112,25 @@ namespace PongRoyale_client
             {
                 ChatController.Instance.OnChatInputSubmitted();
             }
+        }
+
+        private void GameForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            InputManager.Instance.OnKeyDown(e.KeyCode);
+            if (!ChatController.Instance.IsInputSelected())
+                e.SuppressKeyPress = true;
+        }
+
+        private void GameForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            InputManager.Instance.OnKeyUp(e.KeyCode);
+            if(!ChatController.Instance.IsInputSelected())
+                e.SuppressKeyPress = true;
+        }
+
+        private void GameForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

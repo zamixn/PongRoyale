@@ -19,5 +19,15 @@ namespace PongRoyale_client.Extensions
             }
             return newArray;
         }
+
+        public static float Abs(this float f)
+        {
+            return (float)Math.Abs(f);
+        }
+
+        public static float ClampAngle(this float a)
+        { 
+            return (a + 360) % 360;
+        }
     }
 }

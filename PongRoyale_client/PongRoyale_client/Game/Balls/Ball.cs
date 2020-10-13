@@ -1,6 +1,8 @@
-﻿using PongRoyale_client.Game.Balls.ReboundStrategy;
+﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.Balls.ReboundStrategy;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,10 +14,10 @@ namespace PongRoyale_client.Game.Balls
     {
         public BallType bType;
         public IReboundStrategy reboundStrategy { get; set; }
-        public float PositionX { get; protected set; }
-        public float PositionY { get; protected set; }
-        public float BallSpeedX { get; protected set; }
-        public float BallSpeedY { get; protected set; }
+        public Vector2 Position { get; protected set; }
+        public Vector2 Direction { get; private set; }
+        public float Diameter { get; private set; }
+        public float Speed { get; private set; }
         public int ID { get; protected set; }
 
         public void OnCollisionWithPaddle(Paddle coll)
@@ -26,11 +28,11 @@ namespace PongRoyale_client.Game.Balls
                     reboundStrategy = new BallDeadlyStrategy();
                     break;
                 case BallType.Normal:
-                    if (coll.Speed < 0)
+                    if (coll.AngularSpeed < 0)
                         reboundStrategy = new PaddleMovingLeft();
-                    else if (coll.Speed == 0)
+                    else if (coll.AngularSpeed == 0)
                         reboundStrategy = new PaddleNotMoving();
-                    else if (coll.Speed > 0)
+                    else if (coll.AngularSpeed > 0)
                         reboundStrategy = new PaddleMovingRight();
                     break;
                 default:
@@ -42,27 +44,18 @@ namespace PongRoyale_client.Game.Balls
 
         private void Rebound(IReboundStrategy reboundStrategy)
         {
-            float[] speeds = reboundStrategy.ReboundDirection(BallSpeedX, BallSpeedY);
-            BallSpeedX = speeds[0];
-            BallSpeedY = speeds[1];
+            Direction = reboundStrategy.ReboundDirection(Direction);
         }
 
-        public virtual void Render(Graphics g, Brush p, PointF Origin, float Diameter)
+        public virtual void Render(Graphics g, Brush p)
         {
-            g.FillEllipse(p, Origin.X, Origin.Y, Diameter, Diameter);
+            float offset = Diameter / 2;
+            g.FillEllipse(p, Position.X - offset, Position.Y - offset, Diameter, Diameter);
         }
-        public virtual void SetPosition(float positionX, float positionY)
+        public static Ball CreateBall(BallType type, Vector2 position, float speed, Vector2 direction, float diameter)
         {
-            PositionX = positionX;
-            PositionY = positionY;
-        }
-        public static Ball CreateBall()
-        {
-            double spawnRadius = 100;
             Ball ball;
-            BallType bType =(BallType)RandomNumber.RandomNumb((int)BallType.Normal, (int)BallType.Deadly + 1);
-
-            switch (bType)
+            switch (type)
             {
                 case BallType.Normal:
                     ball = new NormalBall();
@@ -77,15 +70,42 @@ namespace PongRoyale_client.Game.Balls
                     break;
             }
 
-            double a = RandomNumber.RandomNumb() * 2 * Math.PI;
-            double r = spawnRadius * Math.Sqrt(RandomNumber.RandomNumb());
-            // 225.5 approx middle of screen
-            double x = r * Math.Cos(a) + 225.5;
-            double y = r * Math.Sin(a) + 225.5;
-
-            ball.SetPosition((float)x, (float)y);
+            ball.Position = position;
+            ball.Speed = speed;
+            ball.Direction = direction;
+            ball.Diameter = diameter;
 
             return ball;
+        }
+
+        public virtual void LocalUpdate()
+        {
+            Position += Direction * Speed;
+        }
+
+        public virtual void CheckCollision(List<Paddle> paddles)
+        {
+            Vector2 center = GameManager.Instance.GameScreen.GetCenter().ToVector2();
+            Vector2 directionFromCenter = (Position - center);
+            float angle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
+            float distance = GameManager.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
+
+            foreach (var p in paddles)
+            {
+                float offsetDistance = distance + p.Thickness / 2;
+                float pAngle1 = p.AngularPosition;
+                float pAngle2 = (p.AngularPosition + p.AngularSize);
+                if (offsetDistance > GameManager.Instance.GameScreen.GetArenaRadius())
+                {
+                    if (Utilities.IsInsideAngle(angle, pAngle1, pAngle2))
+                    {
+                        Direction = -Direction + Vector2.RandomInUnitCircle().Normalize() * 0.1f;
+                    }
+                }
+                // skip collisions with other paddles for now. This will have to be refactored later
+                break; 
+            }
+
         }
     }
 }

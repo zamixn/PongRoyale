@@ -34,6 +34,14 @@ namespace PongRoyale_client.Game
 
         public GameScreen()
         {
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.UserPaint |
+                          ControlStyles.AllPaintingInWmPaint |
+                          ControlStyles.ResizeRedraw |
+                          ControlStyles.ContainerControl |
+                          ControlStyles.OptimizedDoubleBuffer |
+                          ControlStyles.SupportsTransparentBackColor
+                          , true);
             InitializeComponent();
 
             BorderColor = Color.Black;
@@ -52,15 +60,7 @@ namespace PongRoyale_client.Game
             base.OnPaint(pe);
             if (GameManager.Instance.IsInitted)
             {
-                if (!AreStatsInitted)
-                {
-                    Diameter = Math.Min(Width, Height) - ArenaMargin * 2;
-                    Radius = Diameter / 2f;
-                    Origin = new PointF(ArenaMargin, ArenaMargin);
-                    Center = new PointF(Origin.X + Radius, Origin.Y + Radius);
-                    AreStatsInitted = true;
-                }
-
+                TryInitGameParamaters();
                 Graphics g = pe.Graphics;
                 DrawBorder(g);
                 DrawArena(g);
@@ -74,7 +74,7 @@ namespace PongRoyale_client.Game
             foreach (Ball ball in GameManager.Instance.ArenaBalls)
             {
                 Brush p = new SolidBrush(Color.Yellow);
-                ball.Render(g, p, new PointF(ball.PositionX, ball.PositionY), Diameter);
+                ball.Render(g, p);
                 p.Dispose();
             }
         }
@@ -111,6 +111,34 @@ namespace PongRoyale_client.Game
                 angle += angleDelta;
             }
             p.Dispose();
+        }
+
+        public PointF GetCenter()
+        {
+            TryInitGameParamaters();
+            return Center;
+        }
+        public float GetDistanceFromCenter(Vector2 point)
+        {
+            TryInitGameParamaters();
+            return Vector2.Distance(Center.ToVector2(), point);
+        }
+        public float GetArenaRadius()
+        {
+            TryInitGameParamaters();
+            return Radius;
+        }
+
+        private void TryInitGameParamaters()
+        {
+            if (!AreStatsInitted)
+            {
+                Diameter = Math.Min(Width, Height) - ArenaMargin * 2;
+                Radius = Diameter / 2f;
+                Origin = new PointF(ArenaMargin, ArenaMargin);
+                Center = new PointF(Origin.X + Radius, Origin.Y + Radius);
+                AreStatsInitted = true;
+            }
         }
     }
 }
