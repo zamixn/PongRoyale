@@ -13,6 +13,7 @@ namespace PongRoyale_server
     class Program
     {
         public static List<Player> Players = new List<Player>();
+        public static Player RoomMaster;
         public static bool AcceptPlayers;
         private static readonly object Lock = new object();
         public static int GetNewPlayerID()
@@ -28,6 +29,8 @@ namespace PongRoyale_server
         {
             lock (Lock)
             {
+                if (RoomMaster == null)
+                    RoomMaster = p;
                 Players.Add(p);
             }
         }
@@ -142,7 +145,7 @@ namespace PongRoyale_server
                     byte[] paddleTypes = RandomNumber.GetArray(playerIds.Length, 
                         () => RandomNumber.NextByte((byte)PaddleType.Normal, (byte)(PaddleType.Short + 1)));
                     byte ballType = RandomNumber.NextByte((byte)BallType.Normal, (byte)(BallType.Deadly + 1));
-                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameStart, NetworkMessage.EncodeGameStartMessage(playerIds, paddleTypes, ballType) );
+                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameStart, NetworkMessage.EncodeGameStartMessage(playerIds, paddleTypes, ballType, RoomMaster.Id) );
                 default:
                     Debug.WriteLine($"Exception: could not get repsonse to message of type {networkMessage.Type}");
                     break;

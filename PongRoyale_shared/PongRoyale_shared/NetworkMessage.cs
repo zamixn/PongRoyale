@@ -71,22 +71,23 @@ namespace PongRoyale_shared
             return BitConverter.ToSingle(b, 0);
         }
 
-        public static byte[] EncodeGameStartMessage(byte[] playerIds, byte[] paddleTypes, byte ballType)
+        public static byte[] EncodeGameStartMessage(byte[] playerIds, byte[] paddleTypes, byte ballType, byte roomMasterId)
         {
             byte[] data = playerIds.AppendBytes(paddleTypes)
-                          .PrependBytes(new byte[] { (byte)playerIds.Length, ballType });
+                          .PrependBytes(new byte[] { (byte)playerIds.Length, ballType, roomMasterId });
             return data;
         }
-        public static void DecodeGameStartMessage(byte[] data, out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType)
+        public static void DecodeGameStartMessage(byte[] data, out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType, out byte roomMasterId)
         {
             int playerCount = data[0];
             playerIds = new byte[playerCount];
             paddleTypes = new PaddleType[playerCount];
             ballType = (BallType)data[1];
+            roomMasterId = data[2];
             for (int i = 0; i < playerCount; i++)
             {
-                playerIds[i] = data[i + 2];
-                paddleTypes[i] = (PaddleType)data[i + 2 + playerCount];
+                playerIds[i] = data[i + 3];
+                paddleTypes[i] = (PaddleType)data[i + 3 + playerCount];
             }
         }
     }

@@ -11,14 +11,18 @@ namespace PongRoyale_client.Singleton
     {
         public List<NetworkPlayer> Players { get; private set; }
         public BallType BallType { get; private set; }
+        public NetworkPlayer RoomMaster { get; private set; }
 
 
-        public void SetRoomSettings(byte[] playerIds, PaddleType[] playerPaddleTypes, BallType ballType)
+        public void SetRoomSettings(byte[] playerIds, PaddleType[] playerPaddleTypes, BallType ballType, byte roomMasterId)
         {
             Players = new List<NetworkPlayer>();
             for (int i = 0; i < playerIds.Length; i++)
             {
-                Players.Add(new NetworkPlayer(playerIds[i], playerPaddleTypes[i]));
+                NetworkPlayer p = new NetworkPlayer(playerIds[i], playerPaddleTypes[i]);
+                Players.Add(p);
+                if (playerIds[i] == roomMasterId)
+                    RoomMaster = p;
             }
             BallType = ballType;
         }

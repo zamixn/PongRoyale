@@ -89,8 +89,8 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.GameStart:
                     SafeInvoke.Instance.Invoke(() => {
                         NetworkMessage.DecodeGameStartMessage(message.ByteContents,
-                            out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType);
-                        RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType);
+                            out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType, out byte roomMasterId);
+                        RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, roomMasterId);
                         GameForm.Instance.StartGame();
                     });
                     break;

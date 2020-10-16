@@ -21,6 +21,7 @@ namespace PongRoyale_client.Singleton
         public static string ConstructName(byte id) { return $"Player{id}"; }
 
         public byte Id { get; private set; }
+        public bool IsRoomMaster { get { return IdMatches(RoomSettings.Instance.RoomMaster.Id); } }
         public int Life;
 
         public Player()
