@@ -28,7 +28,6 @@ namespace PongRoyale_client.Game
         public virtual void Render(Graphics g, Pen p, PointF Origin, float arenaDiameter)
         {
             p.Width = Thickness;
-            //g.DrawArc(p, Origin.X, Origin.Y, arenaDiameter, arenaDiameter, -AngularPosition - AngularSize, AngularSize);
             g.DrawArc(p, Origin.X, Origin.Y, arenaDiameter, arenaDiameter, AngularPosition, AngularSize);
         }
         public virtual void SetPosition(float position)

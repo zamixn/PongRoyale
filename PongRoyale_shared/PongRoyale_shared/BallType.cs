@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PongRoyale_client.Game.Paddles
+namespace PongRoyale_shared
 {
-    public enum PaddleType
+    public enum BallType : byte
     {
         Normal = 1,
-        Long = 2,
-        Short = 3
+        Deadly = 2
     }
 }

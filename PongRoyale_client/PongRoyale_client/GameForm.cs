@@ -18,16 +18,18 @@ using System.Windows.Forms;
 namespace PongRoyale_client
 {
     public partial class GameForm : Form
-    {
+    { 
+        public static GameForm Instance;
         private long FrameCount;
-        private const long FramesToWaitUntilGameStart = 1;
-        EventHandler GameLoopWaitHandler;
+        //private const long FramesToWaitUntilGameStart = 1;
+        //EventHandler GameLoopWaitHandler;
         EventHandler GameLoopHandler;
 
         private LifeObserver LifeObserver;
 
         public GameForm()
         {
+            Instance = this;
             InitializeComponent();
 
             SafeInvoke.Instance.Setup(this);
@@ -35,9 +37,9 @@ namespace PongRoyale_client
             ChatController.Instance.Setup(Chat, ChatInput);
             ConnectToServerButton.Text = Constants.ConnectToServer;
 
-            GameLoopWaitHandler = new EventHandler(this.GameLoopWait_Tick);
-            GameLoop.Tick += GameLoopWaitHandler;
-            GameLoop.Start();
+            //GameLoopWaitHandler = new EventHandler(this.GameLoopWait_Tick);
+            //GameLoop.Tick += GameLoopWaitHandler;
+            //GameLoop.Start();
             LifeObserver = new LifeObserver();
         }
 
@@ -47,28 +49,38 @@ namespace PongRoyale_client
                 ServerConnection.Instance.Disconnect();
         }
 
-        private void GameLoopWait_Tick(object sender, EventArgs e)
-        {
-            FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
-            if (FrameCount > FramesToWaitUntilGameStart)
-            {
-                StartGame();
-            }
-        }
+        //private void GameLoopWait_Tick(object sender, EventArgs e)
+        //{
+        //    FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
+        //    if (FrameCount > FramesToWaitUntilGameStart)
+        //    {
+        //        StartGame();
+        //    }
+        //}
 
 
-        private void StartGame()
+        public void StartGame()
         {
-            GameManager.Instance.InitGame(RoomSettings.Instance.PlayerCount, GameScreen);
-            GameLoop.Tick -= GameLoopWaitHandler;
+            GameManager.Instance.InitGame(GameScreen);
+            //GameLoop.Tick -= GameLoopWaitHandler;
             GameLoopHandler = new EventHandler(GameLoop_Tick);
             GameLoop.Tick += GameLoopHandler;
+            GameLoop.Start();
+            SyncLoop.Tick += new EventHandler(SyncLoop_Tick);
+            SyncLoop.Start();
         }
         private void GameLoop_Tick(object sender, EventArgs e)
         {
             FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
-
             GameManager.Instance.UpdateGameLoop();
+        }
+
+        private void SyncLoop_Tick(object sender, EventArgs e)
+        {
+            if (ServerConnection.Instance.IsConnected())
+            {
+                Player.Instance.SyncWithServer();
+            }
         }
 
         private void ConnectToServerButton_Click(object sender, EventArgs e)
@@ -131,6 +143,16 @@ namespace PongRoyale_client
         private void GameForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void StartGameButton_Click(object sender, EventArgs e)
+        {
+            if (ServerConnection.Instance.IsConnected())
+            {
+                Player.Instance.SendStartGameMessage();
+            }
+            else
+                ChatController.Instance.LogError("Could not start the game");
         }
     }
 }

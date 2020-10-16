@@ -62,7 +62,8 @@ namespace PongRoyale_client.Singleton
                     Output.AppendText("[me] ", InfoColor, NormalFont);
                 }
                 Output.AppendText($"{playerName}", NormalColor, BoldFont);
-                Output.AppendText($": {message}\r\n", NormalColor, NormalFont);
+                Output.AppendText($": {message.TrimEnd('\0')}\r\n", NormalColor, NormalFont);
+                Debug.WriteLine(message);
             }
         }
         private bool ValidateChatInput(string input)

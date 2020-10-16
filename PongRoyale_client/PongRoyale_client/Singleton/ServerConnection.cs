@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PongRoyale_client.Game;
+using PongRoyale_shared;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -76,7 +78,20 @@ namespace PongRoyale_client.Singleton
                     break;
                 case NetworkMessage.MessageType.Chat:
                     SafeInvoke.Instance.Invoke(() => {                     
-                        ChatController.Instance.LogChatMessage(message.SenderId, message.Contents);
+                        ChatController.Instance.LogChatMessage(message.SenderId, NetworkMessage.DecodeString(message.ByteContents));
+                    });
+                    break;
+                case NetworkMessage.MessageType.playerSync:
+                    SafeInvoke.Instance.Invoke(() => {
+                        GameManager.Instance.SyncMessageReceived(message);
+                    });
+                    break;
+                case NetworkMessage.MessageType.GameStart:
+                    SafeInvoke.Instance.Invoke(() => {
+                        NetworkMessage.DecodeGameStartMessage(message.ByteContents,
+                            out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType);
+                        RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType);
+                        GameForm.Instance.StartGame();
                     });
                     break;
                 default:
@@ -129,7 +144,7 @@ namespace PongRoyale_client.Singleton
         }
         public void LogConnectionDataReceived(NetworkMessage response)
         {
-            Debug.WriteLine($"Received: Type: {response.Type}. Response: {response.Contents}");
+            Debug.WriteLine($"Received: Type: {response.Type}.");
         }
     }
 }

@@ -52,7 +52,6 @@
     <Compile Include="Game\AbstractFactory.cs" />
     <Compile Include="Game\ArenaObject.cs" />
     <Compile Include="Game\Balls\Ball.cs" />
-    <Compile Include="Game\Balls\BallType.cs" />
     <Compile Include="Game\Balls\DeadlyBall.cs" />
     <Compile Include="Game\Balls\NormalBall.cs" />
     <Compile Include="Game\Balls\ReboundStrategy\BallDeadlyStrategy.cs" />
@@ -78,16 +77,13 @@
     <Compile Include="Game\Paddles\NormalPaddle.cs" />
     <Compile Include="Game\Paddles\Paddle.cs" />
     <Compile Include="Game\Paddles\PaddleFactory.cs" />
-    <Compile Include="Game\Paddles\PaddleType.cs" />
     <Compile Include="Game\Paddles\ShortPaddle.cs" />
     <Compile Include="Game\PassableFactory.cs" />
     <Compile Include="Game\Powerups\Powerup.cs" />
     <Compile Include="Game\Powerups\PowerupType.cs" />
     <Compile Include="Game\SolidFactory.cs" />
-    <Compile Include="NetworkMessage.cs" />
     <Compile Include="Observers\IObserver.cs" />
     <Compile Include="Observers\LifeObserver.cs" />
-    <Compile Include="RandomNumber.cs" />
     <Compile Include="Singleton\RoomSettings.cs" />
     <Compile Include="Singleton\SafeInvoke.cs" />
     <Compile Include="Singleton\ChatController.cs" />
@@ -132,6 +128,11 @@
   <ItemGroup>
     <Content Include="Resources\icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\PongRoyale_shared\PongRoyale_shared\PongRoyale_shared.csproj">
+      <Project>{33753F5F-04E4-401E-8F68-9F188A38FBF7}</Project>
+      <Name>PongRoyale_shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

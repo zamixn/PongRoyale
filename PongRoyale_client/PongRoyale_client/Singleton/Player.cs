@@ -1,4 +1,6 @@
-﻿using PongRoyale_client.Observers;
+﻿using PongRoyale_client.Game;
+using PongRoyale_client.Observers;
+using PongRoyale_shared;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using static PongRoyale_shared.NetworkMessage;
 
 namespace PongRoyale_client.Singleton
 {
@@ -26,9 +29,23 @@ namespace PongRoyale_client.Singleton
         }
         public void SendChatMessage(string message)
         {
-            NetworkMessage chatMessage = new NetworkMessage(Id, NetworkMessage.MessageType.Chat, message);
+            NetworkMessage chatMessage = new NetworkMessage(Id, MessageType.Chat, NetworkMessage.EncodeString(message));
             ServerConnection.Instance.SendDataToServer(chatMessage);
         }
+
+        public void SyncWithServer()
+        {
+            Paddle localPlayer = GameManager.Instance.LocalPaddle;
+            NetworkMessage message = new NetworkMessage(Id, MessageType.playerSync, NetworkMessage.EncodeFloat(localPlayer.AngularPosition));
+            ServerConnection.Instance.SendDataToServer(message);
+        }
+        public void SendStartGameMessage()
+        {
+            NetworkMessage message = new NetworkMessage(Id, MessageType.GameStart, new byte[0]);
+            ServerConnection.Instance.SendDataToServer(message);
+        }
+
+
         public void SetId(byte id)
         {
             Id = id;

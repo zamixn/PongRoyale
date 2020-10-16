@@ -38,6 +38,8 @@ namespace PongRoyale_client
             this.ChatInput = new System.Windows.Forms.TextBox();
             this.Chat = new System.Windows.Forms.RichTextBox();
             this.GameScreen = new PongRoyale_client.Game.GameScreen();
+            this.SyncLoop = new System.Windows.Forms.Timer(this.components);
+            this.StartGameButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // GameLoop
@@ -47,7 +49,7 @@ namespace PongRoyale_client
             // FrameCountLabel
             // 
             this.FrameCountLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FrameCountLabel.Location = new System.Drawing.Point(631, 9);
+            this.FrameCountLabel.Location = new System.Drawing.Point(642, 9);
             this.FrameCountLabel.Name = "FrameCountLabel";
             this.FrameCountLabel.Size = new System.Drawing.Size(160, 15);
             this.FrameCountLabel.TabIndex = 0;
@@ -57,7 +59,7 @@ namespace PongRoyale_client
             // ConnectToServerButton
             // 
             this.ConnectToServerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConnectToServerButton.Location = new System.Drawing.Point(631, 27);
+            this.ConnectToServerButton.Location = new System.Drawing.Point(642, 27);
             this.ConnectToServerButton.Name = "ConnectToServerButton";
             this.ConnectToServerButton.Size = new System.Drawing.Size(160, 23);
             this.ConnectToServerButton.TabIndex = 1;
@@ -90,11 +92,23 @@ namespace PongRoyale_client
             this.GameScreen.Size = new System.Drawing.Size(451, 451);
             this.GameScreen.TabIndex = 7;
             // 
+            // StartGameButton
+            // 
+            this.StartGameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.StartGameButton.Location = new System.Drawing.Point(642, 56);
+            this.StartGameButton.Name = "StartGameButton";
+            this.StartGameButton.Size = new System.Drawing.Size(160, 23);
+            this.StartGameButton.TabIndex = 8;
+            this.StartGameButton.Text = "Start game";
+            this.StartGameButton.UseVisualStyleBackColor = true;
+            this.StartGameButton.Click += new System.EventHandler(this.StartGameButton_Click);
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(803, 450);
+            this.ClientSize = new System.Drawing.Size(814, 450);
+            this.Controls.Add(this.StartGameButton);
             this.Controls.Add(this.GameScreen);
             this.Controls.Add(this.ChatInput);
             this.Controls.Add(this.Chat);
@@ -121,6 +135,8 @@ namespace PongRoyale_client
         private System.Windows.Forms.TextBox ChatInput;
         private System.Windows.Forms.RichTextBox Chat;
         private PongRoyale_client.Game.GameScreen GameScreen;
+        private System.Windows.Forms.Timer SyncLoop;
+        private System.Windows.Forms.Button StartGameButton;
     }
 }
 

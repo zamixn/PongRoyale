@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_shared;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;

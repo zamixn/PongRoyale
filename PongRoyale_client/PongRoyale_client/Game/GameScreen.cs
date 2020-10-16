@@ -80,7 +80,7 @@ namespace PongRoyale_client.Game
         }
         private void DrawPlayers(Graphics g)
         {
-            foreach (Paddle paddle in GameManager.Instance.PlayerPaddles)
+            foreach (Paddle paddle in GameManager.Instance.PlayerPaddles.Values)
             {
                 Pen p = new Pen(PlayerColor, PlayerWidth);
                 paddle.Render(g, p, Origin, Diameter);
@@ -104,8 +104,8 @@ namespace PongRoyale_client.Game
             g.DrawEllipse(p, Origin.X, Origin.Y, Diameter, Diameter);
 
             float angle = (float)(-Math.PI  / 2);
-            float angleDelta = (float)(Math.PI * 2 / RoomSettings.Instance.PlayerCount);
-            for (int i = 0; i < RoomSettings.Instance.PlayerCount; i++)
+            float angleDelta = (float)(Math.PI * 2 / RoomSettings.Instance.Players.Count);
+            for (int i = 0; i < RoomSettings.Instance.Players.Count; i++)
             {
                 g.DrawLine(p, Center, Utilities.GetPointOnCircle(Center, Radius, angle));
                 angle += angleDelta;

@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -83,14 +84,14 @@ namespace PongRoyale_client.Game.Balls
             Position += Direction * Speed;
         }
 
-        public virtual void CheckCollision(List<Paddle> paddles)
+        public virtual void CheckCollision(Dictionary<byte, Paddle> paddles)
         {
             Vector2 center = GameManager.Instance.GameScreen.GetCenter().ToVector2();
             Vector2 directionFromCenter = (Position - center);
             float angle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
             float distance = GameManager.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
 
-            foreach (var p in paddles)
+            foreach (var p in paddles.Values)
             {
                 float offsetDistance = distance + p.Thickness / 2;
                 float pAngle1 = p.AngularPosition;

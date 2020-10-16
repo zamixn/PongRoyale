@@ -5,4 +5,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\PongRoyale_shared\PongRoyale_shared\PongRoyale_shared.csproj" />
+  </ItemGroup>
+
 </Project>

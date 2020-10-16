@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PongRoyale_server
+namespace PongRoyale_shared
 {
     public static class Extensions
     {
@@ -13,6 +13,17 @@ namespace PongRoyale_server
             for (int i = 0; i < newBytes.Length; i++)
             {
                 newArray[i] = newBytes[i];
+            }
+            return newArray;
+        }
+
+        public static byte[] AppendBytes(this byte[] bArray, byte[] newBytes)
+        {
+            byte[] newArray = new byte[bArray.Length + newBytes.Length];
+            bArray.CopyTo(newArray, 0);
+            for (int i = 0; i < newBytes.Length; i++)
+            {
+                newArray[bArray.Length + i] = newBytes[i];
             }
             return newArray;
         }

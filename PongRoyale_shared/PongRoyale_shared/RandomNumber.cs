@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PongRoyale_client
+namespace PongRoyale_shared
 {
-    class RandomNumber
+    public class RandomNumber
     {
         private static readonly Random random = new Random();
         private static readonly object syncLock = new object();
@@ -31,6 +31,24 @@ namespace PongRoyale_client
             {
                 return (float)random.NextDouble();
             }
+        }
+
+        public static byte NextByte(byte min, byte max)
+        {
+            lock (syncLock)
+            {
+                return (byte)random.Next(min, max);
+            }
+        }
+
+        public static T[] GetArray<T>(int count, Func<T> randomGetter)
+        {
+            T[] a = new T[count];
+            for (int i = 0; i < count; i++)
+            {
+                a[i] = randomGetter.Invoke();
+            }
+            return a;
         }
     }
 }
