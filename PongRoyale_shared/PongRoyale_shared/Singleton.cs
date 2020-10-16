@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PongRoyale_client
+namespace PongRoyale_shared
 {
     public abstract class Singleton<T> where T : new()
     {
