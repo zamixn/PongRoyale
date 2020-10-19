@@ -153,7 +153,9 @@ namespace PongRoyale_client
         private void StartLocalButton_Click(object sender, EventArgs e)
         {
             byte[] playerIds = new byte[] { 0, 1 };
-            PaddleType[] paddleTypes = new PaddleType[] { PaddleType.Normal, PaddleType.Long };
+            PaddleType[] paddleTypes = new PaddleType[] { 
+                (PaddleType)RandomNumber.RandomNumb((int)PaddleType.Normal, (int)PaddleType.Short + 1), 
+                PaddleType.Long };
             BallType ballType = BallType.Normal;
 
             RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, playerIds[0]);

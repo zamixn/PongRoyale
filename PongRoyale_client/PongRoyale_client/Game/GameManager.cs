@@ -35,7 +35,7 @@ namespace PongRoyale_client.Game
             ArenaBalls = new Dictionary<byte, Ball>();
 
             float deltaAngle = SharedUtilities.PI * 2 / PlayerCount;
-            float angle = (-SharedUtilities.PI + deltaAngle - SharedUtilities.DegToRad(20)) / 2f;
+            float angle = (-SharedUtilities.PI + deltaAngle) / 2f;
 
             for (int i = 0; i < PlayerCount; i++)
             {

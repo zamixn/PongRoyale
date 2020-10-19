@@ -32,8 +32,8 @@ namespace PongRoyale_client.Game
 
         public void AddClampAngles(float minAngle, float maxAngle)
         {
-            MinAngle = minAngle + AngularSize / 2;
-            MaxAngle = maxAngle - AngularSize / 2;
+            MinAngle = minAngle;
+            MaxAngle = maxAngle - AngularSize;
         }
 
         public virtual void Render(Graphics g, Pen p, PointF Origin, float arenaDiameter)
