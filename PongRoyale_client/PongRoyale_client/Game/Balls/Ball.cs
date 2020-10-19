@@ -107,8 +107,6 @@ namespace PongRoyale_client.Game.Balls
                         Direction = -Direction + Vector2.RandomInUnitCircle().Normalize() * 0.1f;
                     }
                 }
-                // skip collisions with other paddles for now. This will have to be refactored later
-                break; 
             }
 
         }
