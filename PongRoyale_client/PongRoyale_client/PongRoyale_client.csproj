@@ -52,6 +52,7 @@
     <Compile Include="Game\ArenaObject.cs" />
     <Compile Include="Game\Balls\Ball.cs" />
     <Compile Include="Game\Balls\DeadlyBall.cs" />
+    <Compile Include="Game\Balls\Decorator\IBall.cs" />
     <Compile Include="Game\Balls\NormalBall.cs" />
     <Compile Include="Game\Balls\ReboundStrategy\BallDeadlyStrategy.cs" />
     <Compile Include="Game\Balls\ReboundStrategy\IReboundStrategy.cs" />
@@ -61,6 +62,9 @@
     <Compile Include="Game\Builders\IArenaObjectBuilder.cs" />
     <Compile Include="Game\Builders\ObstacleBuilder.cs" />
     <Compile Include="Game\Builders\PowerUpBuilder.cs" />
+    <Compile Include="Game\Command\BallMoveCommand.cs" />
+    <Compile Include="Game\Command\Command.cs" />
+    <Compile Include="Game\Command\LifeLostCommand.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="Game\GameScreen.cs">
       <SubType>Component</SubType>
