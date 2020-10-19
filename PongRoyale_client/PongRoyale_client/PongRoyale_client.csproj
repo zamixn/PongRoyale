@@ -52,6 +52,8 @@
     <Compile Include="Game\ArenaObject.cs" />
     <Compile Include="Game\Balls\Ball.cs" />
     <Compile Include="Game\Balls\DeadlyBall.cs" />
+    <Compile Include="Game\Balls\Decorator\BallCurvedDecorator.cs" />
+    <Compile Include="Game\Balls\Decorator\BallDecorator.cs" />
     <Compile Include="Game\Balls\Decorator\IBall.cs" />
     <Compile Include="Game\Balls\NormalBall.cs" />
     <Compile Include="Game\Balls\ReboundStrategy\BallDeadlyStrategy.cs" />

@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.Balls.Decorator;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Command;
 using PongRoyale_shared;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Balls
 {
-    public abstract class Ball : IClonable<Ball>
+    public abstract class Ball : IBall, IClonable<Ball>
     {
         public BallType bType { get; protected set; }
         public IReboundStrategy reboundStrategy { get; protected set; }
