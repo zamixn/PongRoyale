@@ -45,6 +45,7 @@ namespace PongRoyale_client.Game
                 PlayerPaddles.Add(players[i].Id, paddle);
                 if (Player.Instance.IdMatches(players[i].Id))
                     LocalPaddle = paddle;
+                paddle.AddClampAngles(SharedUtilities.RadToDeg(angle - deltaAngle / 2), SharedUtilities.RadToDeg(angle + deltaAngle / 2));
                 angle += deltaAngle;
             }
 

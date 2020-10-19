@@ -18,5 +18,14 @@ namespace PongRoyale_shared
         {
             return (float)(RadToDegConst * angle);
         }
+
+        public static float Clamp(float f, float min, float max)
+        {
+            if (f < min)
+                return min;
+            if (f > max)
+                return max;
+            return f;
+        }
     }
 }

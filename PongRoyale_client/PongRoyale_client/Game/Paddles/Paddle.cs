@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_shared;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -14,6 +15,8 @@ namespace PongRoyale_client.Game
 {
     public abstract class Paddle
     {
+        private float MinAngle, MaxAngle;
+
         public float AngularPosition { get; protected set; }
         public float AngularSize { get; protected set; }
         public float AngularSpeed { get; protected set; }
@@ -25,6 +28,13 @@ namespace PongRoyale_client.Game
             AngularSpeed = settings.Speed;
             Thickness = settings.Thickness;
         }
+
+        public void AddClampAngles(float minAngle, float maxAngle)
+        {
+            MinAngle = minAngle + AngularSize / 2;
+            MaxAngle = maxAngle - AngularSize / 2;
+        }
+
         public virtual void Render(Graphics g, Pen p, PointF Origin, float arenaDiameter)
         {
             p.Width = Thickness;
@@ -38,7 +48,7 @@ namespace PongRoyale_client.Game
         public virtual void Move(int direction)
         {
             float posChange = AngularSpeed * direction;
-            AngularPosition += posChange;
+            AngularPosition = SharedUtilities.Clamp(AngularPosition + posChange, MinAngle, MaxAngle);
         }
 
         public virtual void LocalUpdate()
