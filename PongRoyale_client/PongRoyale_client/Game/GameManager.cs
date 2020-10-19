@@ -17,8 +17,8 @@ namespace PongRoyale_client.Game
         public int PlayerCount { get; private set; }
 
         public Dictionary<byte, Paddle> PlayerPaddles { get; private set; }
+        public Dictionary<byte, Ball> ArenaBalls { get; private set; }
 
-        public List<Ball> ArenaBalls { get; private set; }
         public bool IsInitted { get; private set; }
 
         public Paddle LocalPaddle { get; private set; }
@@ -32,7 +32,7 @@ namespace PongRoyale_client.Game
             PlayerCount = players.Count;
 
             PlayerPaddles = new Dictionary<byte, Paddle>();
-            ArenaBalls = new List<Ball>();
+            ArenaBalls = new Dictionary<byte, Ball>();
 
             float deltaAngle = SharedUtilities.PI * 2 / PlayerCount;
             float angle = (-SharedUtilities.PI + deltaAngle - SharedUtilities.DegToRad(20)) / 2f;
@@ -50,14 +50,23 @@ namespace PongRoyale_client.Game
 
             BallType bType = RoomSettings.Instance.BallType;
             Ball ball = Ball.CreateBall(bType, GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.Up, GameSettings.DefaultBallSize);
-            ArenaBalls.Add(ball);
+            ArenaBalls.Add(RoomSettings.Instance.GetNextBallId(), ball);
 
             IsInitted = true;
         }
 
-        public void SyncMessageReceived(NetworkMessage message)
+        public void PlayerSyncMessageReceived(NetworkMessage message)
         {
             PlayerPaddles[message.SenderId].SetPosition(NetworkMessage.DecodeFloat(message.ByteContents));
+        }
+
+        public void BallSyncMessageReceived(NetworkMessage message)
+        {
+            NetworkMessage.DencodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions);
+            for(int i = 0; i < ids.Length; i++)
+            {
+                ArenaBalls[ids[i]].SetPosition(positions[i]);
+            }
         }
 
         public void UpdateGameLoop()
@@ -71,7 +80,7 @@ namespace PongRoyale_client.Game
             LocalPaddle.LocalUpdate();
 
             if(Player.Instance.IsRoomMaster)
-                foreach (var ball in ArenaBalls)
+                foreach (var ball in ArenaBalls.Values)
                 {
                     ball.LocalUpdate();
                     ball.CheckCollision(PlayerPaddles);

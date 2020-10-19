@@ -72,7 +72,7 @@ namespace PongRoyale_client.Game
 
         private void DrawBalls(Graphics g)
         {
-            foreach (Ball ball in GameManager.Instance.ArenaBalls)
+            foreach (Ball ball in GameManager.Instance.ArenaBalls.Values)
             {
                 Brush p = new SolidBrush(Color.Yellow);
                 ball.Render(g, p);

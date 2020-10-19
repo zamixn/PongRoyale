@@ -117,21 +117,31 @@ namespace PongRoyale_client
                     });
 
             }
+            FocusForm();
         }
+
 
         private void ChatInput_Submitted(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                ChatController.Instance.OnChatInputSubmitted();
+                if (ServerConnection.Instance.IsConnected())
+                    ChatController.Instance.OnChatInputSubmitted();
+                else
+                {
+                    ChatController.Instance.LogError("Not connected to server!");
+                    ChatController.Instance.ClearInput();
+                }
             }
         }
 
-        private void GameForm_KeyDown(object sender, KeyEventArgs e)
+        // this is an on key down event
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            InputManager.Instance.OnKeyDown(e.KeyCode);
+            InputManager.Instance.OnKeyDown(keyData);
             if (!ChatController.Instance.IsInputSelected())
-                e.SuppressKeyPress = true;
+                return true;
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void GameForm_KeyUp(object sender, KeyEventArgs e)
@@ -154,6 +164,7 @@ namespace PongRoyale_client
             }
             else
                 ChatController.Instance.LogError("Could not start the game");
+            FocusForm();
         }
 
         private void StartLocalButton_Click(object sender, EventArgs e)
@@ -164,6 +175,13 @@ namespace PongRoyale_client
 
             RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, playerIds[0]);
             GameForm.Instance.StartGame();
+            FocusForm();
+        }
+
+        private void FocusForm()
+        {
+            this.Select();
+            this.Focus();
         }
     }
 }

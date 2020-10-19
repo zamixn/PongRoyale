@@ -83,6 +83,10 @@ namespace PongRoyale_client.Game.Balls
         {
             Position += Direction * Speed;
         }
+        public void SetPosition(Vector2 pos)
+        {
+            Position = pos;
+        }
 
         public virtual void CheckCollision(Dictionary<byte, Paddle> paddles)
         {

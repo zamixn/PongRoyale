@@ -9,6 +9,8 @@ namespace PongRoyale_shared
 {
     public class Vector2
     {
+        public const int ByteSize = 8;
+
         public static readonly Vector2 Right = new Vector2(1, 0);
         public static readonly Vector2 Left = new Vector2(-1, 0);
         public static readonly Vector2 Up = new Vector2(0, 1);

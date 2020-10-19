@@ -25,6 +25,14 @@ namespace PongRoyale_client.Singleton
                     RoomMaster = p;
             }
             BallType = ballType;
+            NextBallId = 0;
+        }
+
+
+        public static byte NextBallId = 0;
+        public byte GetNextBallId()
+        {
+            return NextBallId++;
         }
     }
 }

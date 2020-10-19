@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -67,14 +68,18 @@ namespace PongRoyale_shared
         {
             return BitConverter.GetBytes(f);
         }
-        public static float DecodeFloat(byte[] b)
+        public static float DecodeFloat(byte[] b, int index = 0)
         {
-            return BitConverter.ToSingle(b, 0);
+            return BitConverter.ToSingle(b, index);
         }
 
         public static byte[] EncodeVector(Vector2 v)
         {
             return EncodeFloat(v.X).AppendBytes(EncodeFloat(v.Y));
+        }
+        public static Vector2 DecodeVector2(byte[] data, int index = 0)
+        {
+            return new Vector2(DecodeFloat(data, index), DecodeFloat(data, index + 4));
         }
 
         public static byte[] EncodeGameStartMessage(byte[] playerIds, byte[] paddleTypes, byte ballType, byte roomMasterId)
@@ -102,9 +107,22 @@ namespace PongRoyale_shared
             byte[] data = ballIds.PrependBytes(new byte[] { (byte)ballIds.Length });
             for (int i = 0; i < ballPositions.Length; i++)
             {
-                data.AppendBytes(EncodeVector(ballPositions[i]));
+                data = data.AppendBytes(EncodeVector(ballPositions[i]));
             }
             return data;
+        }
+
+        public static void DencodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions)
+        {
+            byte length = data[0];
+            ballIds = new byte[length];
+            ballPositions = new Vector2[length];
+            for (int i = 0; i < length; i++)
+            {
+                int index = 1 + (1 + Vector2.ByteSize) * i;
+                ballIds[i] = data[index];
+                ballPositions[i] = DecodeVector2(data, index + 1);
+            }
         }
     }
 }

@@ -72,22 +72,32 @@ namespace PongRoyale_client.Singleton
             switch (message.Type)
             {
                 case NetworkMessage.MessageType.ConnectedToServer:
-                    SafeInvoke.Instance.Invoke(() => {
+                    SafeInvoke.Instance.Invoke(() =>
+                    {
                         ChatController.Instance.LogInfo($"Player: {Player.ConstructName(message.SenderId)} Joined the room");
                     });
                     break;
                 case NetworkMessage.MessageType.Chat:
-                    SafeInvoke.Instance.Invoke(() => {                     
+                    SafeInvoke.Instance.Invoke(() =>
+                    {
                         ChatController.Instance.LogChatMessage(message.SenderId, NetworkMessage.DecodeString(message.ByteContents));
                     });
                     break;
                 case NetworkMessage.MessageType.PlayerSync:
-                    SafeInvoke.Instance.Invoke(() => {
-                        GameManager.Instance.SyncMessageReceived(message);
+                    SafeInvoke.Instance.Invoke(() =>
+                    {
+                        GameManager.Instance.PlayerSyncMessageReceived(message);
+                    });
+                    break;
+                case NetworkMessage.MessageType.BallSync:
+                    SafeInvoke.Instance.Invoke(() =>
+                    {
+                        GameManager.Instance.BallSyncMessageReceived(message);
                     });
                     break;
                 case NetworkMessage.MessageType.GameStart:
-                    SafeInvoke.Instance.Invoke(() => {
+                    SafeInvoke.Instance.Invoke(() =>
+                    {
                         NetworkMessage.DecodeGameStartMessage(message.ByteContents,
                             out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType, out byte roomMasterId);
                         RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, roomMasterId);

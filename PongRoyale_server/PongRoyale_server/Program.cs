@@ -109,15 +109,12 @@ namespace PongRoyale_server
             switch (networkMessage.Type)
             {
                 case NetworkMessage.MessageType.GameStart:
-                    {
-                        SendMessageToAllPlayers(responseMessage);
-                        break;
-                    }
                 case NetworkMessage.MessageType.Chat:
                     {
                         SendMessageToAllPlayers(responseMessage);
                         break;
                     }
+                case NetworkMessage.MessageType.BallSync:
                 case NetworkMessage.MessageType.PlayerSync:
                     {
                         SendMessageToPlayersExceptSender(responseMessage);
@@ -138,6 +135,8 @@ namespace PongRoyale_server
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.Chat, networkMessage.ByteContents);
                 case NetworkMessage.MessageType.PlayerSync:
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.PlayerSync, networkMessage.ByteContents);
+                case NetworkMessage.MessageType.BallSync:
+                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.BallSync, networkMessage.ByteContents);
                 case NetworkMessage.MessageType.GameStart:
                     byte[] playerIds = Players.Select(p => p.Id).ToArray();
                     byte[] paddleTypes = RandomNumber.GetArray(playerIds.Length, 

@@ -45,7 +45,7 @@ namespace PongRoyale_client.Singleton
             {
                 var balls = GameManager.Instance.ArenaBalls;
                 message = new NetworkMessage(Id, MessageType.BallSync, 
-                    NetworkMessage.EncodeBallData(balls.Select(b => b.Id).ToArray(), balls.Select(b => b.Position).ToArray()));
+                    NetworkMessage.EncodeBallData(balls.Select(b => b.Value.Id).ToArray(), balls.Select(b => b.Value.Position).ToArray()));
                 ServerConnection.Instance.SendDataToServer(message);
             }
         }
