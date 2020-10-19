@@ -117,7 +117,6 @@ namespace PongRoyale_client
                     });
 
             }
-            FocusForm();
         }
 
 
@@ -164,7 +163,6 @@ namespace PongRoyale_client
             }
             else
                 ChatController.Instance.LogError("Could not start the game");
-            FocusForm();
         }
 
         private void StartLocalButton_Click(object sender, EventArgs e)
@@ -175,13 +173,6 @@ namespace PongRoyale_client
 
             RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, playerIds[0]);
             GameForm.Instance.StartGame();
-            FocusForm();
-        }
-
-        private void FocusForm()
-        {
-            this.Select();
-            this.Focus();
         }
     }
 }
