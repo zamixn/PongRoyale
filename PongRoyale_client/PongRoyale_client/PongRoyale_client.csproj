@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="Extensions\MiscExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />
-    <Compile Include="Extensions\Vector2.cs" />
     <Compile Include="Game\AbstractFactory.cs" />
     <Compile Include="Game\ArenaObject.cs" />
     <Compile Include="Game\Balls\Ball.cs" />

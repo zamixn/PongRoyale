@@ -1,6 +1,7 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Singleton;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -34,14 +34,14 @@ namespace PongRoyale_client.Game
             PlayerPaddles = new Dictionary<byte, Paddle>();
             ArenaBalls = new List<Ball>();
 
-            float deltaAngle = Utilities.PI * 2 / PlayerCount;
-            float angle = (-Utilities.PI + deltaAngle - Utilities.DegToRad(20)) / 2f;
+            float deltaAngle = SharedUtilities.PI * 2 / PlayerCount;
+            float angle = (-SharedUtilities.PI + deltaAngle - SharedUtilities.DegToRad(20)) / 2f;
 
             for (int i = 0; i < PlayerCount; i++)
             {
                 PaddleType pType = players[i].PaddleType;
                 Paddle paddle = PaddleFactory.CreatePaddle(pType);
-                paddle.SetPosition(Utilities.RadToDeg(angle));
+                paddle.SetPosition(SharedUtilities.RadToDeg(angle));
                 PlayerPaddles.Add(players[i].Id, paddle);
                 if (Player.Instance.IdMatches(players[i].Id))
                     LocalPaddle = paddle;
@@ -49,7 +49,7 @@ namespace PongRoyale_client.Game
             }
 
             BallType bType = RoomSettings.Instance.BallType;
-            Ball ball = Ball.CreateBall(bType, GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.Right, GameSettings.DefaultBallSize);
+            Ball ball = Ball.CreateBall(bType, GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.Up, GameSettings.DefaultBallSize);
             ArenaBalls.Add(ball);
 
             IsInitted = true;
@@ -69,11 +69,13 @@ namespace PongRoyale_client.Game
         private void UpdateGame()
         {
             LocalPaddle.LocalUpdate();
-            foreach (var ball in ArenaBalls)
-            {
-                ball.LocalUpdate();
-                ball.CheckCollision(PlayerPaddles);
-            }
+
+            if(Player.Instance.IsRoomMaster)
+                foreach (var ball in ArenaBalls)
+                {
+                    ball.LocalUpdate();
+                    ball.CheckCollision(PlayerPaddles);
+                }
         }
 
         private void Render()

@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Game;
+using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Observers;
 using PongRoyale_shared;
 using System;
@@ -37,8 +38,16 @@ namespace PongRoyale_client.Singleton
         public void SyncWithServer()
         {
             Paddle localPlayer = GameManager.Instance.LocalPaddle;
-            NetworkMessage message = new NetworkMessage(Id, MessageType.playerSync, NetworkMessage.EncodeFloat(localPlayer.AngularPosition));
+            NetworkMessage message = new NetworkMessage(Id, MessageType.PlayerSync, NetworkMessage.EncodeFloat(localPlayer.AngularPosition));
             ServerConnection.Instance.SendDataToServer(message);
+
+            if (IsRoomMaster)
+            {
+                var balls = GameManager.Instance.ArenaBalls;
+                message = new NetworkMessage(Id, MessageType.BallSync, 
+                    NetworkMessage.EncodeBallData(balls.Select(b => b.Id).ToArray(), balls.Select(b => b.Position).ToArray()));
+                ServerConnection.Instance.SendDataToServer(message);
+            }
         }
         public void SendStartGameMessage()
         {

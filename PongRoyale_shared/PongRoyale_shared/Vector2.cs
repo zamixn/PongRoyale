@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PongRoyale_client.Extensions
+namespace PongRoyale_shared
 {
     public class Vector2
     {
@@ -43,12 +43,12 @@ namespace PongRoyale_client.Extensions
         public static float SignedAngleDeg(Vector2 a, Vector2 b)
         {
             float angle = SignedAngle(a, b);
-            return Utilities.RadToDeg(angle);
+            return SharedUtilities.RadToDeg(angle);
         }
         public static float AngleDeg(Vector2 a, Vector2 b)
         {
             float angle = Angle(a, b);
-            return Utilities.RadToDeg(angle);
+            return SharedUtilities.RadToDeg(angle);
         }
 
         public float Magnitude()
@@ -63,7 +63,7 @@ namespace PongRoyale_client.Extensions
 
         public static Vector2 RandomInUnitCircle()
         {
-            float theta = (2.0f * Utilities.PI) * RandomNumber.NextFloat();
+            float theta = (2.0f * SharedUtilities.PI) * RandomNumber.NextFloat();
             return new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
         }
 

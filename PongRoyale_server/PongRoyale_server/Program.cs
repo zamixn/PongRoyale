@@ -105,25 +105,22 @@ namespace PongRoyale_server
 
         private static void HandleRespondingToMessage(Player sender, NetworkMessage networkMessage)
         {
+            NetworkMessage responseMessage = GetResponse(sender, networkMessage);
             switch (networkMessage.Type)
             {
                 case NetworkMessage.MessageType.GameStart:
-                case NetworkMessage.MessageType.Chat:
                     {
-                        NetworkMessage responseMessage = GetResponse(sender, networkMessage);
-                        if (responseMessage != null)
-                            foreach (Player p in Players)
-                                SendMessage(p, responseMessage);
+                        SendMessageToAllPlayers(responseMessage);
                         break;
                     }
-                case NetworkMessage.MessageType.playerSync:
+                case NetworkMessage.MessageType.Chat:
                     {
-                        NetworkMessage responseMessage = GetResponse(sender, networkMessage);
-                        if (responseMessage != null)
-                            foreach (Player p in Players) {
-                                if (p.Id != networkMessage.SenderId)
-                                    SendMessage(p, responseMessage);
-                            }
+                        SendMessageToAllPlayers(responseMessage);
+                        break;
+                    }
+                case NetworkMessage.MessageType.PlayerSync:
+                    {
+                        SendMessageToPlayersExceptSender(responseMessage);
                         break;
                     }
                 default:
@@ -132,14 +129,15 @@ namespace PongRoyale_server
             }
         }
 
+
         private static NetworkMessage GetResponse(Player player, NetworkMessage networkMessage)
         {
             switch (networkMessage.Type)
             {
                 case NetworkMessage.MessageType.Chat:
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.Chat, networkMessage.ByteContents);
-                case NetworkMessage.MessageType.playerSync:
-                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.playerSync, networkMessage.ByteContents);
+                case NetworkMessage.MessageType.PlayerSync:
+                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.PlayerSync, networkMessage.ByteContents);
                 case NetworkMessage.MessageType.GameStart:
                     byte[] playerIds = Players.Select(p => p.Id).ToArray();
                     byte[] paddleTypes = RandomNumber.GetArray(playerIds.Length, 
@@ -151,6 +149,20 @@ namespace PongRoyale_server
                     break;
             }
             return null;
+        }
+
+        private static void SendMessageToAllPlayers(NetworkMessage message)
+        {
+            if (message != null)
+                foreach (Player p in Players)
+                    SendMessage(p, message);
+        }
+        private static void SendMessageToPlayersExceptSender(NetworkMessage message)
+        {
+            if (message != null)
+                foreach (Player p in Players)
+                    if (p.Id != message.SenderId)
+                        SendMessage(p, message);
         }
 
         public static void SendMessage(Player player, NetworkMessage networkMessage)

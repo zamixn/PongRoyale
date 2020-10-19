@@ -11,8 +11,9 @@ namespace PongRoyale_shared
         {
             ConnectedToServer = 0,  // server sent only
             Chat = 1,
-            playerSync = 2,
-            GameStart = 3
+            PlayerSync = 2,
+            BallSync = 3,
+            GameStart = 4
         }
 
         public byte SenderId;
@@ -71,6 +72,11 @@ namespace PongRoyale_shared
             return BitConverter.ToSingle(b, 0);
         }
 
+        public static byte[] EncodeVector(Vector2 v)
+        {
+            return EncodeFloat(v.X).AppendBytes(EncodeFloat(v.Y));
+        }
+
         public static byte[] EncodeGameStartMessage(byte[] playerIds, byte[] paddleTypes, byte ballType, byte roomMasterId)
         {
             byte[] data = playerIds.AppendBytes(paddleTypes)
@@ -89,6 +95,16 @@ namespace PongRoyale_shared
                 playerIds[i] = data[i + 3];
                 paddleTypes[i] = (PaddleType)data[i + 3 + playerCount];
             }
+        }
+
+        public static byte[] EncodeBallData(byte[] ballIds, Vector2[] ballPositions)
+        {
+            byte[] data = ballIds.PrependBytes(new byte[] { (byte)ballIds.Length });
+            for (int i = 0; i < ballPositions.Length; i++)
+            {
+                data.AppendBytes(EncodeVector(ballPositions[i]));
+            }
+            return data;
         }
     }
 }

@@ -81,7 +81,7 @@ namespace PongRoyale_client.Singleton
                         ChatController.Instance.LogChatMessage(message.SenderId, NetworkMessage.DecodeString(message.ByteContents));
                     });
                     break;
-                case NetworkMessage.MessageType.playerSync:
+                case NetworkMessage.MessageType.PlayerSync:
                     SafeInvoke.Instance.Invoke(() => {
                         GameManager.Instance.SyncMessageReceived(message);
                     });

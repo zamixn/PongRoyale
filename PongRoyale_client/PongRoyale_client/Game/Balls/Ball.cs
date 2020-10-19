@@ -19,7 +19,7 @@ namespace PongRoyale_client.Game.Balls
         public Vector2 Direction { get; private set; }
         public float Diameter { get; private set; }
         public float Speed { get; private set; }
-        public int ID { get; protected set; }
+        public byte Id { get; protected set; }
 
         public void OnCollisionWithPaddle(Paddle coll)
         {

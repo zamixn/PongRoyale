@@ -1,6 +1,7 @@
 ﻿using PongRoyale_client.Game;
 using PongRoyale_client.Observers;
 using PongRoyale_client.Singleton;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -153,6 +154,16 @@ namespace PongRoyale_client
             }
             else
                 ChatController.Instance.LogError("Could not start the game");
+        }
+
+        private void StartLocalButton_Click(object sender, EventArgs e)
+        {
+            byte[] playerIds = new byte[] { 0 };
+            PaddleType[] paddleTypes = new PaddleType[] { PaddleType.Normal };
+            BallType ballType = BallType.Normal;
+
+            RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, playerIds[0]);
+            GameForm.Instance.StartGame();
         }
     }
 }

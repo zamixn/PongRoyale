@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
