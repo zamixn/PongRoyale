@@ -21,6 +21,7 @@ namespace PongRoyale_client.Game
         public float AngularSize { get; protected set; }
         public float AngularSpeed { get; protected set; }
         public float Thickness { get; private set; }
+        public int Life { get; protected set; }
 
         public Paddle(PaddleSettings settings)
         {
@@ -43,6 +44,11 @@ namespace PongRoyale_client.Game
         public virtual void SetPosition(float position)
         {
             AngularPosition = position;
+        }
+
+        public virtual void AddLife(int amount)
+        {
+            Life += amount;
         }
 
         public virtual void Move(int direction)

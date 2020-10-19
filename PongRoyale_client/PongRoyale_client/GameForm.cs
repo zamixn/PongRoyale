@@ -22,8 +22,6 @@ namespace PongRoyale_client
     { 
         public static GameForm Instance;
         private long FrameCount;
-        //private const long FramesToWaitUntilGameStart = 1;
-        //EventHandler GameLoopWaitHandler;
         EventHandler GameLoopHandler;
 
         private LifeObserver LifeObserver;
@@ -38,9 +36,6 @@ namespace PongRoyale_client
             ChatController.Instance.Setup(Chat, ChatInput);
             ConnectToServerButton.Text = Constants.ConnectToServer;
 
-            //GameLoopWaitHandler = new EventHandler(this.GameLoopWait_Tick);
-            //GameLoop.Tick += GameLoopWaitHandler;
-            //GameLoop.Start();
             LifeObserver = new LifeObserver();
         }
 
@@ -50,20 +45,10 @@ namespace PongRoyale_client
                 ServerConnection.Instance.Disconnect();
         }
 
-        //private void GameLoopWait_Tick(object sender, EventArgs e)
-        //{
-        //    FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
-        //    if (FrameCount > FramesToWaitUntilGameStart)
-        //    {
-        //        StartGame();
-        //    }
-        //}
-
 
         public void StartGame()
         {
             GameManager.Instance.InitGame(GameScreen);
-            //GameLoop.Tick -= GameLoopWaitHandler;
             GameLoopHandler = new EventHandler(GameLoop_Tick);
             GameLoop.Tick += GameLoopHandler;
             GameLoop.Start();

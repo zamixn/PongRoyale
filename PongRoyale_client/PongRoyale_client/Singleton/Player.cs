@@ -23,7 +23,7 @@ namespace PongRoyale_client.Singleton
 
         public byte Id { get; private set; }
         public bool IsRoomMaster { get { return IdMatches(RoomSettings.Instance.RoomMaster.Id); } }
-        public int Life;
+        public int Life { get; private set; }
 
         public Player()
         {

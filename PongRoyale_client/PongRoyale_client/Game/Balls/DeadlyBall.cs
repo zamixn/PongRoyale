@@ -10,6 +10,20 @@ namespace PongRoyale_client.Game.Balls
 {
     class DeadlyBall : Ball
     {
+        public override Ball Clone()
+        {
+            return new DeadlyBall()
+            {
+                bType = bType,
+                reboundStrategy = reboundStrategy,
+                Position = Position,
+                Direction = Direction,
+                Diameter = Diameter,
+                Speed = Speed,
+                Id = Id
+            };
+        }
+
         public override void Render(Graphics g, Brush b)
         {
             b = new SolidBrush(Color.Black);

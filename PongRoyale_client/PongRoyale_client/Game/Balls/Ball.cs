@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
+using PongRoyale_client.Game.Command;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Balls
 {
-    public abstract class Ball
+    public abstract class Ball : IClonable<Ball>
     {
-        public BallType bType;
-        public IReboundStrategy reboundStrategy { get; set; }
+        public BallType bType { get; protected set; }
+        public IReboundStrategy reboundStrategy { get; protected set; }
         public Vector2 Position { get; protected set; }
-        public Vector2 Direction { get; private set; }
-        public float Diameter { get; private set; }
-        public float Speed { get; private set; }
+        public Vector2 Direction { get; protected set; }
+        public float Diameter { get; protected set; }
+        public float Speed { get; protected set; }
         public byte Id { get; protected set; }
 
         public void OnCollisionWithPaddle(Paddle coll)
@@ -42,6 +43,8 @@ namespace PongRoyale_client.Game.Balls
             }
             Rebound(reboundStrategy);
         }
+
+        public abstract Ball Clone();
 
         private void Rebound(IReboundStrategy reboundStrategy)
         {
@@ -81,11 +84,16 @@ namespace PongRoyale_client.Game.Balls
 
         public virtual void LocalUpdate()
         {
-            Position += Direction * Speed;
+            Move(Direction * Speed);
         }
         public void SetPosition(Vector2 pos)
         {
             Position = pos;
+        }
+
+        public void Move(Vector2 posOffset)
+        {
+            Position += posOffset;
         }
 
         public virtual void CheckCollision(Dictionary<byte, Paddle> paddles)
