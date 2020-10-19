@@ -24,6 +24,11 @@ namespace PongRoyale_client.Game.Balls
             };
         }
 
+        public override void LocalMove()
+        {
+            base.LocalMove();
+        }
+
         public override void Render(Graphics g, Brush b)
         {
             b = new SolidBrush(Color.Black);

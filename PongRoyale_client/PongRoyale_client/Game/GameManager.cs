@@ -83,7 +83,7 @@ namespace PongRoyale_client.Game
             if(Player.Instance.IsRoomMaster)
                 foreach (var ball in ArenaBalls.Values)
                 {
-                    ball.LocalUpdate();
+                    ball.LocalMove();
                     ball.CheckCollision(PlayerPaddles);
                 }
         }

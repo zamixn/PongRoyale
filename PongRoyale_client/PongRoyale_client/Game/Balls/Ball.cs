@@ -83,7 +83,7 @@ namespace PongRoyale_client.Game.Balls
             return ball;
         }
 
-        public virtual void LocalUpdate()
+        public override void LocalMove()
         {
             Move(Direction * Speed);
         }
