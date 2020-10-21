@@ -40,6 +40,7 @@ namespace PongRoyale_client
             this.SyncLoop = new System.Windows.Forms.Timer(this.components);
             this.StartGameButton = new System.Windows.Forms.Button();
             this.StartLocalButton = new System.Windows.Forms.Button();
+            this.IPTextBox = new System.Windows.Forms.TextBox();
             this.GameScreen = new PongRoyale_client.Game.GameScreen();
             this.SuspendLayout();
             // 
@@ -60,7 +61,7 @@ namespace PongRoyale_client
             // ConnectToServerButton
             // 
             this.ConnectToServerButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConnectToServerButton.Location = new System.Drawing.Point(642, 27);
+            this.ConnectToServerButton.Location = new System.Drawing.Point(642, 58);
             this.ConnectToServerButton.Name = "ConnectToServerButton";
             this.ConnectToServerButton.Size = new System.Drawing.Size(160, 23);
             this.ConnectToServerButton.TabIndex = 1;
@@ -85,13 +86,10 @@ namespace PongRoyale_client
             this.Chat.TabIndex = 5;
             this.Chat.Text = "";
             // 
-            // SyncLoop
-            // 
-            // 
             // StartGameButton
             // 
             this.StartGameButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.StartGameButton.Location = new System.Drawing.Point(642, 56);
+            this.StartGameButton.Location = new System.Drawing.Point(642, 87);
             this.StartGameButton.Name = "StartGameButton";
             this.StartGameButton.Size = new System.Drawing.Size(160, 23);
             this.StartGameButton.TabIndex = 8;
@@ -102,13 +100,23 @@ namespace PongRoyale_client
             // StartLocalButton
             // 
             this.StartLocalButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.StartLocalButton.Location = new System.Drawing.Point(642, 85);
+            this.StartLocalButton.Location = new System.Drawing.Point(642, 116);
             this.StartLocalButton.Name = "StartLocalButton";
             this.StartLocalButton.Size = new System.Drawing.Size(160, 23);
             this.StartLocalButton.TabIndex = 9;
             this.StartLocalButton.Text = "local game";
             this.StartLocalButton.UseVisualStyleBackColor = true;
             this.StartLocalButton.Click += new System.EventHandler(this.StartLocalButton_Click);
+            // 
+            // IPTextBox
+            // 
+            this.IPTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.IPTextBox.Location = new System.Drawing.Point(642, 32);
+            this.IPTextBox.Name = "IPTextBox";
+            this.IPTextBox.Size = new System.Drawing.Size(159, 20);
+            this.IPTextBox.TabIndex = 10;
+            this.IPTextBox.Text = "78.58.170.115:6969";
+            this.IPTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // GameScreen
             // 
@@ -123,6 +131,7 @@ namespace PongRoyale_client
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(814, 450);
+            this.Controls.Add(this.IPTextBox);
             this.Controls.Add(this.StartLocalButton);
             this.Controls.Add(this.StartGameButton);
             this.Controls.Add(this.GameScreen);
@@ -153,6 +162,7 @@ namespace PongRoyale_client
         private System.Windows.Forms.Timer SyncLoop;
         private System.Windows.Forms.Button StartGameButton;
         private System.Windows.Forms.Button StartLocalButton;
+        private System.Windows.Forms.TextBox IPTextBox;
     }
 }
 

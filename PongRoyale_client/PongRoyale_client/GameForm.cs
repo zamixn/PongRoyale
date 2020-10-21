@@ -73,7 +73,7 @@ namespace PongRoyale_client
         {
             if (!ServerConnection.Instance.IsConnected())
             {
-                ServerConnection.Instance.Connect(
+                ServerConnection.Instance.Connect(connectionString: IPTextBox.Text,
                     onConnected: () =>
                     {
                         ChatController.Instance.LogInfo("Connected to server.");
@@ -123,15 +123,20 @@ namespace PongRoyale_client
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             InputManager.Instance.OnKeyDown(keyData);
-            if (!ChatController.Instance.IsInputSelected())
+            if (!IsTextBoxSelected())
                 return true;
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private bool IsTextBoxSelected()
+        {
+            return ChatController.Instance.IsInputSelected() || IPTextBox.Focused;
         }
 
         private void GameForm_KeyUp(object sender, KeyEventArgs e)
         {
             InputManager.Instance.OnKeyUp(e.KeyCode);
-            if(!ChatController.Instance.IsInputSelected())
+            if(!IsTextBoxSelected())
                 e.SuppressKeyPress = true;
         }
 

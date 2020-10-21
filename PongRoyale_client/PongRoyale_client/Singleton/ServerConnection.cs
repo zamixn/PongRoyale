@@ -17,11 +17,17 @@ namespace PongRoyale_client.Singleton
         private TcpClient TcpClient;
         private Thread ServerMessageHandler;
 
-        public void Connect(Action onConnected = null, Action<Exception> onException = null)
+        public void Connect(string connectionString = "", Action onConnected = null, Action<Exception> onException = null)
         {
             try
             {
-                TcpClient client = new TcpClient(Constants.ServerIp, Constants.ServerPort);
+                connectionString = string.IsNullOrEmpty(connectionString) ? 
+                    $"{Constants.ServerIp}:{Constants.ServerPort}" : connectionString;
+
+                string[] parts = connectionString.Split(':');
+                string ip = parts[0];
+                int port = int.Parse(parts[1]);
+                TcpClient client = new TcpClient(ip, port);
                 TcpClient = client;
                 NetworkStream stream = TcpClient.GetStream();
                 byte[] buffer = new byte[1024];
