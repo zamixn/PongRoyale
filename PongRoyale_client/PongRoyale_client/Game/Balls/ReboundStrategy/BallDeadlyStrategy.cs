@@ -11,9 +11,9 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
 {
     class BallDeadlyStrategy : IReboundStrategy
     {
-        public Vector2 ReboundDirection(Vector2 ballDirection)
+        public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal)
         {
-            throw new NotImplementedException();
+            return Vector2.Zero;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace PongRoyale_shared
         public static readonly Vector2 Left = new Vector2(-1, 0);
         public static readonly Vector2 Up = new Vector2(0, 1);
         public static readonly Vector2 Down = new Vector2(0, -1);
+        public static readonly Vector2 Zero = new Vector2(0, 0);
 
         public float X;
         public float Y;
@@ -25,6 +26,12 @@ namespace PongRoyale_shared
         {
             X = x;
             Y = y;
+        }
+
+        public Vector2(double x, double y)
+        {
+            X = (float)x;
+            Y = (float)y;
         }
 
         public static float Distance(Vector2 a, Vector2 b)
@@ -75,6 +82,10 @@ namespace PongRoyale_shared
         }
 
         public static Vector2 operator * (Vector2 a, float b)
+        {
+            return new Vector2(a.X * b, a.Y * b);
+        }
+        public static Vector2 operator *(float b, Vector2 a)
         {
             return new Vector2(a.X * b, a.Y * b);
         }

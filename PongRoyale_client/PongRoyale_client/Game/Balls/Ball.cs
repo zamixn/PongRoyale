@@ -16,7 +16,6 @@ namespace PongRoyale_client.Game.Balls
     public abstract class Ball : IBall, IClonable<Ball>
     {
         public BallType bType { get; protected set; }
-        public IReboundStrategy reboundStrategy { get; protected set; }
         public Vector2 Position { get; protected set; }
         public Vector2 Direction { get; protected set; }
         public float Diameter { get; protected set; }
@@ -25,31 +24,38 @@ namespace PongRoyale_client.Game.Balls
 
         public void OnCollisionWithPaddle(Paddle coll)
         {
+            Vector2 center = GameManager.Instance.GameScreen.GetCenter().ToVector2();
+            float radius = GameManager.Instance.GameScreen.GetArenaRadius();
+            float angle = coll.GetCenterAngle();
+            Vector2 paddleCenter = Utilities.GetPointOnCircle(center, radius, angle);
+            Vector2 paddleNormal = (center - paddleCenter).Normalize();
+
+            IReboundStrategy reboundStrategy;
             switch (bType)
             {
                 case BallType.Deadly:
                     reboundStrategy = new BallDeadlyStrategy();
                     break;
                 case BallType.Normal:
-                    if (coll.AngularSpeed < 0)
+                    if (coll.CurrentAngularSpeed < 0)
                         reboundStrategy = new PaddleMovingLeft();
-                    else if (coll.AngularSpeed == 0)
-                        reboundStrategy = new PaddleNotMoving();
-                    else if (coll.AngularSpeed > 0)
+                    else if (coll.CurrentAngularSpeed > 0)
                         reboundStrategy = new PaddleMovingRight();
+                    else //if (coll.AngularSpeed == 0)
+                        reboundStrategy = new PaddleNotMoving();
                     break;
                 default:
                     reboundStrategy = null;
                     break;
             }
-            Rebound(reboundStrategy);
+            Rebound(reboundStrategy, paddleNormal);
         }
 
         public abstract Ball Clone();
 
-        private void Rebound(IReboundStrategy reboundStrategy)
+        private void Rebound(IReboundStrategy reboundStrategy, Vector2 surfaceNormal)
         {
-            Direction = reboundStrategy.ReboundDirection(Direction);
+            Direction = reboundStrategy.ReboundDirection(Direction, surfaceNormal);
         }
 
         public virtual void Render(Graphics g, Brush p)
@@ -113,7 +119,7 @@ namespace PongRoyale_client.Game.Balls
                 {
                     if (Utilities.IsInsideAngle(angle, pAngle1, pAngle2))
                     {
-                        Direction = -Direction + Vector2.RandomInUnitCircle().Normalize() * 0.1f;
+                        OnCollisionWithPaddle(p);
                     }
                 }
             }

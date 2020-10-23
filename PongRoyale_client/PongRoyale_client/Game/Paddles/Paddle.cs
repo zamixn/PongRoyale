@@ -1,4 +1,5 @@
-﻿using PongRoyale_shared;
+﻿using PongRoyale_client.Extensions;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,17 +18,27 @@ namespace PongRoyale_client.Game
     {
         private float MinAngle, MaxAngle;
 
-        public float AngularPosition { get; protected set; }
+        private float _angPos;
+        public float AngularPosition { 
+            get { return _angPos; } 
+            protected set 
+            {
+                float posChange = value - _angPos;
+                CurrentAngularSpeed = posChange.Clamp(-MaxAngularSpeed, MaxAngularSpeed);
+                _angPos = value;
+            } }
         public float AngularSize { get; protected set; }
-        public float AngularSpeed { get; protected set; }
+        public float MaxAngularSpeed { get; protected set; }
+        public float CurrentAngularSpeed { get; protected set; }
         public float Thickness { get; private set; }
         public int Life { get; protected set; }
 
         public Paddle(PaddleSettings settings)
         {
             AngularSize = settings.Size;
-            AngularSpeed = settings.Speed;
+            MaxAngularSpeed = settings.Speed;
             Thickness = settings.Thickness;
+            CurrentAngularSpeed = 0;
         }
 
         public void AddClampAngles(float minAngle, float maxAngle)
@@ -41,6 +52,12 @@ namespace PongRoyale_client.Game
             p.Width = Thickness;
             g.DrawArc(p, Origin.X, Origin.Y, arenaDiameter, arenaDiameter, AngularPosition, AngularSize);
         }
+        public float GetCenterAngle()
+        {
+            return SharedUtilities.DegToRad(AngularPosition + AngularSize / 2f);
+        }
+
+
         public virtual void SetPosition(float position)
         {
             AngularPosition = position;
@@ -51,9 +68,14 @@ namespace PongRoyale_client.Game
             Life += amount;
         }
 
+        public virtual void OnPosSync(float pos)
+        {
+            float posChange = pos - AngularPosition;
+            AngularPosition = pos;
+        }
         public virtual void Move(int direction)
         {
-            float posChange = AngularSpeed * direction;
+            float posChange = MaxAngularSpeed * direction;
             AngularPosition = SharedUtilities.Clamp(AngularPosition + posChange, MinAngle, MaxAngle);
         }
 
@@ -63,6 +85,8 @@ namespace PongRoyale_client.Game
                 Move(-1);
             else if (InputManager.Instance.IsKeyDown(Keys.Right))
                 Move(1);
+            else
+                Move(0);
         }
     }
 }

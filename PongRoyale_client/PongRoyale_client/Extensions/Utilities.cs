@@ -18,7 +18,7 @@ namespace PongRoyale_client.Extensions
         }
         public static Vector2 GetPointOnCircle(Vector2 origin, float radius, float angle)
         {
-            Vector2 point = new Vector2(origin.X + radius * (float)Math.Cos(angle), origin.Y + radius * (float)Math.Sin(angle));
+            Vector2 point = new Vector2(origin.X + radius * Math.Cos(angle), origin.Y + radius * Math.Sin(angle));
             return point;
         }
         public static Vector2 ToVector2(this PointF p)

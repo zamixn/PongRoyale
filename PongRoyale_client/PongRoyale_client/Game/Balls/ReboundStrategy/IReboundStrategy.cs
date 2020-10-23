@@ -11,6 +11,6 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
 {
     public interface IReboundStrategy
     {
-        Vector2 ReboundDirection(Vector2 ballDirection);
+        Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal);
     }
 }

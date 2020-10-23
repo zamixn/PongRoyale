@@ -58,7 +58,8 @@ namespace PongRoyale_client.Game
 
         public void PlayerSyncMessageReceived(NetworkMessage message)
         {
-            PlayerPaddles[message.SenderId].SetPosition(NetworkMessage.DecodeFloat(message.ByteContents));
+            float newPos = NetworkMessage.DecodeFloat(message.ByteContents);
+            PlayerPaddles[message.SenderId].OnPosSync(newPos);
         }
 
         public void BallSyncMessageReceived(NetworkMessage message)

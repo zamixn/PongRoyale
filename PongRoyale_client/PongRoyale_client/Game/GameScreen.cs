@@ -67,6 +67,10 @@ namespace PongRoyale_client.Game
                 DrawArena(g);
                 DrawPlayers(g);
                 DrawBalls(g);
+
+                // debug stuff
+                DrawPaddleNormals(g);
+                DrawBallCollisions(g);
             }
         }
 
@@ -87,7 +91,6 @@ namespace PongRoyale_client.Game
                 paddle.Render(g, p, Origin, Diameter);
                 p.Dispose();
             }
-
         }
 
         private void DrawBorder(Graphics g)
@@ -141,5 +144,38 @@ namespace PongRoyale_client.Game
                 AreStatsInitted = true;
             }
         }
+
+        #region debug stuff
+        private void DrawPaddleNormals(Graphics g)
+        {
+            Pen p = new Pen(Color.Black);
+            foreach (Paddle paddle in GameManager.Instance.PlayerPaddles.Values)
+            {
+                float angle = paddle.GetCenterAngle();
+                Vector2 paddleCenter = Utilities.GetPointOnCircle(Center.ToVector2(), Radius, angle);
+                Vector2 paddleNormal = (Center.ToVector2() - paddleCenter).Normalize();
+                g.DrawVector(p, paddleCenter, paddleNormal);
+            }
+            p.Dispose();
+        }
+
+        private void DrawBallCollisions(Graphics g)
+        {
+            Pen p = new Pen(Color.Blue);
+            foreach (Paddle paddle in GameManager.Instance.PlayerPaddles.Values)
+            {
+                float angle = paddle.GetCenterAngle();
+                Vector2 paddleCenter = Utilities.GetPointOnCircle(Center.ToVector2(), Radius, angle);
+                Vector2 paddleNormal = (Center.ToVector2() - paddleCenter).Normalize();
+                foreach (Ball b in GameManager.Instance.ArenaBalls.Values)
+                {
+                    Vector2 ballDir = b.Direction;
+                    Vector2 bounceDir = SharedUtilities.GetBounceDirection(paddleNormal, ballDir);
+                    g.DrawVector(p, paddleCenter, bounceDir);
+                }
+            }
+            p.Dispose();
+        }
+        #endregion
     }
 }

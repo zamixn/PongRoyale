@@ -15,7 +15,6 @@ namespace PongRoyale_client.Game.Balls
             return new NormalBall()
             {
                 bType = bType,
-                reboundStrategy = reboundStrategy,
                 Position = Position,
                 Direction = Direction,
                 Diameter = Diameter,

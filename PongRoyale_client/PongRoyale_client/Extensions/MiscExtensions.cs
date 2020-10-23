@@ -17,5 +17,10 @@ namespace PongRoyale_client.Extensions
         { 
             return (a + 360) % 360;
         }
+
+        public static float Clamp(this float f, float min, float max)
+        {
+            return f < min ? min : f > max ? max : f;
+        }
     }
 }
