@@ -1,6 +1,6 @@
 ﻿namespace PongRoyale_client.Game
 {
-    partial class GameScreen
+    partial class GameplayScreen
     {
         /// <summary>
         /// Required designer variable.

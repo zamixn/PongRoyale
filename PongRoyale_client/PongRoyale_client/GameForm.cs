@@ -32,9 +32,7 @@ namespace PongRoyale_client
             InitializeComponent();
 
             SafeInvoke.Instance.Setup(this);
-
-            ChatController.Instance.Setup(Chat, ChatInput);
-            ConnectToServerButton.Text = Constants.ConnectToServer;
+            MainMenu.ConnectToServerButton.Text = Constants.ConnectToServer;
 
             LifeObserver = new LifeObserver();
         }
@@ -48,7 +46,7 @@ namespace PongRoyale_client
 
         public void StartGame()
         {
-            GameManager.Instance.InitGame(GameScreen);
+            GameplayManager.Instance.InitGame(GameScreen);
             GameLoopHandler = new EventHandler(GameLoop_Tick);
             GameLoop.Tick += GameLoopHandler;
             GameLoop.Start();
@@ -58,7 +56,7 @@ namespace PongRoyale_client
         private void GameLoop_Tick(object sender, EventArgs e)
         {
             FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
-            GameManager.Instance.UpdateGameLoop();
+            GameplayManager.Instance.UpdateGameLoop();
         }
 
         private void SyncLoop_Tick(object sender, EventArgs e)
@@ -69,54 +67,13 @@ namespace PongRoyale_client
             }
         }
 
-        private void ConnectToServerButton_Click(object sender, EventArgs e)
+        public void OnConnectedToServer()
         {
-            if (!ServerConnection.Instance.IsConnected())
-            {
-                ServerConnection.Instance.Connect(connectionString: IPTextBox.Text,
-                    onConnected: () =>
-                    {
-                        ChatController.Instance.LogInfo("Connected to server.");
-                        ChatController.Instance.LogInfo($"Welcome to the chat: {Player.Instance.PlayerName}!");
-                        Player.Instance.Register(LifeObserver);
-                        ConnectToServerButton.Text = Constants.DisconnectFromServer;
-
-                    },
-                    onException: (ex) =>
-                    {
-                        ChatController.Instance.LogError("Failed to connect to server.");
-                    });
-            }
-            else
-            {
-                ServerConnection.Instance.Disconnect(
-                    onConnected: () =>
-                    {
-                        ChatController.Instance.LogInfo("Disconnected from server.");
-                        Player.Instance.Unregister(LifeObserver);
-                        ConnectToServerButton.Text = Constants.ConnectToServer;
-                    },
-                    onException: (ex) => 
-                    {
-                        ChatController.Instance.LogError("Failed to disconnect from server.");
-                    });
-
-            }
+            Player.Instance.Register(LifeObserver);
         }
-
-
-        private void ChatInput_Submitted(object sender, KeyEventArgs e)
+        public void OnDisconnectedToServer()
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                if (ServerConnection.Instance.IsConnected())
-                    ChatController.Instance.OnChatInputSubmitted();
-                else
-                {
-                    ChatController.Instance.LogError("Not connected to server!");
-                    ChatController.Instance.ClearInput();
-                }
-            }
+            Player.Instance.Unregister(LifeObserver);
         }
 
         // this is an on key down event
@@ -130,7 +87,7 @@ namespace PongRoyale_client
 
         private bool IsTextBoxSelected()
         {
-            return ChatController.Instance.IsInputSelected() || IPTextBox.Focused;
+            return ChatController.Instance.IsInputSelected() || MainMenu.IPTextBox.Focused;
         }
 
         private void GameForm_KeyUp(object sender, KeyEventArgs e)
@@ -143,29 +100,6 @@ namespace PongRoyale_client
         private void GameForm_Load(object sender, EventArgs e)
         {
 
-        }
-
-        private void StartGameButton_Click(object sender, EventArgs e)
-        {
-            if (ServerConnection.Instance.IsConnected())
-            {
-                Player.Instance.SendStartGameMessage();
-            }
-            else
-                ChatController.Instance.LogError("Could not start the game");
-        }
-
-        private void StartLocalButton_Click(object sender, EventArgs e)
-        {
-            byte[] playerIds = new byte[] { 0 };
-            PaddleType[] paddleTypes = new PaddleType[] { 
-                //(PaddleType)RandomNumber.RandomNumb((int)PaddleType.Normal, (int)PaddleType.Short + 1)
-                PaddleType.Normal
-            };
-            BallType ballType = BallType.Normal;
-
-            RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, playerIds[0]);
-            GameForm.Instance.StartGame();
         }
     }
 }

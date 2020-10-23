@@ -67,12 +67,12 @@
     <Compile Include="Game\Command\BallMoveCommand.cs" />
     <Compile Include="Game\Command\Command.cs" />
     <Compile Include="Game\Command\LifeLostCommand.cs" />
-    <Compile Include="Game\GameManager.cs" />
-    <Compile Include="Game\GameScreen.cs">
+    <Compile Include="Game\GameplayManager.cs" />
+    <Compile Include="Game\GameplayScreen.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Game\GameScreen.Designer.cs">
-      <DependentUpon>GameScreen.cs</DependentUpon>
+    <Compile Include="Game\GameplayScreen.Designer.cs">
+      <DependentUpon>GameplayScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\GameSettings.cs" />
     <Compile Include="Game\InputManager.cs" />
@@ -87,8 +87,21 @@
     <Compile Include="Game\Powerups\Powerup.cs" />
     <Compile Include="Game\Powerups\PowerupType.cs" />
     <Compile Include="Game\SolidFactory.cs" />
+    <Compile Include="Menu\ChatUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Menu\ChatUI.Designer.cs">
+      <DependentUpon>ChatUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\MainMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Menu\MainMenu.Designer.cs">
+      <DependentUpon>MainMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Observers\IObserver.cs" />
     <Compile Include="Observers\LifeObserver.cs" />
+    <Compile Include="Singleton\MainMenuSettings.cs" />
     <Compile Include="Singleton\RoomSettings.cs" />
     <Compile Include="Singleton\SafeInvoke.cs" />
     <Compile Include="Singleton\ChatController.cs" />
@@ -106,6 +119,12 @@
     <Compile Include="Singleton\ServerConnection.cs" />
     <EmbeddedResource Include="GameForm.resx">
       <DependentUpon>GameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\ChatUI.resx">
+      <DependentUpon>ChatUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu\MainMenu.resx">
+      <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

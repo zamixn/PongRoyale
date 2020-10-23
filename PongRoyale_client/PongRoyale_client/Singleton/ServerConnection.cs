@@ -92,13 +92,13 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.PlayerSync:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        GameManager.Instance.PlayerSyncMessageReceived(message);
+                        GameplayManager.Instance.PlayerSyncMessageReceived(message);
                     });
                     break;
                 case NetworkMessage.MessageType.BallSync:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        GameManager.Instance.BallSyncMessageReceived(message);
+                        GameplayManager.Instance.BallSyncMessageReceived(message);
                     });
                     break;
                 case NetworkMessage.MessageType.GameStart:

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game
 {
-    public class GameManager : Singleton<GameManager>
+    public class GameplayManager : Singleton<GameplayManager>
     {
         public int PlayerCount { get; private set; }
 
@@ -22,9 +22,9 @@ namespace PongRoyale_client.Game
         public bool IsInitted { get; private set; }
 
         public Paddle LocalPaddle { get; private set; }
-        public GameScreen GameScreen { get; private set; }
+        public GameplayScreen GameScreen { get; private set; }
 
-        public void InitGame(GameScreen gameScreen)
+        public void InitGame(GameplayScreen gameScreen)
         {
             GameScreen = gameScreen;
 

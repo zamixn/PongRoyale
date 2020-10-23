@@ -9,7 +9,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static PongRoyale_client.Game.GameManager;
+using static PongRoyale_client.Game.GameplayManager;
 using static PongRoyale_client.Game.GameSettings;
 
 namespace PongRoyale_client.Game

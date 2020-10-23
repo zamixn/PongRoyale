@@ -24,8 +24,8 @@ namespace PongRoyale_client.Game.Balls
 
         public void OnCollisionWithPaddle(Paddle coll)
         {
-            Vector2 center = GameManager.Instance.GameScreen.GetCenter().ToVector2();
-            float radius = GameManager.Instance.GameScreen.GetArenaRadius();
+            Vector2 center = GameplayManager.Instance.GameScreen.GetCenter().ToVector2();
+            float radius = GameplayManager.Instance.GameScreen.GetArenaRadius();
             float angle = coll.GetCenterAngle();
             Vector2 paddleCenter = Utilities.GetPointOnCircle(center, radius, angle);
             Vector2 paddleNormal = (center - paddleCenter).Normalize();
@@ -105,17 +105,17 @@ namespace PongRoyale_client.Game.Balls
 
         public virtual void CheckCollision(Dictionary<byte, Paddle> paddles)
         {
-            Vector2 center = GameManager.Instance.GameScreen.GetCenter().ToVector2();
+            Vector2 center = GameplayManager.Instance.GameScreen.GetCenter().ToVector2();
             Vector2 directionFromCenter = (Position - center);
             float angle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
-            float distance = GameManager.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
+            float distance = GameplayManager.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
 
             foreach (var p in paddles.Values)
             {
                 float offsetDistance = distance + p.Thickness / 2;
                 float pAngle1 = p.AngularPosition;
                 float pAngle2 = (p.AngularPosition + p.AngularSize);
-                if (offsetDistance > GameManager.Instance.GameScreen.GetArenaRadius())
+                if (offsetDistance > GameplayManager.Instance.GameScreen.GetArenaRadius())
                 {
                     if (Utilities.IsInsideAngle(angle, pAngle1, pAngle2))
                     {
