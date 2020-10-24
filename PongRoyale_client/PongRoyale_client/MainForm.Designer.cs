@@ -2,7 +2,7 @@
 
 namespace PongRoyale_client
 {
-    partial class GameForm
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -31,13 +31,15 @@ namespace PongRoyale_client
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.GameLoop = new System.Windows.Forms.Timer(this.components);
             this.FrameCountLabel = new System.Windows.Forms.Label();
             this.SyncLoop = new System.Windows.Forms.Timer(this.components);
+            this.ChatUI = new PongRoyale_client.Menu.ChatUI();
             this.MainMenu = new PongRoyale_client.Menu.MainMenu();
             this.GameScreen = new PongRoyale_client.Game.GameplayScreen();
-            this.ChatUI = new PongRoyale_client.Menu.ChatUI();
+            this.InGameMenu = new PongRoyale_client.Menu.InGameMenu();
+            this.GameEndMenu = new PongRoyale_client.Menu.GameEnd();
             this.SuspendLayout();
             // 
             // GameLoop
@@ -54,11 +56,18 @@ namespace PongRoyale_client
             this.FrameCountLabel.Text = "FrameCount";
             this.FrameCountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // ChatUI
+            // 
+            this.ChatUI.Location = new System.Drawing.Point(0, 1);
+            this.ChatUI.Name = "ChatUI";
+            this.ChatUI.Size = new System.Drawing.Size(196, 449);
+            this.ChatUI.TabIndex = 12;
+            // 
             // MainMenu
             // 
-            this.MainMenu.Location = new System.Drawing.Point(675, 27);
+            this.MainMenu.Location = new System.Drawing.Point(12, 12);
             this.MainMenu.Name = "MainMenu";
-            this.MainMenu.Size = new System.Drawing.Size(162, 411);
+            this.MainMenu.Size = new System.Drawing.Size(825, 411);
             this.MainMenu.TabIndex = 11;
             // 
             // GameScreen
@@ -69,29 +78,38 @@ namespace PongRoyale_client
             this.GameScreen.Size = new System.Drawing.Size(451, 451);
             this.GameScreen.TabIndex = 7;
             // 
-            // ChatUI
+            // InGameMenu
             // 
-            this.ChatUI.Location = new System.Drawing.Point(0, 1);
-            this.ChatUI.Name = "ChatUI";
-            this.ChatUI.Size = new System.Drawing.Size(196, 449);
-            this.ChatUI.TabIndex = 12;
+            this.InGameMenu.Location = new System.Drawing.Point(670, 1);
+            this.InGameMenu.Name = "InGameMenu";
+            this.InGameMenu.Size = new System.Drawing.Size(177, 449);
+            this.InGameMenu.TabIndex = 13;
             // 
-            // GameForm
+            // GameEndMenu
+            // 
+            this.GameEndMenu.Location = new System.Drawing.Point(350, 21);
+            this.GameEndMenu.Name = "GameEndMenu";
+            this.GameEndMenu.Size = new System.Drawing.Size(150, 114);
+            this.GameEndMenu.TabIndex = 14;
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(849, 450);
+            this.Controls.Add(this.GameEndMenu);
+            this.Controls.Add(this.InGameMenu);
             this.Controls.Add(this.ChatUI);
             this.Controls.Add(this.MainMenu);
             this.Controls.Add(this.GameScreen);
             this.Controls.Add(this.FrameCountLabel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.Name = "GameForm";
+            this.Name = "MainForm";
             this.Text = "Pong Royale";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
-            this.Load += new System.EventHandler(this.GameForm_Load);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameForm_KeyUp);
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
             this.ResumeLayout(false);
 
         }
@@ -104,6 +122,8 @@ namespace PongRoyale_client
         private System.Windows.Forms.Timer SyncLoop;
         private Menu.MainMenu MainMenu;
         private Menu.ChatUI ChatUI;
+        private Menu.InGameMenu InGameMenu;
+        private Menu.GameEnd GameEndMenu;
     }
 }
 

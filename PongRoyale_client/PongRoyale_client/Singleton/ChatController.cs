@@ -16,6 +16,7 @@ namespace PongRoyale_client.Singleton
         private RichTextBox Output;
         private TextBox Input;
         public void ClearInput() => Input.Clear();
+        public void ClearChat() => Output.Clear();
 
         private Font BoldFont;
         private Font NormalFont;

@@ -38,6 +38,7 @@ namespace PongRoyale_client.Game
             AngularSize = settings.Size;
             MaxAngularSpeed = settings.Speed;
             Thickness = settings.Thickness;
+            Life = settings.Life;
             CurrentAngularSpeed = 0;
         }
 
@@ -66,6 +67,10 @@ namespace PongRoyale_client.Game
         public virtual void AddLife(int amount)
         {
             Life += amount;
+        }
+        public virtual bool IsAlive()
+        {
+            return Life > 0;
         }
 
         public virtual void OnPosSync(float pos)

@@ -69,7 +69,7 @@ namespace PongRoyale_client.Game
                 DrawBalls(g);
 
                 // debug stuff
-                if (MainMenuSettings.Instance.DebugMode)
+                if (GameManager.Instance.DebugMode)
                 {
                     DrawPaddleNormals(g);
                     DrawBallCollisions(g);

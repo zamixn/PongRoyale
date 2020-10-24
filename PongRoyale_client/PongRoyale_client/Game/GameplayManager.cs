@@ -17,6 +17,7 @@ namespace PongRoyale_client.Game
         public int PlayerCount { get; private set; }
 
         public Dictionary<byte, Paddle> PlayerPaddles { get; private set; }
+        public int AlivePaddleCount { get; private set; }
         public Dictionary<byte, Ball> ArenaBalls { get; private set; }
 
         public bool IsInitted { get; private set; }
@@ -28,7 +29,7 @@ namespace PongRoyale_client.Game
         {
             GameScreen = gameScreen;
 
-            List<NetworkPlayer> players = RoomSettings.Instance.Players;
+            var players = RoomSettings.Instance.Players;
             PlayerCount = players.Count;
 
             PlayerPaddles = new Dictionary<byte, Paddle>();
@@ -37,23 +38,35 @@ namespace PongRoyale_client.Game
             float deltaAngle = SharedUtilities.PI * 2 / PlayerCount;
             float angle = (-SharedUtilities.PI + deltaAngle) / 2f;
 
-            for (int i = 0; i < PlayerCount; i++)
+            foreach (var player in players.Values)
             {
-                PaddleType pType = players[i].PaddleType;
+                PaddleType pType = player.PaddleType;
                 Paddle paddle = PaddleFactory.CreatePaddle(pType);
                 paddle.SetPosition(SharedUtilities.RadToDeg(angle));
-                PlayerPaddles.Add(players[i].Id, paddle);
-                if (Player.Instance.IdMatches(players[i].Id))
+                PlayerPaddles.Add(player.Id, paddle);
+                player.SetLife(paddle.Life);
+                if (Player.Instance.IdMatches(player.Id))
                     LocalPaddle = paddle;
                 paddle.AddClampAngles(SharedUtilities.RadToDeg(angle - deltaAngle / 2), SharedUtilities.RadToDeg(angle + deltaAngle / 2));
                 angle += deltaAngle;
             }
+            AlivePaddleCount = PlayerPaddles.Count;
 
             BallType bType = RoomSettings.Instance.BallType;
             Ball ball = Ball.CreateBall(bType, GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.Up, GameSettings.DefaultBallSize);
             ArenaBalls.Add(RoomSettings.Instance.GetNextBallId(), ball);
 
             IsInitted = true;
+        }
+
+        public void DestroyGame()
+        {
+            IsInitted = false;
+            GameScreen = null;
+            PlayerPaddles.Clear();
+            ArenaBalls.Clear();
+            LocalPaddle = null;
+            PlayerCount = 0;
         }
 
         public void PlayerSyncMessageReceived(NetworkMessage message)
@@ -71,10 +84,31 @@ namespace PongRoyale_client.Game
             }
         }
 
+        public void OutOfBounds(byte ballId, byte paddleId)
+        {
+            Paddle paddle = PlayerPaddles[paddleId];
+            paddle.AddLife(-1);
+            RoomSettings.Instance.Players[paddleId].SetLife(paddle.Life);
+            if (paddle.IsAlive())
+                foreach (var ball in ArenaBalls)
+                {
+                    ball.Value.SetPosition(GameScreen.GetCenter().ToVector2());
+                }
+            else
+            {
+                AlivePaddleCount = PlayerPaddles.Count(p => p.Value.IsAlive());
+            }
+        }
+
         public void UpdateGameLoop()
         {
             UpdateGame();
             Render();
+
+            if (AlivePaddleCount <= 0)
+            {
+                GameManager.Instance.SetGameState(GameManager.GameState.GameEnded);
+            }
         }
 
         private void UpdateGame()
@@ -82,10 +116,13 @@ namespace PongRoyale_client.Game
             LocalPaddle.LocalUpdate();
 
             if(Player.Instance.IsRoomMaster)
-                foreach (var ball in ArenaBalls.Values)
+                foreach (var kvp in ArenaBalls)
                 {
+                    var ball = kvp.Value;
                     ball.LocalMove();
-                    ball.CheckCollision(PlayerPaddles);
+                    ball.CheckCollisionWithPaddles(PlayerPaddles);
+                    if (ball.CheckOutOfBounds((float)(-Math.PI / 2), PlayerPaddles, out byte paddleId))
+                        OutOfBounds(kvp.Key, paddleId);
                 }
         }
 

@@ -103,27 +103,51 @@ namespace PongRoyale_client.Game.Balls
             Position += posOffset;
         }
 
-        public virtual void CheckCollision(Dictionary<byte, Paddle> paddles)
+        public virtual void CheckCollisionWithPaddles(Dictionary<byte, Paddle> paddles)
         {
             Vector2 center = GameplayManager.Instance.GameScreen.GetCenter().ToVector2();
             Vector2 directionFromCenter = (Position - center);
             float angle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
             float distance = GameplayManager.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
+            float arenaRadius = GameplayManager.Instance.GameScreen.GetArenaRadius();
 
-            foreach (var p in paddles.Values)
+            foreach (var kvp in paddles)
             {
+                var p = kvp.Value;
                 float offsetDistance = distance + p.Thickness / 2;
                 float pAngle1 = p.AngularPosition;
                 float pAngle2 = (p.AngularPosition + p.AngularSize);
-                if (offsetDistance > GameplayManager.Instance.GameScreen.GetArenaRadius())
-                {
+                if (offsetDistance > arenaRadius)
                     if (Utilities.IsInsideAngle(angle, pAngle1, pAngle2))
-                    {
-                        OnCollisionWithPaddle(p);
-                    }
-                }
+                            OnCollisionWithPaddle(p);
             }
+        }
 
+        public virtual bool CheckOutOfBounds(float startAngle, Dictionary<byte, Paddle> paddles, out byte paddleId)
+        {
+            Vector2 center = GameplayManager.Instance.GameScreen.GetCenter().ToVector2();
+            Vector2 directionFromCenter = (Position - center);
+            float ballAngle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
+            float distance = GameplayManager.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
+            float arenaRadius = GameplayManager.Instance.GameScreen.GetArenaRadius();
+
+            paddleId = 0;
+            int paddleCount = paddles.Count;
+            float angleDelta = SharedUtilities.RadToDeg(SharedUtilities.PI * 2 / paddleCount);
+            float angle = SharedUtilities.RadToDeg(startAngle);
+            foreach (var kvp in paddles)
+            {
+                paddleId = kvp.Key;
+                if (distance >= arenaRadius)
+                {
+                    float minAngle = angle;
+                    float maxAngle = minAngle + angleDelta;
+                    if (Utilities.IsInsideAngle(ballAngle, minAngle, maxAngle))
+                        return true;
+                }
+                angle += angleDelta;
+            }
+            return false;
         }
     }
 }

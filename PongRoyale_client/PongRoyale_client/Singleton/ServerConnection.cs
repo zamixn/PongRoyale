@@ -107,7 +107,7 @@ namespace PongRoyale_client.Singleton
                         NetworkMessage.DecodeGameStartMessage(message.ByteContents,
                             out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType, out byte roomMasterId);
                         RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, roomMasterId);
-                        GameForm.Instance.StartGame();
+                        GameManager.Instance.SetGameState(GameManager.GameState.InGame);
                     });
                     break;
                 default:

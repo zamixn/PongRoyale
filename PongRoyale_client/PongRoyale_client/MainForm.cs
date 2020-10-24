@@ -18,23 +18,26 @@ using System.Windows.Forms;
 
 namespace PongRoyale_client
 {
-    public partial class GameForm : Form
+    public partial class MainForm : Form, IObserverReceiver<GameStateObserver>
     { 
-        public static GameForm Instance;
+        public static MainForm Instance;
         private long FrameCount;
-        EventHandler GameLoopHandler;
 
-        private LifeObserver LifeObserver;
+        private List<GameStateObserver> GameStateObservers;
 
-        public GameForm()
+        public MainForm()
         {
             Instance = this;
+            GameStateObservers = new List<GameStateObserver>();
+            new GameStateObserver(GameManager.Instance, this);
+
             InitializeComponent();
+            GameLoop.Tick += new EventHandler(GameLoop_Tick);
+            SyncLoop.Tick += new EventHandler(SyncLoop_Tick);
 
             SafeInvoke.Instance.Setup(this);
             MainMenu.ConnectToServerButton.Text = Constants.ConnectToServer;
-
-            LifeObserver = new LifeObserver();
+            GameManager.Instance.SetGameState(GameManager.GameState.InMainMenu_NotConnected);
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
@@ -47,12 +50,17 @@ namespace PongRoyale_client
         public void StartGame()
         {
             GameplayManager.Instance.InitGame(GameScreen);
-            GameLoopHandler = new EventHandler(GameLoop_Tick);
-            GameLoop.Tick += GameLoopHandler;
             GameLoop.Start();
-            SyncLoop.Tick += new EventHandler(SyncLoop_Tick);
             SyncLoop.Start();
         }
+
+        public void EndGame()
+        {
+            GameplayManager.Instance.DestroyGame();
+            GameLoop.Stop();
+            SyncLoop.Stop();
+        }
+
         private void GameLoop_Tick(object sender, EventArgs e)
         {
             FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
@@ -67,15 +75,6 @@ namespace PongRoyale_client
             }
         }
 
-        public void OnConnectedToServer()
-        {
-            Player.Instance.Register(LifeObserver);
-        }
-        public void OnDisconnectedToServer()
-        {
-            Player.Instance.Unregister(LifeObserver);
-        }
-
         // this is an on key down event
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
@@ -87,18 +86,47 @@ namespace PongRoyale_client
 
         private bool IsTextBoxSelected()
         {
-            return ChatController.Instance.IsInputSelected() || MainMenu.IPTextBox.Focused;
+            return ChatController.Instance.IsInputSelected() || MainMenu.IsInputSelected();
         }
 
-        private void GameForm_KeyUp(object sender, KeyEventArgs e)
+        private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
             InputManager.Instance.OnKeyUp(e.KeyCode);
             if(!IsTextBoxSelected())
                 e.SuppressKeyPress = true;
         }
 
-        private void GameForm_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
+
+        }
+
+        // Game state observer
+        public void ObserverNotify(GameStateObserver observer)
+        {
+            var state = GameManager.Instance.CurrentGameState;
+
+            switch (state)
+            {
+                case GameManager.GameState.InMainMenu_NotConnected:
+                    break;
+                case GameManager.GameState.InMainMenu_Connected:
+                    break;
+                case GameManager.GameState.GameEnded:
+                    EndGame();
+                    break;
+                case GameManager.GameState.InGame:
+                    StartGame();
+                    break;
+                default:
+                    break;
+            }
+
+            ChatUI.Visible = state != GameManager.GameState.InMainMenu_NotConnected;
+            GameScreen.Visible = state == GameManager.GameState.InGame;
+            MainMenu.Visible = state != GameManager.GameState.InGame;
+            InGameMenu.Visible = state == GameManager.GameState.InGame;
+            GameEndMenu.Visible = state == GameManager.GameState.GameEnded;
 
         }
     }

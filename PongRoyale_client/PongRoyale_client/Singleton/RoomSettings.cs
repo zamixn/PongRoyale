@@ -9,18 +9,18 @@ namespace PongRoyale_client.Singleton
 {
     public class RoomSettings : Singleton<RoomSettings>
     {
-        public List<NetworkPlayer> Players { get; private set; }
+        public Dictionary<byte, NetworkPlayer> Players { get; private set; }
         public BallType BallType { get; private set; }
         public NetworkPlayer RoomMaster { get; private set; }
 
 
         public void SetRoomSettings(byte[] playerIds, PaddleType[] playerPaddleTypes, BallType ballType, byte roomMasterId)
         {
-            Players = new List<NetworkPlayer>();
+            Players = new Dictionary<byte, NetworkPlayer>();
             for (int i = 0; i < playerIds.Length; i++)
             {
-                NetworkPlayer p = new NetworkPlayer(playerIds[i], playerPaddleTypes[i]);
-                Players.Add(p);
+                NetworkPlayer p = new NetworkPlayer(playerIds[i], life: byte.MaxValue, playerPaddleTypes[i]);
+                Players.Add(playerIds[i], p);
                 if (playerIds[i] == roomMasterId)
                     RoomMaster = p;
             }
@@ -33,6 +33,13 @@ namespace PongRoyale_client.Singleton
         public byte GetNextBallId()
         {
             return NextBallId++;
+        }
+
+        public string GetPlayerWonName()
+        {
+            var alive = Players.Where(p => p.Value.Life > 0);
+            var winner = alive.Count() > 0 ? alive.First().Value : Players.Values.First();
+            return Player.ConstructName(winner.Id);
         }
     }
 }
