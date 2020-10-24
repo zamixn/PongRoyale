@@ -17,6 +17,7 @@ namespace PongRoyale_client.Game
         public int PlayerCount { get; private set; }
 
         public Dictionary<byte, Paddle> PlayerPaddles { get; private set; }
+        public int StartingAlivePaddleCount { get; private set; }
         public int AlivePaddleCount { get; private set; }
         public Dictionary<byte, Ball> ArenaBalls { get; private set; }
 
@@ -51,6 +52,7 @@ namespace PongRoyale_client.Game
                 angle += deltaAngle;
             }
             AlivePaddleCount = PlayerPaddles.Count;
+            StartingAlivePaddleCount = AlivePaddleCount;
 
             BallType bType = RoomSettings.Instance.BallType;
             Ball ball = Ball.CreateBall(bType, GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.Up, GameSettings.DefaultBallSize);
@@ -83,12 +85,20 @@ namespace PongRoyale_client.Game
                 ArenaBalls[ids[i]].SetPosition(positions[i]);
             }
         }
+        public void PLayerLostLifeMessageReceived(NetworkMessage message)
+        {
+            byte playerId = message.ByteContents[0];
+            byte life = message.ByteContents[1];
+            PlayerPaddles[playerId].SetLife(life);
+            RoomSettings.Instance.Players[playerId].SetLife(life);
+        }
 
         public void OutOfBounds(byte ballId, byte paddleId)
         {
             Paddle paddle = PlayerPaddles[paddleId];
             paddle.AddLife(-1);
             RoomSettings.Instance.Players[paddleId].SetLife(paddle.Life);
+            Player.Instance.SendPlayerLostLifeMessage(paddleId, RoomSettings.Instance.Players[paddleId].Life);
             if (paddle.IsAlive())
                 foreach (var ball in ArenaBalls)
                 {
@@ -105,9 +115,9 @@ namespace PongRoyale_client.Game
             UpdateGame();
             Render();
 
-            if (AlivePaddleCount <= 0)
+            if (AlivePaddleCount <= 1 && StartingAlivePaddleCount > AlivePaddleCount)
             {
-                GameManager.Instance.SetGameState(GameManager.GameState.GameEnded);
+                Player.Instance.SendEndGameMessage();
             }
         }
 

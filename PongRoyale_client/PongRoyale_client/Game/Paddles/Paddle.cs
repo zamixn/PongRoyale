@@ -68,6 +68,11 @@ namespace PongRoyale_client.Game
         {
             Life += amount;
         }
+        public virtual void SetLife(int life)
+        {
+            Life = life;
+        }
+
         public virtual bool IsAlive()
         {
             return Life > 0;

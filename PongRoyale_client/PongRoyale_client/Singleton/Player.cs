@@ -55,6 +55,18 @@ namespace PongRoyale_client.Singleton
             ServerConnection.Instance.SendDataToServer(message);
         }
 
+        public void SendEndGameMessage()
+        {
+            NetworkMessage message = new NetworkMessage(Id, MessageType.GameEnd, new byte[] { RoomSettings.Instance.GetPlayerWonId() });
+            ServerConnection.Instance.SendDataToServer(message);
+        }
+
+        public void SendPlayerLostLifeMessage(byte id, byte life)
+        {
+            NetworkMessage message = new NetworkMessage(Id, MessageType.GameEnd, new byte[] { id, life });
+            ServerConnection.Instance.SendDataToServer(message);
+        }
+
 
         public void SetId(byte id)
         {

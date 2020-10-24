@@ -110,6 +110,18 @@ namespace PongRoyale_client.Singleton
                         GameManager.Instance.SetGameState(GameManager.GameState.InGame);
                     });
                     break;
+                case NetworkMessage.MessageType.GameEnd:
+                    SafeInvoke.Instance.Invoke(() =>
+                    {
+                        GameManager.Instance.SetGameState(GameManager.GameState.GameEnded);
+                    });
+                    break;
+                case NetworkMessage.MessageType.PlayerLostLife:
+                    SafeInvoke.Instance.Invoke(() =>
+                    {
+                        GameplayManager.Instance.PLayerLostLifeMessageReceived(message);
+                    });
+                    break;
                 default:
                     break;
             }
@@ -160,7 +172,15 @@ namespace PongRoyale_client.Singleton
         }
         public void LogConnectionDataReceived(NetworkMessage response)
         {
-            Debug.WriteLine($"Received: Type: {response.Type}.");
+            switch (response.Type)
+            {
+                case NetworkMessage.MessageType.PlayerSync:
+                case NetworkMessage.MessageType.BallSync:
+                    break;
+                default:
+                    Debug.WriteLine($"Received net message: Type: {response.Type}.");
+                    break;
+            }
         }
     }
 }

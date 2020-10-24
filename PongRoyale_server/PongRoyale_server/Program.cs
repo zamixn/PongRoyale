@@ -86,7 +86,7 @@ namespace PongRoyale_server
                     if (!networkMessage.ValidateSender())
                         break;
 
-                    Console.WriteLine(string.Format("Data received from client id: {0}:\n{1}", networkMessage.SenderId, networkMessage.Type));
+                    LogMessageReceived(networkMessage);
 
                     HandleRespondingToMessage(player, networkMessage);
                 }
@@ -108,12 +108,14 @@ namespace PongRoyale_server
             NetworkMessage responseMessage = GetResponse(sender, networkMessage);
             switch (networkMessage.Type)
             {
+                case NetworkMessage.MessageType.GameEnd:
                 case NetworkMessage.MessageType.GameStart:
                 case NetworkMessage.MessageType.Chat:
                     {
                         SendMessageToAllPlayers(responseMessage);
                         break;
                     }
+                case NetworkMessage.MessageType.PlayerLostLife:
                 case NetworkMessage.MessageType.BallSync:
                 case NetworkMessage.MessageType.PlayerSync:
                     {
@@ -143,6 +145,10 @@ namespace PongRoyale_server
                         () => RandomNumber.NextByte((byte)PaddleType.Normal, (byte)(PaddleType.Short + 1)));
                     byte ballType = RandomNumber.NextByte((byte)BallType.Normal, (byte)(BallType.Deadly + 1));
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameStart, NetworkMessage.EncodeGameStartMessage(playerIds, paddleTypes, ballType, RoomMaster.Id) );
+                case NetworkMessage.MessageType.GameEnd:
+                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameEnd, networkMessage.ByteContents);
+                case NetworkMessage.MessageType.PlayerLostLife:
+                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.PlayerLostLife, networkMessage.ByteContents);
                 default:
                     Debug.WriteLine($"Exception: could not get repsonse to message of type {networkMessage.Type}");
                     break;
@@ -169,6 +175,23 @@ namespace PongRoyale_server
             NetworkStream stream = player.TcpClient.GetStream();
             byte[] buffer = networkMessage.ToBytes();
             stream.Write(buffer, 0, buffer.Length);
+        }
+
+        private static void LogMessageReceived(NetworkMessage networkMessage)
+        {
+            switch (networkMessage.Type)
+            {
+                case NetworkMessage.MessageType.GameStart:
+                case NetworkMessage.MessageType.ConnectedToServer:
+                case NetworkMessage.MessageType.Chat:
+                    Console.WriteLine(string.Format("Data received from client id: {0}:\n{1}", networkMessage.SenderId, networkMessage.Type));
+                    break;
+                case NetworkMessage.MessageType.PlayerSync:
+                case NetworkMessage.MessageType.BallSync:
+                    break;
+                default:
+                    break;
+            }
         }
 
     }

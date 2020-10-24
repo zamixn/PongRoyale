@@ -35,11 +35,15 @@ namespace PongRoyale_client.Singleton
             return NextBallId++;
         }
 
-        public string GetPlayerWonName()
+        public byte GetPlayerWonId()
         {
             var alive = Players.Where(p => p.Value.Life > 0);
             var winner = alive.Count() > 0 ? alive.First().Value : Players.Values.First();
-            return Player.ConstructName(winner.Id);
+            return winner.Id;
+        }
+        public string GetPlayerWonName()
+        {
+            return Player.ConstructName(GetPlayerWonId());
         }
     }
 }

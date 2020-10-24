@@ -14,7 +14,9 @@ namespace PongRoyale_shared
             Chat = 1,
             PlayerSync = 2,
             BallSync = 3,
-            GameStart = 4
+            GameStart = 4,
+            GameEnd = 5,
+            PlayerLostLife = 6
         }
 
         public byte SenderId;

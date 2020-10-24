@@ -24,8 +24,6 @@ namespace PongRoyale_client.Menu
         public void ObserverNotify(GameStateObserver observer)
         {
             var state = GameManager.Instance.CurrentGameState;
-            Debug.WriteLine("Received: " + state);
-
             switch (state)
             {
                 case GameManager.GameState.GameEnded:
