@@ -96,18 +96,40 @@ namespace PongRoyale_client.Game
         public void OutOfBounds(byte ballId, byte paddleId)
         {
             Paddle paddle = PlayerPaddles[paddleId];
+            PaddleLost(paddleId);
+        }
+
+        public void KillPaddle(Paddle p)
+        {
+            PaddleLost(PlayerPaddles.Where(kvp => kvp.Value == p).First().Key);
+        }
+
+        private void PaddleLost(byte paddleId)
+        {
+            Paddle paddle = PlayerPaddles[paddleId];
             paddle.AddLife(-1);
             RoomSettings.Instance.Players[paddleId].SetLife(paddle.Life);
             Player.Instance.SendPlayerLostLifeMessage(paddleId, RoomSettings.Instance.Players[paddleId].Life);
+
             if (paddle.IsAlive())
-                foreach (var ball in ArenaBalls)
-                {
-                    ball.Value.SetPosition(GameScreen.GetCenter().ToVector2());
-                }
+                ResetRound();
             else
             {
                 AlivePaddleCount = PlayerPaddles.Count(p => p.Value.IsAlive());
             }
+        }
+
+        private void ResetRound()
+        {
+            foreach (var ball in ArenaBalls)
+            {
+                ResetBall(ball.Value);
+            }
+        }
+
+        public void ResetBall(Ball b)
+        {
+            b.SetPosition(GameScreen.GetCenter().ToVector2());
         }
 
         public void UpdateGameLoop()

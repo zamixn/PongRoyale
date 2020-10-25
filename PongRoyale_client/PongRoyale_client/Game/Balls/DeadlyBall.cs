@@ -33,5 +33,11 @@ namespace PongRoyale_client.Game.Balls
             b = new SolidBrush(Color.Black);
             base.Render(g, b);
         }
+
+        protected override bool HandleOutOfBounds(bool isOutOfBounds)
+        {
+            GameplayManager.Instance.ResetBall(this);
+            return !isOutOfBounds;
+        }
     }
 }

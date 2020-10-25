@@ -143,7 +143,7 @@ namespace PongRoyale_server
                     byte[] playerIds = Players.Select(p => p.Id).ToArray();
                     byte[] paddleTypes = RandomNumber.GetArray(playerIds.Length, 
                         () => RandomNumber.NextByte((byte)PaddleType.Normal, (byte)(PaddleType.Short + 1)));
-                    byte ballType = RandomNumber.NextByte((byte)BallType.Normal, (byte)(BallType.Deadly + 1));
+                    byte ballType = (byte)BallType.Normal; //RandomNumber.NextByte((byte)BallType.Normal, (byte)(BallType.Deadly + 1));
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameStart, NetworkMessage.EncodeGameStartMessage(playerIds, paddleTypes, ballType, RoomMaster.Id) );
                 case NetworkMessage.MessageType.GameEnd:
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameEnd, networkMessage.ByteContents);
@@ -181,15 +181,11 @@ namespace PongRoyale_server
         {
             switch (networkMessage.Type)
             {
-                case NetworkMessage.MessageType.GameStart:
-                case NetworkMessage.MessageType.ConnectedToServer:
-                case NetworkMessage.MessageType.Chat:
-                    Console.WriteLine(string.Format("Data received from client id: {0}:\n{1}", networkMessage.SenderId, networkMessage.Type));
-                    break;
                 case NetworkMessage.MessageType.PlayerSync:
                 case NetworkMessage.MessageType.BallSync:
                     break;
                 default:
+                    Console.WriteLine(string.Format("Data received from client id: {0}:\n{1}", networkMessage.SenderId, networkMessage.Type));
                     break;
             }
         }

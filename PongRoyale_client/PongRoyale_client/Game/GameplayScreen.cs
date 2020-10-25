@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.Balls;
+using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -33,6 +34,11 @@ namespace PongRoyale_client.Game
         private PointF Origin;
         private PointF Center;
 
+        private Font LifeFont;
+        private Brush LifeBrush;
+        private StringFormat LifeStringFormat;
+        private float LifeRadiusOffset;
+
         public GameplayScreen()
         {
             this.DoubleBuffered = true;
@@ -50,10 +56,16 @@ namespace PongRoyale_client.Game
 
             ArenaColor = Color.Gray;
             ArenaWidth = 1;
-            ArenaMargin = 20;
+            ArenaMargin = 25;
 
             PlayerColor = Color.Black;
             PlayerWidth = 10;
+
+            LifeFont = new Font(new FontFamily("Arial"), 16, FontStyle.Bold, GraphicsUnit.Pixel);
+            LifeBrush = Brushes.Black;
+            LifeStringFormat = new StringFormat()
+                { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+            LifeRadiusOffset = 14;
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -93,6 +105,9 @@ namespace PongRoyale_client.Game
                 Pen p = new Pen(PlayerColor, PlayerWidth);
                 paddle.Render(g, p, Origin, Diameter);
                 p.Dispose();
+
+                PointF lifePos = Utilities.GetPointOnCircle(Center, Radius + LifeRadiusOffset, paddle.GetCenterAngle());
+                g.DrawString(paddle.Life.ToString(), LifeFont, LifeBrush, lifePos, LifeStringFormat);
             }
         }
 

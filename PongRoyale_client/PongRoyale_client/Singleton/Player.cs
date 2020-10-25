@@ -63,7 +63,7 @@ namespace PongRoyale_client.Singleton
 
         public void SendPlayerLostLifeMessage(byte id, byte life)
         {
-            NetworkMessage message = new NetworkMessage(Id, MessageType.GameEnd, new byte[] { id, life });
+            NetworkMessage message = new NetworkMessage(Id, MessageType.PlayerLostLife, new byte[] { id, life });
             ServerConnection.Instance.SendDataToServer(message);
         }
 

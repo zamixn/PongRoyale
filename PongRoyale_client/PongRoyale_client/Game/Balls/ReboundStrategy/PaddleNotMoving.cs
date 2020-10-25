@@ -12,7 +12,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
     public class PaddleNotMoving : IReboundStrategy
     {
 
-        public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal)
+        public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal, Paddle p)
         {
             Vector2 bounceDir = SharedUtilities.GetBounceDirection(collisionNormal, ballDirection);
             return (bounceDir + Vector2.RandomInUnitCircle().Normalize() * 0.2f).Normalize();

@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PongRoyale_client.Game.Balls
 {
@@ -48,14 +49,14 @@ namespace PongRoyale_client.Game.Balls
                     reboundStrategy = null;
                     break;
             }
-            Rebound(reboundStrategy, paddleNormal);
+            Rebound(reboundStrategy, paddleNormal, coll);
         }
 
         public abstract Ball Clone();
 
-        private void Rebound(IReboundStrategy reboundStrategy, Vector2 surfaceNormal)
+        private void Rebound(IReboundStrategy reboundStrategy, Vector2 surfaceNormal, Paddle p)
         {
-            Direction = reboundStrategy.ReboundDirection(Direction, surfaceNormal);
+            Direction = reboundStrategy.ReboundDirection(Direction, surfaceNormal, p);
         }
 
         public virtual void Render(Graphics g, Brush p)
@@ -143,11 +144,16 @@ namespace PongRoyale_client.Game.Balls
                     float minAngle = angle;
                     float maxAngle = minAngle + angleDelta;
                     if (Utilities.IsInsideAngle(ballAngle, minAngle, maxAngle))
-                        return true;
+                        return HandleOutOfBounds(true);
                 }
                 angle += angleDelta;
             }
-            return false;
+            return false; 
+        }
+
+        protected virtual bool HandleOutOfBounds(bool isOutOfBounds)
+        {
+            return isOutOfBounds;
         }
     }
 }

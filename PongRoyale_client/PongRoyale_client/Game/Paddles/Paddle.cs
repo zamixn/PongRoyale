@@ -53,6 +53,7 @@ namespace PongRoyale_client.Game
             p.Width = Thickness;
             g.DrawArc(p, Origin.X, Origin.Y, arenaDiameter, arenaDiameter, AngularPosition, AngularSize);
         }
+
         public float GetCenterAngle()
         {
             return SharedUtilities.DegToRad(AngularPosition + AngularSize / 2f);

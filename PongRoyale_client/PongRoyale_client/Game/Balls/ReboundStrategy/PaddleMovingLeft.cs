@@ -12,7 +12,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
     public class PaddleMovingLeft : IReboundStrategy
     {
 
-        public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal)
+        public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal, Paddle p)
         {
             Vector2 bounceDir = SharedUtilities.GetBounceDirection(collisionNormal, ballDirection);
             Vector2 paddleDir = new Vector2(-collisionNormal.Y, collisionNormal.X);
