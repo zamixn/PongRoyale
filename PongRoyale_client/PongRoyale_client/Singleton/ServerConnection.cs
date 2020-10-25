@@ -19,6 +19,11 @@ namespace PongRoyale_client.Singleton
 
         public void Connect(string connectionString = "", Action onConnected = null, Action<Exception> onException = null)
         {
+            if (IsConnected())
+            {
+                Debug.WriteLine("Could not connect, because we are already connected to a server :)");
+                return;
+            }
             try
             {
                 connectionString = string.IsNullOrEmpty(connectionString) ? 
@@ -130,6 +135,11 @@ namespace PongRoyale_client.Singleton
 
         public void Disconnect(Action onConnected = null, Action<Exception> onException = null)
         {
+            if (!IsConnected())
+            {
+                Debug.WriteLine("Could not disconnect, because we are not connected to a server :)");
+                return;
+            }
             try
             {
                 TcpClient.Close();
@@ -176,6 +186,9 @@ namespace PongRoyale_client.Singleton
             {
                 case NetworkMessage.MessageType.PlayerSync:
                 case NetworkMessage.MessageType.BallSync:
+                    break;
+                case NetworkMessage.MessageType.Invalid:
+                    Debug.WriteLine("Invalid network message received");
                     break;
                 default:
                     Debug.WriteLine($"Received net message: Type: {response.Type}.");

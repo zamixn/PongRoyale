@@ -31,12 +31,18 @@ namespace PongRoyale_client.Singleton
         }
         public void SendChatMessage(string message)
         {
+            if (!ServerConnection.Instance.IsConnected())
+                return;
+
             NetworkMessage chatMessage = new NetworkMessage(Id, MessageType.Chat, NetworkMessage.EncodeString(message));
             ServerConnection.Instance.SendDataToServer(chatMessage);
         }
 
         public void SyncWithServer()
         {
+            if (!ServerConnection.Instance.IsConnected())
+                return;
+
             Paddle localPlayer = GameplayManager.Instance.LocalPaddle;
             NetworkMessage message = new NetworkMessage(Id, MessageType.PlayerSync, NetworkMessage.EncodeFloat(localPlayer.AngularPosition));
             ServerConnection.Instance.SendDataToServer(message);
@@ -51,18 +57,27 @@ namespace PongRoyale_client.Singleton
         }
         public void SendStartGameMessage()
         {
+            if (!ServerConnection.Instance.IsConnected())
+                return;
+
             NetworkMessage message = new NetworkMessage(Id, MessageType.GameStart, new byte[0]);
             ServerConnection.Instance.SendDataToServer(message);
         }
 
         public void SendEndGameMessage()
         {
+            if (!ServerConnection.Instance.IsConnected())
+                return;
+
             NetworkMessage message = new NetworkMessage(Id, MessageType.GameEnd, new byte[] { RoomSettings.Instance.GetPlayerWonId() });
             ServerConnection.Instance.SendDataToServer(message);
         }
 
         public void SendPlayerLostLifeMessage(byte id, byte life)
         {
+            if (!ServerConnection.Instance.IsConnected())
+                return;
+
             NetworkMessage message = new NetworkMessage(Id, MessageType.PlayerLostLife, new byte[] { id, life });
             ServerConnection.Instance.SendDataToServer(message);
         }

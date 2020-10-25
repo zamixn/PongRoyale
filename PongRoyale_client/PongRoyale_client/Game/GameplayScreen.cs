@@ -20,6 +20,8 @@ namespace PongRoyale_client.Game
     {
         private Color BorderColor;
         private float BorderWidth;
+        private Color LocalBorderColor;
+        private float LocalBorderWidth;
 
         private Color ArenaColor;
         private float ArenaWidth;
@@ -53,6 +55,8 @@ namespace PongRoyale_client.Game
 
             BorderColor = Color.Black;
             BorderWidth = 2.5f;
+            LocalBorderColor = Color.Green;
+            LocalBorderWidth = BorderWidth = 3;
 
             ArenaColor = Color.Gray;
             ArenaWidth = 1;
@@ -121,18 +125,22 @@ namespace PongRoyale_client.Game
         private void DrawArena(Graphics g)
         {
             Pen p = new Pen(ArenaColor, ArenaWidth);
+            Pen pp = new Pen(LocalBorderColor, LocalBorderWidth);
             p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-
-            g.DrawEllipse(p, Origin.X, Origin.Y, Diameter, Diameter);
 
             float angle = (float)(-Math.PI  / 2);
             float angleDelta = (float)(Math.PI * 2 / RoomSettings.Instance.Players.Count);
-            for (int i = 0; i < RoomSettings.Instance.Players.Count; i++)
+            foreach (var player in RoomSettings.Instance.Players)
             {
+                if (Player.Instance.IdMatches(player.Key)) 
+                    g.DrawArc(pp, Origin.X, Origin.Y, Diameter, Diameter, SharedUtilities.RadToDeg(angle), SharedUtilities.RadToDeg(angleDelta));
                 g.DrawLine(p, Center, Utilities.GetPointOnCircle(Center, Radius, angle));
                 angle += angleDelta;
             }
+
+            g.DrawEllipse(p, Origin.X, Origin.Y, Diameter, Diameter);
             p.Dispose();
+            pp.Dispose();
         }
 
         public PointF GetCenter()

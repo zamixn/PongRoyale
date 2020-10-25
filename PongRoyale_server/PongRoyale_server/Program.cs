@@ -184,6 +184,9 @@ namespace PongRoyale_server
                 case NetworkMessage.MessageType.PlayerSync:
                 case NetworkMessage.MessageType.BallSync:
                     break;
+                case NetworkMessage.MessageType.Invalid:
+                    Debug.WriteLine("Invalid network message received");
+                    break;
                 default:
                     Console.WriteLine(string.Format("Data received from client id: {0}:\n{1}", networkMessage.SenderId, networkMessage.Type));
                     break;

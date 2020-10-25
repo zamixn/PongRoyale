@@ -10,13 +10,14 @@ namespace PongRoyale_shared
     {
         public enum MessageType : byte
         {
-            ConnectedToServer = 0,  // server sent only
-            Chat = 1,
-            PlayerSync = 2,
-            BallSync = 3,
-            GameStart = 4,
-            GameEnd = 5,
-            PlayerLostLife = 6
+            Invalid = 0,
+            ConnectedToServer = 1,  // server sent only
+            Chat = 2,
+            PlayerSync = 3,
+            BallSync = 4,
+            GameStart = 5,
+            GameEnd = 6,
+            PlayerLostLife = 7
         }
 
         public byte SenderId;
