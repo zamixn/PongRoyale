@@ -97,13 +97,13 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.PlayerSync:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        GameplayManager.Instance.PlayerSyncMessageReceived(message);
+                        ArenaManager.Instance.PlayerSyncMessageReceived(message);
                     });
                     break;
                 case NetworkMessage.MessageType.BallSync:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        GameplayManager.Instance.BallSyncMessageReceived(message);
+                        ArenaManager.Instance.BallSyncMessageReceived(message);
                     });
                     break;
                 case NetworkMessage.MessageType.GameStart:
@@ -121,10 +121,12 @@ namespace PongRoyale_client.Singleton
                         GameManager.Instance.SetGameState(GameManager.GameState.GameEnded);
                     });
                     break;
-                case NetworkMessage.MessageType.PlayerLostLife:
+                case NetworkMessage.MessageType.RoundReset:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        GameplayManager.Instance.PLayerLostLifeMessageReceived(message);
+                        NetworkMessage.DecodeRoundOverData(message.ByteContents, 
+                            out BallType[] ballTypes, out byte[] ballIds, out byte[] playerIds, out byte[] playerLifes);
+                        ArenaManager.Instance.ResetRoundMessageReceived(ballTypes, ballIds, playerIds, playerLifes);
                     });
                     break;
                 default:

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game
 {
-    public class GameplayManager : Singleton<GameplayManager>
+    public class ArenaManager : Singleton<ArenaManager>
     {
         public int PlayerCount { get; private set; }
 
@@ -25,6 +25,8 @@ namespace PongRoyale_client.Game
 
         public Paddle LocalPaddle { get; private set; }
         public GameplayScreen GameScreen { get; private set; }
+
+        public bool IsPaused { get; private set; }
 
         public void InitGame(GameplayScreen gameScreen)
         {
@@ -55,10 +57,11 @@ namespace PongRoyale_client.Game
             StartingAlivePaddleCount = AlivePaddleCount;
 
             BallType bType = RoomSettings.Instance.BallType;
-            Ball ball = Ball.CreateBall(bType, GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.Up, GameSettings.DefaultBallSize);
-            ArenaBalls.Add(RoomSettings.Instance.GetNextBallId(), ball);
+            Ball ball = Ball.CreateBall(bType, GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
+            ArenaBalls.Add(0, ball);
 
             IsInitted = true;
+            PauseGame(false);
         }
 
         public void DestroyGame()
@@ -109,22 +112,53 @@ namespace PongRoyale_client.Game
             Paddle paddle = PlayerPaddles[paddleId];
             paddle.AddLife(-1);
             RoomSettings.Instance.Players[paddleId].SetLife(paddle.Life);
-            Player.Instance.SendPlayerLostLifeMessage(paddleId, RoomSettings.Instance.Players[paddleId].Life);
 
             if (paddle.IsAlive())
                 ResetRound();
             else
             {
                 AlivePaddleCount = PlayerPaddles.Count(p => p.Value.IsAlive());
+                PauseGame(true);
             }
         }
 
         private void ResetRound()
         {
-            foreach (var ball in ArenaBalls)
+            var ballTypes = ArenaBalls.Select(b => b.Value.bType).ToArray();
+            var ballIds = ArenaBalls.Select(b => b.Key).ToArray();
+            byte[] playerIds = RoomSettings.Instance.Players.Select(kvp => kvp.Key).ToArray();
+            byte[] playerLifes = RoomSettings.Instance.Players.Select(kvp => kvp.Value.Life).ToArray();
+            if (ServerConnection.Instance.IsConnected())
             {
-                ResetBall(ball.Value);
+                PauseGame(true);
+                ChatController.Instance.LogInfo("sending round over info");
+                Player.Instance.SendRoundReset(ballTypes, ballIds);
             }
+            else
+                ResetRoundMessageReceived(ballTypes, ballIds, playerIds, playerLifes);
+        }
+
+        public void PauseGame(bool pause)
+        {
+            IsPaused = pause;
+        }
+
+        public void ResetRoundMessageReceived(BallType[] newBalls, byte[] ballIds, byte[] playerIds, byte[] playerLifes)
+        {
+            ChatController.Instance.LogInfo("Received round over info");
+            for (int i = 0; i < playerIds.Length; i++)
+            {
+                RoomSettings.Instance.Players[playerIds[i]].SetLife(playerLifes[i]);
+                PlayerPaddles[playerIds[i]].SetLife(playerLifes[i]);
+            }
+
+            ArenaBalls.Clear();
+            for (int i = 0; i < newBalls.Length; i++)
+            {
+                Ball ball = Ball.CreateBall(newBalls[i], GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
+                ArenaBalls.Add(ballIds[i], ball);
+            }
+            PauseGame(false);
         }
 
         public void ResetBall(Ball b)
@@ -145,16 +179,23 @@ namespace PongRoyale_client.Game
 
         private void UpdateGame()
         {
+            if (IsPaused)
+                return;
+
             LocalPaddle.LocalUpdate();
 
             if(Player.Instance.IsRoomMaster)
                 foreach (var kvp in ArenaBalls)
                 {
+
                     var ball = kvp.Value;
                     ball.LocalMove();
                     ball.CheckCollisionWithPaddles(PlayerPaddles);
                     if (ball.CheckOutOfBounds((float)(-Math.PI / 2), PlayerPaddles, out byte paddleId))
                         OutOfBounds(kvp.Key, paddleId);
+
+                    if (IsPaused)
+                        break;
                 }
         }
 

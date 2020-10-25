@@ -111,11 +111,11 @@ namespace PongRoyale_server
                 case NetworkMessage.MessageType.GameEnd:
                 case NetworkMessage.MessageType.GameStart:
                 case NetworkMessage.MessageType.Chat:
+                case NetworkMessage.MessageType.RoundReset:
                     {
                         SendMessageToAllPlayers(responseMessage);
                         break;
                     }
-                case NetworkMessage.MessageType.PlayerLostLife:
                 case NetworkMessage.MessageType.BallSync:
                 case NetworkMessage.MessageType.PlayerSync:
                     {
@@ -143,12 +143,23 @@ namespace PongRoyale_server
                     byte[] playerIds = Players.Select(p => p.Id).ToArray();
                     byte[] paddleTypes = RandomNumber.GetArray(playerIds.Length, 
                         () => RandomNumber.NextByte((byte)PaddleType.Normal, (byte)(PaddleType.Short + 1)));
-                    byte ballType = (byte)BallType.Normal; //RandomNumber.NextByte((byte)BallType.Normal, (byte)(BallType.Deadly + 1));
+                    byte ballType = (byte)BallType.Normal; 
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameStart, NetworkMessage.EncodeGameStartMessage(playerIds, paddleTypes, ballType, RoomMaster.Id) );
                 case NetworkMessage.MessageType.GameEnd:
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameEnd, networkMessage.ByteContents);
-                case NetworkMessage.MessageType.PlayerLostLife:
-                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.PlayerLostLife, networkMessage.ByteContents);
+                case NetworkMessage.MessageType.RoundReset:
+                    Debug.WriteLine("Sending round over info");
+                    int additionalBalls = RandomNumber.RandomNumb(0, 2) == 0 ? 1 : 0;
+                    NetworkMessage.DecodeRoundOverData(networkMessage.ByteContents, out BallType[] oldBalls, out byte[] oldIds, out byte[] playerIDs, out byte[] playerLifes);
+
+                    BallType[] newBallTypes = new BallType[oldBalls.Length + additionalBalls];
+                    byte[] newIds = new byte[newBallTypes.Length];
+                    for (int i = 0; i < newBallTypes.Length; i++)
+                    {
+                        newBallTypes[i] = (BallType)RandomNumber.NextByte((byte)BallType.Normal, (byte)(BallType.Deadly + 1));
+                        newIds[i] = (byte)i;
+                    }
+                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.RoundReset, NetworkMessage.EncodeRoundOverData(newBallTypes, newIds, playerIDs, playerLifes));
                 default:
                     Debug.WriteLine($"Exception: could not get repsonse to message of type {networkMessage.Type}");
                     break;

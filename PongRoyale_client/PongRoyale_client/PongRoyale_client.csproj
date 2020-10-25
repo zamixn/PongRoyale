@@ -67,7 +67,7 @@
     <Compile Include="Game\Command\BallMoveCommand.cs" />
     <Compile Include="Game\Command\Command.cs" />
     <Compile Include="Game\Command\LifeLostCommand.cs" />
-    <Compile Include="Game\GameplayManager.cs" />
+    <Compile Include="Game\ArenaManager.cs" />
     <Compile Include="Game\GameplayScreen.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -114,7 +114,6 @@
     <Compile Include="Observers\GameStateObserver.cs" />
     <Compile Include="Observers\IObserver.cs" />
     <Compile Include="Observers\IObserverReceiver.cs" />
-    <Compile Include="Observers\LifeObserver.cs" />
     <Compile Include="Observers\IObserverPublisher.cs" />
     <Compile Include="Singleton\GameManager.cs" />
     <Compile Include="Singleton\RoomSettings.cs" />

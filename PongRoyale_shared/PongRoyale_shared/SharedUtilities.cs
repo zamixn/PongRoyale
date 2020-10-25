@@ -27,6 +27,14 @@ namespace PongRoyale_shared
                 return max;
             return f;
         }
+        public static int Clamp(int i, int min, int max)
+        {
+            if (i < min)
+                return min;
+            if (i > max)
+                return max;
+            return i;
+        }
 
         public static Vector2 GetBounceDirection(Vector2 surfaceNormal, Vector2 impactDirection)
         {

@@ -75,7 +75,7 @@ namespace PongRoyale_client.Game
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
-            if (GameplayManager.Instance.IsInitted)
+            if (ArenaManager.Instance.IsInitted)
             {
                 TryInitGameParamaters();
                 Graphics g = pe.Graphics;
@@ -95,7 +95,7 @@ namespace PongRoyale_client.Game
 
         private void DrawBalls(Graphics g)
         {
-            foreach (Ball ball in GameplayManager.Instance.ArenaBalls.Values)
+            foreach (Ball ball in ArenaManager.Instance.ArenaBalls.Values)
             {
                 Brush p = new SolidBrush(Color.Yellow);
                 ball.Render(g, p);
@@ -104,7 +104,7 @@ namespace PongRoyale_client.Game
         }
         private void DrawPlayers(Graphics g)
         {
-            foreach (Paddle paddle in GameplayManager.Instance.PlayerPaddles.Values)
+            foreach (Paddle paddle in ArenaManager.Instance.PlayerPaddles.Values)
             {
                 Pen p = new Pen(PlayerColor, PlayerWidth);
                 paddle.Render(g, p, Origin, Diameter);
@@ -175,7 +175,7 @@ namespace PongRoyale_client.Game
         private void DrawPaddleNormals(Graphics g)
         {
             Pen p = new Pen(Color.Black);
-            foreach (Paddle paddle in GameplayManager.Instance.PlayerPaddles.Values)
+            foreach (Paddle paddle in ArenaManager.Instance.PlayerPaddles.Values)
             {
                 float angle = paddle.GetCenterAngle();
                 Vector2 paddleCenter = Utilities.GetPointOnCircle(Center.ToVector2(), Radius, angle);
@@ -188,12 +188,12 @@ namespace PongRoyale_client.Game
         private void DrawBallCollisions(Graphics g)
         {
             Pen p = new Pen(Color.Blue);
-            foreach (Paddle paddle in GameplayManager.Instance.PlayerPaddles.Values)
+            foreach (Paddle paddle in ArenaManager.Instance.PlayerPaddles.Values)
             {
                 float angle = paddle.GetCenterAngle();
                 Vector2 paddleCenter = Utilities.GetPointOnCircle(Center.ToVector2(), Radius, angle);
                 Vector2 paddleNormal = (Center.ToVector2() - paddleCenter).Normalize();
-                foreach (Ball b in GameplayManager.Instance.ArenaBalls.Values)
+                foreach (Ball b in ArenaManager.Instance.ArenaBalls.Values)
                 {
                     Vector2 ballDir = b.Direction;
                     Vector2 bounceDir = SharedUtilities.GetBounceDirection(paddleNormal, ballDir);

@@ -17,7 +17,7 @@ namespace PongRoyale_shared
             BallSync = 4,
             GameStart = 5,
             GameEnd = 6,
-            PlayerLostLife = 7
+            RoundReset = 7
         }
 
         public byte SenderId;
@@ -125,6 +125,36 @@ namespace PongRoyale_shared
                 int index = 1 + (1 + Vector2.ByteSize) * i;
                 ballIds[i] = data[index];
                 ballPositions[i] = DecodeVector2(data, index + 1);
+            }
+        }
+
+        public static byte[] EncodeRoundOverData(BallType[] ballTypes, byte[] ballIds, byte[] playerIds, byte[] playerLifes)
+        {
+            byte[] data = new byte[ballTypes.Length + 1];
+            data[0] = (byte)ballTypes.Length;
+            for (int i = 0; i < ballTypes.Length; i++)
+                data[1 + i] = (byte)ballTypes[i];
+            data = data.AppendBytes(ballIds)
+                .AppendBytes(new byte[] { (byte)playerIds.Length })
+                .AppendBytes(playerIds).AppendBytes(playerLifes);
+            return data;
+        }
+        public static void DecodeRoundOverData(byte[] data, out BallType[] ballTypes, out byte[] ids, out byte[] playerIds, out byte[] playerLifes)
+        {
+            ballTypes = new BallType[data[0]];
+            for (int i = 0; i < ballTypes.Length; i++)
+                ballTypes[i] = (BallType)data[i + 1];
+            ids = new byte[data[0]];
+            for (int i = 0; i < ballTypes.Length; i++)
+                ids[i] = data[1 + ballTypes.Length + i];
+
+            int offset = 1 + ballTypes.Length * 2;
+            playerIds = new byte[data[offset]];
+            playerLifes = new byte[playerIds.Length];
+            for (int i = 0; i < playerIds.Length; i++)
+            {
+                playerIds[i] = data[1 + offset + i];
+                playerLifes[i] = data[1 + playerIds.Length + offset + i];
             }
         }
     }

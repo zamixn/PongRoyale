@@ -36,7 +36,7 @@ namespace PongRoyale_client.Game.Balls
 
         protected override bool HandleOutOfBounds(bool isOutOfBounds)
         {
-            GameplayManager.Instance.ResetBall(this);
+            ArenaManager.Instance.ResetBall(this);
             return !isOutOfBounds;
         }
     }

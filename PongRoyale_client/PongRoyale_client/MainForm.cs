@@ -49,14 +49,14 @@ namespace PongRoyale_client
 
         public void StartGame()
         {
-            GameplayManager.Instance.InitGame(GameScreen);
+            ArenaManager.Instance.InitGame(GameScreen);
             GameLoop.Start();
             SyncLoop.Start();
         }
 
         public void EndGame()
         {
-            GameplayManager.Instance.DestroyGame();
+            ArenaManager.Instance.DestroyGame();
             GameLoop.Stop();
             SyncLoop.Stop();
         }
@@ -64,7 +64,7 @@ namespace PongRoyale_client
         private void GameLoop_Tick(object sender, EventArgs e)
         {
             FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
-            GameplayManager.Instance.UpdateGameLoop();
+            ArenaManager.Instance.UpdateGameLoop();
         }
 
         private void SyncLoop_Tick(object sender, EventArgs e)

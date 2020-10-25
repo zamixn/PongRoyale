@@ -43,13 +43,13 @@ namespace PongRoyale_client.Singleton
             if (!ServerConnection.Instance.IsConnected())
                 return;
 
-            Paddle localPlayer = GameplayManager.Instance.LocalPaddle;
+            Paddle localPlayer = ArenaManager.Instance.LocalPaddle;
             NetworkMessage message = new NetworkMessage(Id, MessageType.PlayerSync, NetworkMessage.EncodeFloat(localPlayer.AngularPosition));
             ServerConnection.Instance.SendDataToServer(message);
 
             if (IsRoomMaster)
             {
-                var balls = GameplayManager.Instance.ArenaBalls;
+                var balls = ArenaManager.Instance.ArenaBalls;
                 message = new NetworkMessage(Id, MessageType.BallSync, 
                     NetworkMessage.EncodeBallData(balls.Select(b => b.Value.Id).ToArray(), balls.Select(b => b.Value.Position).ToArray()));
                 ServerConnection.Instance.SendDataToServer(message);
@@ -73,12 +73,15 @@ namespace PongRoyale_client.Singleton
             ServerConnection.Instance.SendDataToServer(message);
         }
 
-        public void SendPlayerLostLifeMessage(byte id, byte life)
+        public void SendRoundReset(BallType[] ballTypes, byte[] ballIds)
         {
             if (!ServerConnection.Instance.IsConnected())
                 return;
 
-            NetworkMessage message = new NetworkMessage(Id, MessageType.PlayerLostLife, new byte[] { id, life });
+            byte[] playerIds = RoomSettings.Instance.Players.Select(kvp => kvp.Key).ToArray();
+            byte[] playerLifes = RoomSettings.Instance.Players.Select(kvp => kvp.Value.Life).ToArray();
+            byte[] data = NetworkMessage.EncodeRoundOverData(ballTypes, ballIds, playerIds, playerLifes);
+            NetworkMessage message = new NetworkMessage(Id, MessageType.RoundReset, data);
             ServerConnection.Instance.SendDataToServer(message);
         }
 
