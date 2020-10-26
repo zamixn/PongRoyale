@@ -12,6 +12,7 @@ namespace PongRoyale_server
 {
     class Program
     {
+        public static ByteNetworkDataConverter Converter = new ByteNetworkDataConverter();
         public static List<Player> Players = new List<Player>();
         public static Player RoomMaster;
         public static bool AcceptPlayers;
@@ -67,7 +68,7 @@ namespace PongRoyale_server
             TcpClient client = clientObject as TcpClient;
             Player player = new Player((byte)GetNewPlayerID(), client);
             AddNewPlayer(player);
-            byte[] d = NetworkMessage.EncodeString("200");
+            byte[] d = Converter.EncodeString("200");
             NetworkMessage connectedMessage = new NetworkMessage(player.Id, NetworkMessage.MessageType.ConnectedToServer, d);
             foreach (Player p in Players)
                 SendMessage(p, connectedMessage);
@@ -144,12 +145,12 @@ namespace PongRoyale_server
                     byte[] paddleTypes = RandomNumber.GetArray(playerIds.Length, 
                         () => RandomNumber.NextByte((byte)PaddleType.Normal, (byte)(PaddleType.Short + 1)));
                     byte ballType = (byte)BallType.Normal; 
-                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameStart, NetworkMessage.EncodeGameStartMessage(playerIds, paddleTypes, ballType, RoomMaster.Id) );
+                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameStart, Converter.EncodeGameStartMessage(playerIds, paddleTypes, ballType, RoomMaster.Id) );
                 case NetworkMessage.MessageType.GameEnd:
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameEnd, networkMessage.ByteContents);
                 case NetworkMessage.MessageType.RoundReset:
 
-                    NetworkMessage.DecodeRoundOverData(networkMessage.ByteContents, out BallType[] oldBalls, out byte[] oldIds, out byte[] playerIDs, out byte[] playerLifes);
+                    Converter.DecodeRoundOverData(networkMessage.ByteContents, out BallType[] oldBalls, out byte[] oldIds, out byte[] playerIDs, out byte[] playerLifes);
 
                     int ballCount = SharedUtilities.Clamp(
                         playerIDs.Length + RandomNumber.RandomNumb(-1, 2), 1, playerIDs.Length + 1);
@@ -162,7 +163,7 @@ namespace PongRoyale_server
                             (BallType)RandomNumber.NextByte((byte)BallType.Normal, (byte)(BallType.Deadly + 1));
                         newIds[i] = (byte)i;
                     }
-                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.RoundReset, NetworkMessage.EncodeRoundOverData(newBallTypes, newIds, playerIDs, playerLifes));
+                    return new NetworkMessage(player.Id, NetworkMessage.MessageType.RoundReset, Converter.EncodeRoundOverData(newBallTypes, newIds, playerIDs, playerLifes));
                 default:
                     Debug.WriteLine($"Exception: could not get repsonse to message of type {networkMessage.Type}");
                     break;

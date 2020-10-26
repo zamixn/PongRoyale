@@ -17,7 +17,7 @@ namespace PongRoyale_client.Singleton
 {
     public class Player : Singleton<Player>
     {
-        private ArrayList observers;
+        private readonly NetworkDataConverterAdapter Converter = NetworkDataConverterAdapter.Instance;
         public string PlayerName { get { return ConstructName(Id); } }
         public static string ConstructName(byte id) { return $"Player{id}"; }
 
@@ -25,16 +25,12 @@ namespace PongRoyale_client.Singleton
         public bool IsRoomMaster { get { return IdMatches(RoomSettings.Instance.RoomMaster.Id); } }
         public int Life { get; private set; }
 
-        public Player()
-        {
-            observers = new ArrayList();
-        }
         public void SendChatMessage(string message)
         {
             if (!ServerConnection.Instance.IsConnected())
                 return;
 
-            NetworkMessage chatMessage = new NetworkMessage(Id, MessageType.Chat, NetworkMessage.EncodeString(message));
+            NetworkMessage chatMessage = new NetworkMessage(Id, MessageType.Chat, Converter.EncodeString(message));
             ServerConnection.Instance.SendDataToServer(chatMessage);
         }
 
@@ -44,7 +40,7 @@ namespace PongRoyale_client.Singleton
                 return;
 
             Paddle localPlayer = ArenaFacade.Instance.LocalPaddle;
-            NetworkMessage message = new NetworkMessage(Id, MessageType.PlayerSync, NetworkMessage.EncodeFloat(localPlayer.AngularPosition));
+            NetworkMessage message = new NetworkMessage(Id, MessageType.PlayerSync, Converter.EncodeFloat(localPlayer.AngularPosition));
             ServerConnection.Instance.SendDataToServer(message);
 
             if (IsRoomMaster)
@@ -55,7 +51,7 @@ namespace PongRoyale_client.Singleton
                 Debug.WriteLine("sending: " + ids.Select(a => a.ToString()).Aggregate((b, c) => $"{b}, {c}"));
 
                 message = new NetworkMessage(Id, MessageType.BallSync,
-                    NetworkMessage.EncodeBallData(ids, positions));
+                    Converter.EncodeBallData(ids, positions));
                 ServerConnection.Instance.SendDataToServer(message);
             }
         }
@@ -84,7 +80,7 @@ namespace PongRoyale_client.Singleton
 
             byte[] playerIds = RoomSettings.Instance.Players.Select(kvp => kvp.Key).ToArray();
             byte[] playerLifes = RoomSettings.Instance.Players.Select(kvp => kvp.Value.Life).ToArray();
-            byte[] data = NetworkMessage.EncodeRoundOverData(ballTypes, ballIds, playerIds, playerLifes);
+            byte[] data = Converter.EncodeRoundOverData(ballTypes, ballIds, playerIds, playerLifes);
             NetworkMessage message = new NetworkMessage(Id, MessageType.RoundReset, data);
             ServerConnection.Instance.SendDataToServer(message);
         }
@@ -98,24 +94,6 @@ namespace PongRoyale_client.Singleton
         public bool IdMatches(byte id)
         {
             return id.Equals(Id);
-        }
-        public void Register(IObserver observer)
-        {
-            if (!observers.Contains(observer))
-            {
-                observers.Add(observer);
-            }
-        }
-        public void Unregister(IObserver observer)
-        {
-            observers.Remove(observer);
-        }
-        public void Lose()
-        {
-            foreach (IObserver observer in observers)
-            {
-                observer.Update();
-            }
         }
     }
 }

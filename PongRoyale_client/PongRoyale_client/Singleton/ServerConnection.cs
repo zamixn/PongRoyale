@@ -14,6 +14,7 @@ namespace PongRoyale_client.Singleton
 {
     public class ServerConnection : Singleton<ServerConnection>
     {
+        private readonly NetworkDataConverterAdapter Converter = NetworkDataConverterAdapter.Instance;
         private TcpClient TcpClient;
         private Thread ServerMessageHandler;
 
@@ -91,7 +92,7 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.Chat:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        ChatController.Instance.LogChatMessage(message.SenderId, NetworkMessage.DecodeString(message.ByteContents));
+                        ChatController.Instance.LogChatMessage(message.SenderId, Converter.DecodeString(message.ByteContents));
                     });
                     break;
                 case NetworkMessage.MessageType.PlayerSync:
@@ -109,7 +110,7 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.GameStart:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        NetworkMessage.DecodeGameStartMessage(message.ByteContents,
+                        Converter.DecodeGameStartMessage(message.ByteContents,
                             out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType, out byte roomMasterId);
                         RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, roomMasterId);
                         GameManager.Instance.SetGameState(GameManager.GameState.InGame);
@@ -125,7 +126,7 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.RoundReset:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        NetworkMessage.DecodeRoundOverData(message.ByteContents, 
+                        Converter.DecodeRoundOverData(message.ByteContents, 
                             out BallType[] ballTypes, out byte[] ballIds, out byte[] playerIds, out byte[] playerLifes);
                         ArenaFacade.Instance.ResetRoundMessageReceived(ballTypes, ballIds, playerIds, playerLifes);
                     });

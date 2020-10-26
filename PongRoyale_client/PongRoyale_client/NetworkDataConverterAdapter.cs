@@ -1,0 +1,124 @@
+﻿using PongRoyale_client.Game.Obstacles;
+using PongRoyale_shared;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PongRoyale_client
+{
+    public class NetworkDataConverterAdapter : Singleton<NetworkDataConverterAdapter>, INetworkDataConverter
+    {
+        private INetworkDataConverter Converter;
+
+        public NetworkDataConverterAdapter()
+        {
+            Converter = new ByteNetworkDataConverter();
+        }
+
+        public NetworkDataConverterAdapter(INetworkDataConverter converter)
+        {
+            Converter = converter;
+        }
+
+        public void DecodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions)
+        {
+            Converter.DecodeBallData(data, out ballIds, out ballPositions);
+        }
+
+        public Color DecodeColor(byte[] data, int index = 0)
+        {
+           return Converter.DecodeColor(data, index);
+        }
+
+        public float DecodeFloat(byte[] b, int index = 0)
+        {
+            return Converter.DecodeFloat(b, index);
+        }
+
+        public void DecodeGameStartMessage(byte[] data, out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType, out byte roomMasterId)
+        {
+            Converter.DecodeGameStartMessage(data, out playerIds, out paddleTypes, out ballType, out roomMasterId);
+        }
+
+        public int DecodeInt(byte[] b, int index = 0)
+        {
+            return DecodeInt(b, index);
+        }
+
+        public void DecodeRoundOverData(byte[] data, out BallType[] ballTypes, out byte[] ids, out byte[] playerIds, out byte[] playerLifes)
+        {
+            Converter.DecodeRoundOverData(data, out ballTypes, out ids, out playerIds, out playerLifes);
+        }
+
+        public string DecodeString(byte[] b)
+        {
+            return Converter.DecodeString(b);
+        }
+
+        public Vector2 DecodeVector2(byte[] data, int index = 0)
+        {
+            return Converter.DecodeVector2(data, index);
+        }
+
+        public byte[] EncodeBallData(byte[] ballIds, Vector2[] ballPositions)
+        {
+            return Converter.EncodeBallData(ballIds, ballPositions);
+        }
+
+        public byte[] EncodeColor(Color c)
+        {
+            return Converter.EncodeColor(c);
+        }
+
+        public byte[] EncodeFloat(float f)
+        {
+            return Converter.EncodeFloat(f);
+        }
+
+        public byte[] EncodeGameStartMessage(byte[] playerIds, byte[] paddleTypes, byte ballType, byte roomMasterId)
+        {
+            return Converter.EncodeGameStartMessage(playerIds, paddleTypes, ballType, roomMasterId);
+        }
+
+        public byte[] EncodeInt(int i)
+        {
+            return Converter.EncodeInt(i);
+        }
+
+        public byte[] EncodeRoundOverData(BallType[] ballTypes, byte[] ballIds, byte[] playerIds, byte[] playerLifes)
+        {
+            return Converter.EncodeRoundOverData(ballTypes, ballIds, playerIds, playerLifes);
+        }
+
+        public byte[] EncodeString(string s)
+        {
+            return Converter.EncodeString(s);
+        }
+
+        public byte[] EncodeVector(Vector2 v)
+        {
+            return Converter.EncodeVector(v);
+        }
+
+        public byte[] EncodeObstacleData(float width, float height, Color color, float duration, float posX, float posY)
+        {
+            return Converter.EncodeObstacleData(width, height, color, duration, posX, posY);
+        }
+        public void DecodeObstacleData(byte[] data, out float width, out float height, out Color color, out float duration, out float posX, out float posY)
+        {
+            Converter.DecodeObstacleData(data, out width, out height, out color, out duration, out posX, out posY);
+        }
+        public byte[] EncodeObstacleData(Obstacle obstacle)
+        {
+            return Converter.EncodeObstacleData(obstacle.Width, obstacle.Heigth, obstacle.Color, obstacle.Duration, obstacle.PosX, obstacle.PosY);
+        }
+        public Obstacle DecodeObstacleData(byte[] data)
+        {
+            Converter.DecodeObstacleData(data, out float width, out float height, out Color color, out float duration, out float posX, out float posY);
+            return new Obstacle(posX, posY, duration, color, width, height);
+        }
+    }
+}

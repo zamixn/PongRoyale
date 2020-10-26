@@ -111,6 +111,7 @@
     <Compile Include="Menu\MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="NetworkDataConverterAdapter.cs" />
     <Compile Include="Observers\GameStateObserver.cs" />
     <Compile Include="Observers\IObserver.cs" />
     <Compile Include="Observers\IObserverReceiver.cs" />

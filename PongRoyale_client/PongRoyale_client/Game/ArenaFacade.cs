@@ -16,6 +16,7 @@ namespace PongRoyale_client.Game
 {
     public class ArenaFacade : Singleton<ArenaFacade>
     {
+        private readonly NetworkDataConverterAdapter Converter = NetworkDataConverterAdapter.Instance;
         public int PlayerCount { get; private set; }
 
         public Dictionary<byte, Paddle> PlayerPaddles { get; private set; }
@@ -84,13 +85,13 @@ namespace PongRoyale_client.Game
 
         public void PlayerSyncMessageReceived(NetworkMessage message)
         {
-            float newPos = NetworkMessage.DecodeFloat(message.ByteContents);
+            float newPos = Converter.DecodeFloat(message.ByteContents);
             PlayerPaddles[message.SenderId].OnPosSync(newPos);
         }
 
         public void BallSyncMessageReceived(NetworkMessage message)
         {
-            NetworkMessage.DecodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions);
+            Converter.DecodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions);
             Debug.WriteLine(ids.Select(a => a.ToString()).Aggregate((b, c) => $"{b}, {c}"));
             for(int i = 0; i < ids.Length; i++)
             {
