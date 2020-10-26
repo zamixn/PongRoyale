@@ -21,7 +21,6 @@ namespace PongRoyale_client.Game.Balls
         public Vector2 Direction { get; protected set; }
         public float Diameter { get; protected set; }
         public float Speed { get; protected set; }
-        public byte Id { get; protected set; }
 
         public void OnCollisionWithPaddle(Paddle coll)
         {
@@ -61,8 +60,15 @@ namespace PongRoyale_client.Game.Balls
 
         public virtual void Render(Graphics g, Brush p)
         {
-            float offset = Diameter / 2;
-            g.FillEllipse(p, Position.X - offset, Position.Y - offset, Diameter, Diameter);
+            try
+            {
+                float offset = Diameter / 2;
+                g.FillEllipse(p, Position.X - offset, Position.Y - offset, Diameter, Diameter);
+            }
+            catch
+            {
+                Debug.Write("");
+            }
         }
         public static Ball CreateBall(BallType type, Vector2 position, float speed, Vector2 direction, float diameter)
         {
@@ -97,6 +103,11 @@ namespace PongRoyale_client.Game.Balls
         public void SetPosition(Vector2 pos)
         {
             Position = pos;
+        }
+
+        public void SetDirection(Vector2 dir)
+        {
+            Direction = dir;
         }
 
         public void Move(Vector2 posOffset)

@@ -19,7 +19,6 @@ namespace PongRoyale_client.Game.Balls
                 Direction = Direction,
                 Diameter = Diameter,
                 Speed = Speed,
-                Id = Id
             };
         }
 

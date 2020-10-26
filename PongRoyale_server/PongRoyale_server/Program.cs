@@ -149,10 +149,10 @@ namespace PongRoyale_server
                     return new NetworkMessage(player.Id, NetworkMessage.MessageType.GameEnd, networkMessage.ByteContents);
                 case NetworkMessage.MessageType.RoundReset:
                     Debug.WriteLine("Sending round over info");
-                    int additionalBalls = RandomNumber.RandomNumb(0, 2) == 0 ? 1 : 0;
+                    int ballCount = 2;// RandomNumber.RandomNumb(0, 2) == 0 ? 1 : 0;
                     NetworkMessage.DecodeRoundOverData(networkMessage.ByteContents, out BallType[] oldBalls, out byte[] oldIds, out byte[] playerIDs, out byte[] playerLifes);
 
-                    BallType[] newBallTypes = new BallType[oldBalls.Length + additionalBalls];
+                    BallType[] newBallTypes = new BallType[ballCount];
                     byte[] newIds = new byte[newBallTypes.Length];
                     for (int i = 0; i < newBallTypes.Length; i++)
                     {

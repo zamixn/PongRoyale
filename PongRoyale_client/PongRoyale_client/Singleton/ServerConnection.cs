@@ -118,6 +118,7 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.GameEnd:
                     SafeInvoke.Instance.Invoke(() =>
                     {
+                        RoomSettings.Instance.SetPlayerWon(message.ByteContents[0]);
                         GameManager.Instance.SetGameState(GameManager.GameState.GameEnded);
                     });
                     break;

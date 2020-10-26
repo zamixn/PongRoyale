@@ -37,5 +37,13 @@ namespace PongRoyale_client.Singleton
         {
             return Player.ConstructName(GetPlayerWonId());
         }
+        public void SetPlayerWon(byte id)
+        {
+            foreach (var p in Players)
+            {
+                if(p.Key != id)
+                    p.Value.SetLife(0);
+            }
+        }
     }
 }

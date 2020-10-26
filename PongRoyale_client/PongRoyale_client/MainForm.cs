@@ -23,12 +23,9 @@ namespace PongRoyale_client
         public static MainForm Instance;
         private long FrameCount;
 
-        private List<GameStateObserver> GameStateObservers;
-
         public MainForm()
         {
             Instance = this;
-            GameStateObservers = new List<GameStateObserver>();
             new GameStateObserver(GameManager.Instance, this);
 
             InitializeComponent();
@@ -38,6 +35,9 @@ namespace PongRoyale_client
             SafeInvoke.Instance.Setup(this);
             MainMenu.ConnectToServerButton.Text = Constants.ConnectToServer;
             GameManager.Instance.SetGameState(GameManager.GameState.InMainMenu_NotConnected);
+
+            //tests            
+            //UnitTests.NetworkMessageUnitTests.TestBallSyncEncodingAndDecoding();
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)

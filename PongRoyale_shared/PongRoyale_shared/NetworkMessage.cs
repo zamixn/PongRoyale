@@ -115,15 +115,15 @@ namespace PongRoyale_shared
             return data;
         }
 
-        public static void DencodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions)
+        public static void DecodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions)
         {
             byte length = data[0];
             ballIds = new byte[length];
             ballPositions = new Vector2[length];
             for (int i = 0; i < length; i++)
             {
-                int index = 1 + (1 + Vector2.ByteSize) * i;
-                ballIds[i] = data[index];
+                ballIds[i] = data[i + 1];
+                int index = length + (Vector2.ByteSize) * i;
                 ballPositions[i] = DecodeVector2(data, index + 1);
             }
         }

@@ -82,7 +82,8 @@ namespace PongRoyale_client.Game
 
         public void BallSyncMessageReceived(NetworkMessage message)
         {
-            NetworkMessage.DencodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions);
+            NetworkMessage.DecodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions);
+            Debug.WriteLine(ids.Select(a => a.ToString()).Aggregate((b, c) => $"{b}, {c}"));
             for(int i = 0; i < ids.Length; i++)
             {
                 ArenaBalls[ids[i]].SetPosition(positions[i]);
@@ -164,6 +165,7 @@ namespace PongRoyale_client.Game
         public void ResetBall(Ball b)
         {
             b.SetPosition(GameScreen.GetCenter().ToVector2());
+            b.SetDirection(Vector2.RandomInUnitCircle());
         }
 
         public void UpdateGameLoop()
