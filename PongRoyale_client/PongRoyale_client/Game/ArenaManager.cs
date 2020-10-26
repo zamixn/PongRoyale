@@ -132,7 +132,6 @@ namespace PongRoyale_client.Game
             if (ServerConnection.Instance.IsConnected())
             {
                 PauseGame(true);
-                ChatController.Instance.LogInfo("sending round over info");
                 Player.Instance.SendRoundReset(ballTypes, ballIds);
             }
             else
@@ -146,7 +145,6 @@ namespace PongRoyale_client.Game
 
         public void ResetRoundMessageReceived(BallType[] newBalls, byte[] ballIds, byte[] playerIds, byte[] playerLifes)
         {
-            ChatController.Instance.LogInfo("Received round over info");
             for (int i = 0; i < playerIds.Length; i++)
             {
                 RoomSettings.Instance.Players[playerIds[i]].SetLife(playerLifes[i]);
