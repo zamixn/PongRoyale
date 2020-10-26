@@ -83,6 +83,7 @@ namespace PongRoyale_client.Game
                 DrawArena(g);
                 DrawPlayers(g);
                 DrawBalls(g);
+                DrawArenaObjects(g);
 
                 // debug stuff
                 if (GameManager.Instance.DebugMode)
@@ -93,6 +94,17 @@ namespace PongRoyale_client.Game
             }
         }
 
+        private void DrawArenaObjects(Graphics g)
+        {
+            foreach (ArenaObject obj in ArenaManager.Instance.ArenaObjects.Values)
+            {
+                Pen p = new Pen(Color.Magenta);
+                Brush b = new SolidBrush(Color.Magenta);
+                obj.Render(g, p, b);
+                p.Dispose();
+                b.Dispose();
+            }
+        }
         private void DrawBalls(Graphics g)
         {
             foreach (Ball ball in ArenaManager.Instance.ArenaBalls.Values)

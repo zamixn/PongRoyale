@@ -42,5 +42,31 @@ namespace PongRoyale_client.Extensions
             }
             return false;
         }
+
+        public static Color Lerp(Color a, Color b, float t)
+        {
+            if (t <= 0)
+                return a;
+            if (t >= 1)
+                return b;
+
+            return Color.FromArgb(
+                Lerp(a.A, b.A, t),
+                Lerp(a.R, b.R, t),
+                Lerp(a.G, b.G, t),
+                Lerp(a.B, b.B, t)
+                );
+        }
+
+
+        public static int Lerp(int a, int b, float t)
+        {
+            return (int)(a + t * (b - a));
+        }
+
+        public static float Lerp(float a, float b, float t)
+        {
+            return a + t * (b - a);
+        }
     }
 }

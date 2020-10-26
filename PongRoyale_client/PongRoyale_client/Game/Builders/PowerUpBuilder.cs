@@ -19,9 +19,33 @@ namespace PongRoyale_client.Game.Builders
         public bool MakeBallFaster = false;
         public bool ChangeBallDirection = false;
         public bool GivePlayerLife = false;
-        public bool MultiplyBalls = false;
         public bool MakePaddleFaster = false;
         public bool MakePaddleSlower = false;
+
+
+        public PowerUpBuilder AddColor(Color color)
+        {
+            Color = color;
+            return this;
+        }
+
+        public PowerUpBuilder AddDuration(float duration)
+        {
+            Duration = duration;
+            return this;
+        }
+
+        public PowerUpBuilder AddPosX(float posX)
+        {
+            PosX = posX;
+            return this;
+        }
+
+        public PowerUpBuilder AddPosY(float posY)
+        {
+            PosY = posY;
+            return this;
+        }
 
         public void AddDeadlyBallPw()
         {
@@ -39,10 +63,6 @@ namespace PongRoyale_client.Game.Builders
         {
             GivePlayerLife = true;
         }
-        public void AddMultiplyBallsPw()
-        {
-            MultiplyBalls = true;
-        }
         public void AddFasterPaddlePw()
         {
             MakePaddleFaster = true;
@@ -53,7 +73,7 @@ namespace PongRoyale_client.Game.Builders
         }
         public ArenaObject CreateObject()
         {
-            return new Powerup(Duration, PosX, PosY, Color, MakeBallDeadly, MakeBallFaster, ChangeBallDirection, GivePlayerLife, MultiplyBalls, MakePaddleFaster, MakePaddleSlower);
+            return new Powerup(Duration, PosX, PosY, Color, MakeBallDeadly, MakeBallFaster, ChangeBallDirection, GivePlayerLife, MakePaddleFaster, MakePaddleSlower);
         }
     }
 }

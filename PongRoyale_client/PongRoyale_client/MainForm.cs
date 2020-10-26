@@ -64,6 +64,7 @@ namespace PongRoyale_client
         private void GameLoop_Tick(object sender, EventArgs e)
         {
             FrameCountLabel.Text = string.Format(Constants.FrameCount, FrameCount++);
+            GameManager.Instance.SetTimeSinceLastFrame(GameLoop.Interval / 1000f);
             ArenaManager.Instance.UpdateGameLoop();
         }
 

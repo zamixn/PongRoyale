@@ -44,6 +44,5 @@ namespace PongRoyale_client.Game
 
         public static readonly float DefaultBallSpeed = 1f;
         public static readonly float DefaultBallSize = 20f;
-
     }
 }

@@ -34,6 +34,12 @@ namespace PongRoyale_client.Singleton
             }
         }
 
+        public float DeltaTime { get; private set; }
+        public void SetTimeSinceLastFrame(float dTime)
+        {
+            DeltaTime = dTime;
+        }
+
 
         #region game state observer
         private List<GameStateObserver> GameStateObservers = new List<GameStateObserver>();

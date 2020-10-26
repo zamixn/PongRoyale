@@ -40,5 +40,10 @@ namespace PongRoyale_client.Extensions
             g.DrawLine(p, p2, p3);
             g.DrawLine(p, p2, p4);
         }
+
+        public static void FillRectangleAtCenter(this Graphics g, Brush b, float x, float y, float width, float height)
+        {
+            g.FillRectangle(b, x - width / 2f, y - height / 2f, width, height);
+        }
     }
 }

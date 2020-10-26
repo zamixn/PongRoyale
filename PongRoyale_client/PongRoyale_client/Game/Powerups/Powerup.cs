@@ -13,12 +13,11 @@ namespace PongRoyale_client.Game.Powerups
         public bool MakeBallFaster;
         public bool ChangeBallDirection;
         public bool GivePlayerLife;
-        public bool MultiplyBalls;
         public bool MakePaddleFaster;
         public bool MakePaddleSlower;
 
         public Powerup(float duration, float posX, float posY, Color color,
-            bool makeBallDeadly, bool makeBallFaster, bool changeBallDirection, bool givePlayerLife, bool multiplyBalls, bool makePaddleFaster, bool makePaddleSlower)
+            bool makeBallDeadly, bool makeBallFaster, bool changeBallDirection, bool givePlayerLife, bool makePaddleFaster, bool makePaddleSlower)
         {
             Duration = duration;
             PosX = posX;
@@ -28,9 +27,18 @@ namespace PongRoyale_client.Game.Powerups
             MakeBallFaster = makeBallFaster;
             ChangeBallDirection = changeBallDirection;
             GivePlayerLife = givePlayerLife;
-            MultiplyBalls = multiplyBalls;
             MakePaddleFaster = makePaddleFaster;
             MakePaddleSlower = makePaddleSlower;
+        }
+
+        public override void Render(Graphics g, Pen p, Brush b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
     }
 }

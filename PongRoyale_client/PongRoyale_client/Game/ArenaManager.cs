@@ -1,11 +1,13 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.Balls;
+using PongRoyale_client.Game.Builders;
 using PongRoyale_client.Game.Paddles;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +22,7 @@ namespace PongRoyale_client.Game
         public int StartingAlivePaddleCount { get; private set; }
         public int AlivePaddleCount { get; private set; }
         public Dictionary<byte, Ball> ArenaBalls { get; private set; }
+        public Dictionary<byte, ArenaObject> ArenaObjects { get; private set; }
 
         public bool IsInitted { get; private set; }
 
@@ -37,6 +40,7 @@ namespace PongRoyale_client.Game
 
             PlayerPaddles = new Dictionary<byte, Paddle>();
             ArenaBalls = new Dictionary<byte, Ball>();
+            ArenaObjects = new Dictionary<byte, ArenaObject>();
 
             float deltaAngle = SharedUtilities.PI * 2 / PlayerCount;
             float angle = (-SharedUtilities.PI + deltaAngle) / 2f;
@@ -60,6 +64,9 @@ namespace PongRoyale_client.Game
             Ball ball = Ball.CreateBall(bType, GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
             ArenaBalls.Add(0, ball);
 
+            var obstacle = new ObstacleBuilder().AddHeigth(50).AddWidth(50).AddColor(Color.Red).AddDuration(1f).AddPos(GameScreen.GetCenter().ToVector2()).CreateObject();
+            ArenaObjects.Add(0, obstacle);
+
             IsInitted = true;
             PauseGame(false);
         }
@@ -70,6 +77,7 @@ namespace PongRoyale_client.Game
             GameScreen = null;
             PlayerPaddles.Clear();
             ArenaBalls.Clear();
+            ArenaObjects.Clear();
             LocalPaddle = null;
             PlayerCount = 0;
         }
@@ -157,6 +165,7 @@ namespace PongRoyale_client.Game
                 Ball ball = Ball.CreateBall(newBalls[i], GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
                 ArenaBalls.Add(ballIds[i], ball);
             }
+            ArenaObjects.Clear();
             PauseGame(false);
         }
 
@@ -184,7 +193,13 @@ namespace PongRoyale_client.Game
 
             LocalPaddle.LocalUpdate();
 
-            if(Player.Instance.IsRoomMaster)
+            if (Player.Instance.IsRoomMaster)
+            {
+                foreach (var kvp in ArenaObjects)
+                {
+                    kvp.Value.Update();
+                }
+
                 foreach (var kvp in ArenaBalls)
                 {
 
@@ -197,6 +212,7 @@ namespace PongRoyale_client.Game
                     if (IsPaused)
                         break;
                 }
+            }
         }
 
         private void Render()

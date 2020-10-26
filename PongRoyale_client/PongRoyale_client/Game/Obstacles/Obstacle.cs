@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_client.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -19,6 +20,18 @@ namespace PongRoyale_client.Game.Obstacles
             Color = color;
             Width = width;
             Heigth = heigth;
+        }
+
+        public override void Render(Graphics g, Pen p, Brush b)
+        {
+            b = new SolidBrush(CurrentColor);
+            g.FillRectangleAtCenter(b, PosX, PosY, Width, Heigth);
+            b.Dispose();
+        }
+
+        public override void Update()
+        {
+            base.Update();
         }
     }
 }

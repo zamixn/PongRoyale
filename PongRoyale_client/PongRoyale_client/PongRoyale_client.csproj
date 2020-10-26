@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Extensions\MiscExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />
-    <Compile Include="Game\AbstractFactory.cs" />
+    <Compile Include="Game\AbstractFactory\AbstractFactory.cs" />
     <Compile Include="Game\ArenaObject.cs" />
     <Compile Include="Game\Balls\Ball.cs" />
     <Compile Include="Game\Balls\DeadlyBall.cs" />
@@ -83,10 +83,10 @@
     <Compile Include="Game\Paddles\Paddle.cs" />
     <Compile Include="Game\Paddles\PaddleFactory.cs" />
     <Compile Include="Game\Paddles\ShortPaddle.cs" />
-    <Compile Include="Game\PassableFactory.cs" />
+    <Compile Include="Game\AbstractFactory\PassableFactory.cs" />
     <Compile Include="Game\Powerups\Powerup.cs" />
     <Compile Include="Game\Powerups\PowerupType.cs" />
-    <Compile Include="Game\SolidFactory.cs" />
+    <Compile Include="Game\AbstractFactory\SolidFactory.cs" />
     <Compile Include="Menu\ChatUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
