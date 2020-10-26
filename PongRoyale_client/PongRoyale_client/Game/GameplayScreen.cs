@@ -75,7 +75,7 @@ namespace PongRoyale_client.Game
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
-            if (ArenaManager.Instance.IsInitted)
+            if (ArenaFacade.Instance.IsInitted)
             {
                 TryInitGameParamaters();
                 Graphics g = pe.Graphics;
@@ -96,7 +96,7 @@ namespace PongRoyale_client.Game
 
         private void DrawArenaObjects(Graphics g)
         {
-            foreach (ArenaObject obj in ArenaManager.Instance.ArenaObjects.Values)
+            foreach (ArenaObject obj in ArenaFacade.Instance.ArenaObjects.Values)
             {
                 Pen p = new Pen(Color.Magenta);
                 Brush b = new SolidBrush(Color.Magenta);
@@ -107,7 +107,7 @@ namespace PongRoyale_client.Game
         }
         private void DrawBalls(Graphics g)
         {
-            foreach (Ball ball in ArenaManager.Instance.ArenaBalls.Values)
+            foreach (Ball ball in ArenaFacade.Instance.ArenaBalls.Values)
             {
                 Brush p = new SolidBrush(Color.Yellow);
                 ball.Render(g, p);
@@ -116,7 +116,7 @@ namespace PongRoyale_client.Game
         }
         private void DrawPlayers(Graphics g)
         {
-            foreach (Paddle paddle in ArenaManager.Instance.PlayerPaddles.Values)
+            foreach (Paddle paddle in ArenaFacade.Instance.PlayerPaddles.Values)
             {
                 Pen p = new Pen(PlayerColor, PlayerWidth);
                 paddle.Render(g, p, Origin, Diameter);
@@ -187,7 +187,7 @@ namespace PongRoyale_client.Game
         private void DrawPaddleNormals(Graphics g)
         {
             Pen p = new Pen(Color.Black);
-            foreach (Paddle paddle in ArenaManager.Instance.PlayerPaddles.Values)
+            foreach (Paddle paddle in ArenaFacade.Instance.PlayerPaddles.Values)
             {
                 float angle = paddle.GetCenterAngle();
                 Vector2 paddleCenter = Utilities.GetPointOnCircle(Center.ToVector2(), Radius, angle);
@@ -200,12 +200,12 @@ namespace PongRoyale_client.Game
         private void DrawBallCollisions(Graphics g)
         {
             Pen p = new Pen(Color.Blue);
-            foreach (Paddle paddle in ArenaManager.Instance.PlayerPaddles.Values)
+            foreach (Paddle paddle in ArenaFacade.Instance.PlayerPaddles.Values)
             {
                 float angle = paddle.GetCenterAngle();
                 Vector2 paddleCenter = Utilities.GetPointOnCircle(Center.ToVector2(), Radius, angle);
                 Vector2 paddleNormal = (Center.ToVector2() - paddleCenter).Normalize();
-                foreach (Ball b in ArenaManager.Instance.ArenaBalls.Values)
+                foreach (Ball b in ArenaFacade.Instance.ArenaBalls.Values)
                 {
                     Vector2 ballDir = b.Direction;
                     Vector2 bounceDir = SharedUtilities.GetBounceDirection(paddleNormal, ballDir);

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game
 {
-    public class ArenaManager : Singleton<ArenaManager>
+    public class ArenaFacade : Singleton<ArenaFacade>
     {
         public int PlayerCount { get; private set; }
 

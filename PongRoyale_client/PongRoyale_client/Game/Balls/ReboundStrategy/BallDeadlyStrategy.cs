@@ -14,7 +14,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
         public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal, Paddle p)
         {
             if (p != null)
-                ArenaManager.Instance.KillPaddle(p);
+                ArenaFacade.Instance.KillPaddle(p);
             return ballDirection;
         }
     }

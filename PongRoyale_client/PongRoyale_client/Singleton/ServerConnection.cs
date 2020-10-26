@@ -97,13 +97,13 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.PlayerSync:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        ArenaManager.Instance.PlayerSyncMessageReceived(message);
+                        ArenaFacade.Instance.PlayerSyncMessageReceived(message);
                     });
                     break;
                 case NetworkMessage.MessageType.BallSync:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        ArenaManager.Instance.BallSyncMessageReceived(message);
+                        ArenaFacade.Instance.BallSyncMessageReceived(message);
                     });
                     break;
                 case NetworkMessage.MessageType.GameStart:
@@ -127,7 +127,7 @@ namespace PongRoyale_client.Singleton
                     {
                         NetworkMessage.DecodeRoundOverData(message.ByteContents, 
                             out BallType[] ballTypes, out byte[] ballIds, out byte[] playerIds, out byte[] playerLifes);
-                        ArenaManager.Instance.ResetRoundMessageReceived(ballTypes, ballIds, playerIds, playerLifes);
+                        ArenaFacade.Instance.ResetRoundMessageReceived(ballTypes, ballIds, playerIds, playerLifes);
                     });
                     break;
                 default:

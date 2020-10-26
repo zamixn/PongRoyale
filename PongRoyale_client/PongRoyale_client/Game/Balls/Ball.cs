@@ -24,8 +24,8 @@ namespace PongRoyale_client.Game.Balls
 
         public void OnCollisionWithPaddle(Paddle coll)
         {
-            Vector2 center = ArenaManager.Instance.GameScreen.GetCenter().ToVector2();
-            float radius = ArenaManager.Instance.GameScreen.GetArenaRadius();
+            Vector2 center = ArenaFacade.Instance.GameScreen.GetCenter().ToVector2();
+            float radius = ArenaFacade.Instance.GameScreen.GetArenaRadius();
             float angle = coll.GetCenterAngle();
             Vector2 paddleCenter = Utilities.GetPointOnCircle(center, radius, angle);
             Vector2 paddleNormal = (center - paddleCenter).Normalize();
@@ -117,11 +117,11 @@ namespace PongRoyale_client.Game.Balls
 
         public virtual void CheckCollisionWithPaddles(Dictionary<byte, Paddle> paddles)
         {
-            Vector2 center = ArenaManager.Instance.GameScreen.GetCenter().ToVector2();
+            Vector2 center = ArenaFacade.Instance.GameScreen.GetCenter().ToVector2();
             Vector2 directionFromCenter = (Position - center);
             float angle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
-            float distance = ArenaManager.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
-            float arenaRadius = ArenaManager.Instance.GameScreen.GetArenaRadius();
+            float distance = ArenaFacade.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
+            float arenaRadius = ArenaFacade.Instance.GameScreen.GetArenaRadius();
 
             foreach (var kvp in paddles)
             {
@@ -137,11 +137,11 @@ namespace PongRoyale_client.Game.Balls
 
         public virtual bool CheckOutOfBounds(float startAngle, Dictionary<byte, Paddle> paddles, out byte paddleId)
         {
-            Vector2 center = ArenaManager.Instance.GameScreen.GetCenter().ToVector2();
+            Vector2 center = ArenaFacade.Instance.GameScreen.GetCenter().ToVector2();
             Vector2 directionFromCenter = (Position - center);
             float ballAngle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
-            float distance = ArenaManager.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
-            float arenaRadius = ArenaManager.Instance.GameScreen.GetArenaRadius();
+            float distance = ArenaFacade.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
+            float arenaRadius = ArenaFacade.Instance.GameScreen.GetArenaRadius();
 
             paddleId = 0;
             int paddleCount = paddles.Count;

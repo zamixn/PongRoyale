@@ -67,7 +67,7 @@
     <Compile Include="Game\Command\BallMoveCommand.cs" />
     <Compile Include="Game\Command\Command.cs" />
     <Compile Include="Game\Command\LifeLostCommand.cs" />
-    <Compile Include="Game\ArenaManager.cs" />
+    <Compile Include="Game\ArenaFacade.cs" />
     <Compile Include="Game\GameplayScreen.cs">
       <SubType>Component</SubType>
     </Compile>
