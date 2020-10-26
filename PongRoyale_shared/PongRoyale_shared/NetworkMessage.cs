@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -74,6 +75,24 @@ namespace PongRoyale_shared
         public static float DecodeFloat(byte[] b, int index = 0)
         {
             return BitConverter.ToSingle(b, index);
+        }
+
+        public static byte[] EncodeInt(int i)
+        {
+            return BitConverter.GetBytes(i);
+        }
+        public static int DecodeInt(byte[] b, int index = 0)
+        {
+            return BitConverter.ToInt32(b, index);
+        }
+
+        public static byte[] EncodeColor(Color c)
+        {
+            return new byte[] { c.A, c.R, c.G, c.B };
+        }
+        public static Color DecodeColor(byte[] data, int index = 0)
+        {
+            return Color.FromArgb(data[index], data[index + 1], data[index + 2], data[index + 3]);
         }
 
         public static byte[] EncodeVector(Vector2 v)
@@ -156,6 +175,32 @@ namespace PongRoyale_shared
                 playerIds[i] = data[1 + offset + i];
                 playerLifes[i] = data[1 + playerIds.Length + offset + i];
             }
+        }
+
+        public static byte[] EncodeObstacleData(int width, int height, Color color, float duration, float posX, float posY)
+        {
+            return EncodeInt(width)
+                        .AppendBytes(EncodeInt(height))
+                        .AppendBytes(EncodeColor(color))
+                        .AppendBytes(EncodeFloat(duration))
+                        .AppendBytes(EncodeFloat(posX))
+                        .AppendBytes(EncodeFloat(posY));
+        }
+
+        public static void EncodeObstacleData(byte[] data, out int width, out int height, out Color color, out float duration, out float posX, out float posY)
+        {
+            int index = 0;
+            width = DecodeInt(data, index);
+            index += 4;
+            height = DecodeInt(data, index);
+            index += 4;
+            color = DecodeColor(data, index);
+            index += 4;
+            duration = DecodeFloat(data, index);
+            index += 4;
+            posX = DecodeFloat(data, index);
+            index += 4;
+            posY = DecodeFloat(data, index);
         }
     }
 }
