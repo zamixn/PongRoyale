@@ -1,6 +1,7 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Game.Builders;
+using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Paddles;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
@@ -11,12 +12,22 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PongRoyale_client.Game
 {
     public class ArenaFacade : Singleton<ArenaFacade>
     {
+        public ArenaDimensions ArenaDimensions { get; private set; }
+        public void UpdateDimentions(Vector2 size, Vector2 center, float radius)
+        {
+            ArenaDimensions = new ArenaDimensions(size, center, radius);
+        }
+
         private readonly NetworkDataConverterAdapter Converter = NetworkDataConverterAdapter.Instance;
+
+        private List<ArenaObjectSpawner> Spawners;
+
         public int PlayerCount { get; private set; }
 
         public Dictionary<byte, Paddle> PlayerPaddles { get; private set; }
@@ -24,6 +35,9 @@ namespace PongRoyale_client.Game
         public int AlivePaddleCount { get; private set; }
         public Dictionary<byte, Ball> ArenaBalls { get; private set; }
         public Dictionary<byte, ArenaObject> ArenaObjects { get; private set; }
+        private List<byte> ArenaObjectsToDestroy;
+        private List<byte> PaddlesToDestroy;
+        private List<byte> BallsToDestroy;
 
         public bool IsInitted { get; private set; }
 
@@ -42,6 +56,9 @@ namespace PongRoyale_client.Game
             PlayerPaddles = new Dictionary<byte, Paddle>();
             ArenaBalls = new Dictionary<byte, Ball>();
             ArenaObjects = new Dictionary<byte, ArenaObject>();
+            ArenaObjectsToDestroy = new List<byte>();
+            PaddlesToDestroy = new List<byte>();
+            BallsToDestroy = new List<byte>();
 
             float deltaAngle = SharedUtilities.PI * 2 / PlayerCount;
             float angle = (-SharedUtilities.PI + deltaAngle) / 2f;
@@ -62,14 +79,26 @@ namespace PongRoyale_client.Game
             StartingAlivePaddleCount = AlivePaddleCount;
 
             BallType bType = RoomSettings.Instance.BallType;
-            Ball ball = Ball.CreateBall(bType, GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
+            Ball ball = Ball.CreateBall(bType, ArenaDimensions.Center, GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
             ArenaBalls.Add(0, ball);
 
-            var obstacle = new ObstacleBuilder().AddHeigth(50).AddWidth(50).AddColor(Color.Red).AddDuration(1f).AddPos(GameScreen.GetCenter().ToVector2()).CreateObject();
-            ArenaObjects.Add(0, obstacle);
+            Spawners = new List<ArenaObjectSpawner>();
+            Spawners.Add(new ObstacleSpawner());
 
             IsInitted = true;
             PauseGame(false);
+        }
+
+        byte idTmp = 0;
+        public void CreateArenaObject(ArenaObject obj)
+        {
+            byte id = idTmp++;
+            ArenaObjects.Add(id, obj);
+            obj.SetId(id);
+        }
+        public void DestroyArenaObject(byte id)
+        {
+            ArenaObjectsToDestroy.Add(id);
         }
 
         public void DestroyGame()
@@ -141,10 +170,17 @@ namespace PongRoyale_client.Game
             if (ServerConnection.Instance.IsConnected())
             {
                 PauseGame(true);
-                Player.Instance.SendRoundReset(ballTypes, ballIds);
+                // fix for round reset not sending due to connection being overfilled
+                // delay round reset message so that paddle and ball sync messages have time to clear up
+                SafeInvoke.Instance.DelayedInvoke(0.5f, () => 
+                    Player.Instance.SendRoundReset(ballTypes, ballIds)
+                );
             }
             else
+            {
+                PauseGame(true);
                 ResetRoundMessageReceived(ballTypes, ballIds, playerIds, playerLifes);
+            }
         }
 
         public void PauseGame(bool pause)
@@ -154,6 +190,7 @@ namespace PongRoyale_client.Game
 
         public void ResetRoundMessageReceived(BallType[] newBalls, byte[] ballIds, byte[] playerIds, byte[] playerLifes)
         {
+            Debug.WriteLine("pausing");
             for (int i = 0; i < playerIds.Length; i++)
             {
                 RoomSettings.Instance.Players[playerIds[i]].SetLife(playerLifes[i]);
@@ -163,16 +200,17 @@ namespace PongRoyale_client.Game
             ArenaBalls.Clear();
             for (int i = 0; i < newBalls.Length; i++)
             {
-                Ball ball = Ball.CreateBall(newBalls[i], GameScreen.GetCenter().ToVector2(), GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
+                Ball ball = Ball.CreateBall(newBalls[i], ArenaDimensions.Center, GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
                 ArenaBalls.Add(ballIds[i], ball);
             }
             ArenaObjects.Clear();
-            PauseGame(false);
+            SafeInvoke.Instance.DelayedInvoke(0.5f, 
+                () => { Debug.WriteLine("unpausing"); PauseGame(false); });
         }
 
         public void ResetBall(Ball b)
         {
-            b.SetPosition(GameScreen.GetCenter().ToVector2());
+            b.SetPosition(ArenaDimensions.Center);
             b.SetDirection(Vector2.RandomInUnitCircle());
         }
 
@@ -196,17 +234,28 @@ namespace PongRoyale_client.Game
 
             if (Player.Instance.IsRoomMaster)
             {
+                foreach (var spawner in Spawners)
+                {
+                    spawner.Update();
+
+                    if (IsPaused)
+                        break;
+                }
+
                 foreach (var kvp in ArenaObjects)
                 {
                     kvp.Value.Update();
+
+                    if (IsPaused)
+                        break;
                 }
 
                 foreach (var kvp in ArenaBalls)
                 {
-
                     var ball = kvp.Value;
                     ball.LocalMove();
                     ball.CheckCollisionWithPaddles(PlayerPaddles);
+                    ball.CheckCollisionWithArenaObjects(ArenaObjects);
                     if (ball.CheckOutOfBounds((float)(-Math.PI / 2), PlayerPaddles, out byte paddleId))
                         OutOfBounds(kvp.Key, paddleId);
 
@@ -214,11 +263,33 @@ namespace PongRoyale_client.Game
                         break;
                 }
             }
+            CleanUp();
         }
 
         private void Render()
         {
             GameScreen.Refresh();
+        }
+
+        private void CleanUp()
+        {
+            foreach (var id in ArenaObjectsToDestroy)
+            {
+                ArenaObjects.Remove(id);
+            }
+            ArenaObjectsToDestroy.Clear();
+
+            foreach (var id in BallsToDestroy)
+            {
+                ArenaBalls.Remove(id);
+            }
+            BallsToDestroy.Clear();
+
+            foreach (var id in PaddlesToDestroy)
+            {
+                PlayerPaddles.Remove(id);
+            }
+            PaddlesToDestroy.Clear();
         }
     }
 }

@@ -11,11 +11,16 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
 {
     class BallDeadlyStrategy : IReboundStrategy
     {
-        public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal, Paddle p)
+        public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal, Paddle p, ArenaObject obj)
         {
             if (p != null)
                 ArenaFacade.Instance.KillPaddle(p);
             return ballDirection;
+        }
+
+        public Vector2 ReboundPosition(Vector2 ballPos, Vector2 ballDirection, Vector2 collisionNormal, Paddle p, ArenaObject obj)
+        {
+            return ballPos;
         }
     }
 }

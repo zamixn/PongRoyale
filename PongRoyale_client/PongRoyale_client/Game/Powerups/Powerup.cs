@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_client.Singleton;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -37,6 +38,11 @@ namespace PongRoyale_client.Game.Powerups
         }
 
         public override void Update()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Rect2D GetBounds()
         {
             throw new NotImplementedException();
         }

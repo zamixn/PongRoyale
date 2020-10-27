@@ -18,7 +18,7 @@ namespace PongRoyale_client.Singleton
             InGame
         }
 
-        public bool DebugMode { get; private set; }
+        public bool DebugMode { get; private set; } = true;
         public void SetDebugMode(bool value)
         {
             DebugMode = value;

@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Singleton;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -32,6 +33,14 @@ namespace PongRoyale_client.Game.Obstacles
         public override void Update()
         {
             base.Update();
+        }
+
+        public override Rect2D GetBounds()
+        {
+            Rect2D bounds = new Rect2D(
+                PosX - Width / 2f, PosY - Heigth / 2f,
+                Width, Heigth);
+            return bounds;
         }
     }
 }

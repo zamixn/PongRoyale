@@ -2,6 +2,7 @@
 using PongRoyale_client.Game.Balls.Decorator;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Command;
+using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
@@ -22,41 +23,7 @@ namespace PongRoyale_client.Game.Balls
         public float Diameter { get; protected set; }
         public float Speed { get; protected set; }
 
-        public void OnCollisionWithPaddle(Paddle coll)
-        {
-            Vector2 center = ArenaFacade.Instance.GameScreen.GetCenter().ToVector2();
-            float radius = ArenaFacade.Instance.GameScreen.GetArenaRadius();
-            float angle = coll.GetCenterAngle();
-            Vector2 paddleCenter = Utilities.GetPointOnCircle(center, radius, angle);
-            Vector2 paddleNormal = (center - paddleCenter).Normalize();
-
-            IReboundStrategy reboundStrategy;
-            switch (bType)
-            {
-                case BallType.Deadly:
-                    reboundStrategy = new BallDeadlyStrategy();
-                    break;
-                case BallType.Normal:
-                    if (coll.CurrentAngularSpeed < 0)
-                        reboundStrategy = new PaddleMovingLeft();
-                    else if (coll.CurrentAngularSpeed > 0)
-                        reboundStrategy = new PaddleMovingRight();
-                    else //if (coll.AngularSpeed == 0)
-                        reboundStrategy = new PaddleNotMoving();
-                    break;
-                default:
-                    reboundStrategy = null;
-                    break;
-            }
-            Rebound(reboundStrategy, paddleNormal, coll);
-        }
-
         public abstract Ball Clone();
-
-        private void Rebound(IReboundStrategy reboundStrategy, Vector2 surfaceNormal, Paddle p)
-        {
-            Direction = reboundStrategy.ReboundDirection(Direction, surfaceNormal, p);
-        }
 
         public virtual void Render(Graphics g, Brush p)
         {
@@ -67,7 +34,7 @@ namespace PongRoyale_client.Game.Balls
             }
             catch
             {
-                Debug.Write("");
+                Debug.WriteLine("Error while drawing ball");
             }
         }
         public static Ball CreateBall(BallType type, Vector2 position, float speed, Vector2 direction, float diameter)
@@ -117,11 +84,11 @@ namespace PongRoyale_client.Game.Balls
 
         public virtual void CheckCollisionWithPaddles(Dictionary<byte, Paddle> paddles)
         {
-            Vector2 center = ArenaFacade.Instance.GameScreen.GetCenter().ToVector2();
+            Vector2 center = ArenaFacade.Instance.ArenaDimensions.Center;
             Vector2 directionFromCenter = (Position - center);
             float angle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
-            float distance = ArenaFacade.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
-            float arenaRadius = ArenaFacade.Instance.GameScreen.GetArenaRadius();
+            float distance = ArenaFacade.Instance.ArenaDimensions.GetDistanceFromCenter(Position) + Diameter / 2f;
+            float arenaRadius = ArenaFacade.Instance.ArenaDimensions.Radius;
 
             foreach (var kvp in paddles)
             {
@@ -131,17 +98,36 @@ namespace PongRoyale_client.Game.Balls
                 float pAngle2 = (p.AngularPosition + p.AngularSize);
                 if (offsetDistance > arenaRadius)
                     if (Utilities.IsInsideAngle(angle, pAngle1, pAngle2))
-                            OnCollisionWithPaddle(p);
+                        OnCollision(p, null);
             }
+        }
+
+        public virtual void CheckCollisionWithArenaObjects(Dictionary<byte, ArenaObject> objects)
+        {
+
+            foreach (var obj in objects.Values)
+            {
+                if (obj.Intersects(GetBounds()))
+                    OnCollision(null, obj);
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
+            }
+        }
+
+        public Rect2D GetBounds()
+        {
+            float offset = Diameter / 2f;
+            return new Rect2D(Position.X - offset, Position.Y - offset, Diameter, Diameter);
         }
 
         public virtual bool CheckOutOfBounds(float startAngle, Dictionary<byte, Paddle> paddles, out byte paddleId)
         {
-            Vector2 center = ArenaFacade.Instance.GameScreen.GetCenter().ToVector2();
+            Vector2 center = ArenaFacade.Instance.ArenaDimensions.Center;
             Vector2 directionFromCenter = (Position - center);
             float ballAngle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
-            float distance = ArenaFacade.Instance.GameScreen.GetDistanceFromCenter(Position) + Diameter / 2f;
-            float arenaRadius = ArenaFacade.Instance.GameScreen.GetArenaRadius();
+            float distance = ArenaFacade.Instance.ArenaDimensions.GetDistanceFromCenter(Position) + Diameter / 2f;
+            float arenaRadius = ArenaFacade.Instance.ArenaDimensions.Radius;
 
             paddleId = 0;
             int paddleCount = paddles.Count;
@@ -159,12 +145,65 @@ namespace PongRoyale_client.Game.Balls
                 }
                 angle += angleDelta;
             }
-            return false; 
+            return false;
         }
 
         protected virtual bool HandleOutOfBounds(bool isOutOfBounds)
         {
             return isOutOfBounds;
         }
+
+
+
+        #region collisions
+        public void OnCollision(Paddle coll, ArenaObject obj)
+        {
+            Vector2 center = ArenaFacade.Instance.ArenaDimensions.Center;
+            float radius = ArenaFacade.Instance.ArenaDimensions.Radius;
+            Vector2 collisionNormal = null;
+
+            IReboundStrategy reboundStrategy = null;
+            if (coll != null)// collision with a paddle
+            {
+                float paddleAngle = coll.GetCenterAngle();
+                Vector2 paddleCenter = Utilities.GetPointOnCircle(center, radius, paddleAngle);
+                collisionNormal = (center - paddleCenter).Normalize();
+
+                switch (bType)
+                {
+                    case BallType.Deadly:
+                        reboundStrategy = new BallDeadlyStrategy();
+                        break;
+                    case BallType.Normal:
+                        if (coll.CurrentAngularSpeed < 0)
+                            reboundStrategy = new PaddleMovingLeft();
+                        else if (coll.CurrentAngularSpeed > 0)
+                            reboundStrategy = new PaddleMovingRight();
+                        else //if (coll.AngularSpeed == 0)
+                            reboundStrategy = new PaddleNotMoving();
+                        break;
+                    default:
+                        reboundStrategy = null;
+                        break;
+                }
+            }
+            else if (obj != null)// collision with an arena object
+            {
+                float offset = Diameter / 2f;
+                Vector2 impactPos = new Vector2(Position.X + offset, Position.Y + offset);
+                collisionNormal = obj.GetCollisionNormal(impactPos, Direction);
+                reboundStrategy = new ObstacleStrategy();
+            }
+            Rebound(reboundStrategy, collisionNormal, coll, obj);
+        }
+
+        private void Rebound(IReboundStrategy reboundStrategy, Vector2 surfaceNormal, Paddle p, ArenaObject obj)
+        {
+            var dir = reboundStrategy.ReboundDirection(Direction, surfaceNormal, p, obj);
+            var pos = reboundStrategy.ReboundPosition(Position, Direction, surfaceNormal, p, obj);
+            Direction = dir;
+            SetPosition(pos);
+        }
+        #endregion
     }
 }

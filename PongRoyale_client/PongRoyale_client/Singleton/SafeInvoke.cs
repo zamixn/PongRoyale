@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PongRoyale_client.Singleton
@@ -15,6 +16,11 @@ namespace PongRoyale_client.Singleton
             Control = control;
         }
 
+        public Task DelayedInvoke(float delay, Action action)
+        {
+            var d = TimeSpan.FromSeconds(delay);
+            return Task.Delay(d).ContinueWith(t => action.Invoke());
+        }
 
         public void Invoke(Action action)
         {

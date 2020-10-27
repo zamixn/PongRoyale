@@ -1,4 +1,5 @@
-﻿using PongRoyale_shared;
+﻿using PongRoyale_client.Singleton;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -44,6 +45,11 @@ namespace PongRoyale_client.Extensions
         public static void FillRectangleAtCenter(this Graphics g, Brush b, float x, float y, float width, float height)
         {
             g.FillRectangle(b, x - width / 2f, y - height / 2f, width, height);
+        }
+
+        public static void DrawRect2D(this Graphics g, Pen p, Rect2D rect)
+        {
+            g.DrawRectangle(p, rect.Origin.X, rect.Origin.Y, rect.Size.X, rect.Size.Y);
         }
     }
 }

@@ -70,7 +70,7 @@ namespace PongRoyale_client
 
         private void SyncLoop_Tick(object sender, EventArgs e)
         {
-            if (ServerConnection.Instance.IsConnected())
+            if (ServerConnection.Instance.IsConnected() /*&& !ArenaFacade.Instance.IsPaused*/)
             {
                 Player.Instance.SyncWithServer();
             }

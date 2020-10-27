@@ -36,6 +36,16 @@ namespace PongRoyale_shared
             return i;
         }
 
+        public static float Min(float a, float b)
+        {
+            return Math.Min(a, b);
+        }
+
+        public static float Max(float a, float b)
+        {
+            return Math.Max(a, b);
+        }
+
         public static Vector2 GetBounceDirection(Vector2 surfaceNormal, Vector2 impactDirection)
         {
             Vector2 tmp = (-2 * (surfaceNormal * impactDirection)) * surfaceNormal;

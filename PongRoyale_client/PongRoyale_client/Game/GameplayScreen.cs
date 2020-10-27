@@ -70,6 +70,9 @@ namespace PongRoyale_client.Game
             LifeStringFormat = new StringFormat()
                 { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
             LifeRadiusOffset = 14;
+
+
+            SafeInvoke.Instance.DelayedInvoke(0.5f, () => TryInitGameParamaters());
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -90,6 +93,7 @@ namespace PongRoyale_client.Game
                 {
                     DrawPaddleNormals(g);
                     DrawBallCollisions(g);
+                    DrawRect2DBounds(g);
                 }
             }
         }
@@ -155,22 +159,6 @@ namespace PongRoyale_client.Game
             pp.Dispose();
         }
 
-        public PointF GetCenter()
-        {
-            TryInitGameParamaters();
-            return Center;
-        }
-        public float GetDistanceFromCenter(Vector2 point)
-        {
-            TryInitGameParamaters();
-            return Vector2.Distance(Center.ToVector2(), point);
-        }
-        public float GetArenaRadius()
-        {
-            TryInitGameParamaters();
-            return Radius;
-        }
-
         private void TryInitGameParamaters()
         {
             if (!AreStatsInitted)
@@ -179,6 +167,7 @@ namespace PongRoyale_client.Game
                 Radius = Diameter / 2f;
                 Origin = new PointF(ArenaMargin, ArenaMargin);
                 Center = new PointF(Origin.X + Radius, Origin.Y + Radius);
+                ArenaFacade.Instance.UpdateDimentions(new Vector2(Width, Height), Center.ToVector2(), Radius);
                 AreStatsInitted = true;
             }
         }
@@ -212,6 +201,16 @@ namespace PongRoyale_client.Game
                     g.DrawVector(p, paddleCenter, bounceDir);
                 }
             }
+            p.Dispose();
+        }
+
+        private void DrawRect2DBounds(Graphics g)
+        {
+            Pen p = new Pen(Color.Magenta);
+            foreach (var obj in ArenaFacade.Instance.ArenaObjects.Values)
+                g.DrawRect2D(p, obj.GetBounds());
+            foreach (Ball ball in ArenaFacade.Instance.ArenaBalls.Values)
+                g.DrawRect2D(p, ball.GetBounds());
             p.Dispose();
         }
         #endregion

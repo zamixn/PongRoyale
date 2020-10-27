@@ -36,7 +36,7 @@ namespace PongRoyale_client.Singleton
 
         public void SyncWithServer()
         {
-            if (!ServerConnection.Instance.IsConnected())
+            if (!ServerConnection.Instance.IsConnected() || ArenaFacade.Instance.IsPaused)
                 return;
 
             Paddle localPlayer = ArenaFacade.Instance.LocalPaddle;
@@ -48,7 +48,6 @@ namespace PongRoyale_client.Singleton
                 var balls = ArenaFacade.Instance.ArenaBalls;
                 var ids = balls.Select(b => b.Key).ToArray();
                 var positions = balls.Select(b => b.Value.Position).ToArray();
-                Debug.WriteLine("sending: " + ids.Select(a => a.ToString()).Aggregate((b, c) => $"{b}, {c}"));
 
                 message = new NetworkMessage(Id, MessageType.BallSync,
                     Converter.EncodeBallData(ids, positions));

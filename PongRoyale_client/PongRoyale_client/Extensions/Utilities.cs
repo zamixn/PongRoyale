@@ -43,6 +43,11 @@ namespace PongRoyale_client.Extensions
             return false;
         }
 
+        public static bool IsInsideRange(float f, float min, float max)
+        {
+            return f > min && f < max;
+        }
+
         public static Color Lerp(Color a, Color b, float t)
         {
             if (t <= 0)
