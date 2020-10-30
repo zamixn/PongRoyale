@@ -42,6 +42,11 @@ namespace PongRoyale_client.Extensions
             g.DrawLine(p, p2, p4);
         }
 
+        public static void DrawPoint(this Graphics g, Brush b, Vector2 point, float size = 5)
+        {
+            g.FillEllipse(b, point.X - size / 2f, point.Y - size / 2f, size, size);
+        }
+
         public static void FillRectangleAtCenter(this Graphics g, Brush b, float x, float y, float width, float height)
         {
             g.FillRectangle(b, x - width / 2f, y - height / 2f, width, height);

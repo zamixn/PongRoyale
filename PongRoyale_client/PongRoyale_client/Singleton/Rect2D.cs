@@ -48,41 +48,40 @@ namespace PongRoyale_client.Singleton
 
         public Vector2 GetClosestPointOnBorder(Vector2 point)
         {
-            return point;
-            //Vector2 bounds = Size * 0.5f;
-            //Vector2 center = Origin + bounds;
-            //Vector2 closestPoint = new Vector2(0, 0);
-            //Vector2 P = point;
+            Vector2 bounds = Size * 0.5f;
+            Vector2 center = Origin + bounds;
+            Vector2 closestPoint = new Vector2(0, 0);
+            Vector2 P = point;
 
-            //bool insideX = center.X - bounds.X < P.X && P.X < center.X + bounds.X;
-            //bool insideY = center.Y - bounds.Y < P.Y && P.Y < center.Y + bounds.Y;
-            //bool pointInsideRectangle = insideX && insideY;
+            bool insideX = center.X - bounds.X < P.X && P.X < center.X + bounds.X;
+            bool insideY = center.Y - bounds.Y < P.Y && P.Y < center.Y + bounds.Y;
+            bool pointInsideRectangle = insideX && insideY;
 
-            //if (!pointInsideRectangle)
-            //{ //Outside
-            //    closestPoint.X = SharedUtilities.Max(center.X - bounds.X, 
-            //                            SharedUtilities.Min(P.X, center.X + bounds.X));
-            //    closestPoint.Y = SharedUtilities.Max(center.Y - bounds.Y, 
-            //                            SharedUtilities.Min(P.Y, center.Y + bounds.Y));
-            //}
-            //else
-            //{ //Inside
-            //    Vector2 distanceToPositiveBounds = center + bounds - P;
-            //    Vector2 distanceToNegativeBounds = -(center - bounds - P);
-            //    float smallestX = SharedUtilities.Min(distanceToPositiveBounds.X, distanceToNegativeBounds.X);
-            //    float smallestY = SharedUtilities.Min(distanceToPositiveBounds.Y, distanceToNegativeBounds.Y);
-            //    float smallestDistance = SharedUtilities.Min(smallestX, smallestY);
+            if (!pointInsideRectangle)
+            { //Outside
+                closestPoint.X = SharedUtilities.Max(center.X - bounds.X,
+                                        SharedUtilities.Min(P.X, center.X + bounds.X));
+                closestPoint.Y = SharedUtilities.Max(center.Y - bounds.Y,
+                                        SharedUtilities.Min(P.Y, center.Y + bounds.Y));
+            }
+            else
+            { //Inside
+                Vector2 distanceToPositiveBounds = center + bounds - P;
+                Vector2 distanceToNegativeBounds = -(center - bounds - P);
+                float smallestX = SharedUtilities.Min(distanceToPositiveBounds.X, distanceToNegativeBounds.X);
+                float smallestY = SharedUtilities.Min(distanceToPositiveBounds.Y, distanceToNegativeBounds.Y);
+                float smallestDistance = SharedUtilities.Min(smallestX, smallestY);
 
-            //    if (smallestDistance == distanceToPositiveBounds.X)
-            //        closestPoint = new Vector2(center.X + bounds.X, P.Y);
-            //    else if (smallestDistance == distanceToNegativeBounds.X)
-            //        closestPoint = new Vector2(center.X - bounds.X, P.Y);
-            //    else if (smallestDistance == distanceToPositiveBounds.Y)
-            //        closestPoint = new Vector2(P.X, center.Y + bounds.Y);
-            //    else
-            //        closestPoint = new Vector2(P.X, center.Y - bounds.Y);
-            //}
-            //return closestPoint + ((point - center).Normalize() * 20);
+                if (smallestDistance == distanceToPositiveBounds.X)
+                    closestPoint = new Vector2(center.X + bounds.X, P.Y);
+                else if (smallestDistance == distanceToNegativeBounds.X)
+                    closestPoint = new Vector2(center.X - bounds.X, P.Y);
+                else if (smallestDistance == distanceToPositiveBounds.Y)
+                    closestPoint = new Vector2(P.X, center.Y + bounds.Y);
+                else
+                    closestPoint = new Vector2(P.X, center.Y - bounds.Y);
+            }
+            return closestPoint + ((point - center).Normalize() * 11);
         }
 
         public override string ToString()

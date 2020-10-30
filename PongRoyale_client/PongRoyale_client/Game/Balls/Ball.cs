@@ -65,6 +65,33 @@ namespace PongRoyale_client.Game.Balls
 
         public override void LocalMove()
         {
+            //bool pressed = false;
+            //if (InputManager.Instance.IsKeyDown(Keys.Left))
+            //{
+            //    Direction = pressed ? Direction + Vector2.Left : Vector2.Left;
+            //    Direction = Direction.Normalize();
+            //    pressed = true;
+            //}
+            //if (InputManager.Instance.IsKeyDown(Keys.Right))
+            //{
+            //    Direction = pressed ? Direction + Vector2.Right : Vector2.Right;
+            //    Direction = Direction.Normalize();
+            //    pressed = true;
+            //}
+            //if (InputManager.Instance.IsKeyDown(Keys.Down))
+            //{
+            //    Direction = pressed ? Direction + Vector2.Up : Vector2.Up;
+            //    Direction = Direction.Normalize();
+            //    pressed = true;
+            //}
+            //if (InputManager.Instance.IsKeyDown(Keys.Up))
+            //{
+            //    Direction = pressed ? Direction + Vector2.Down : Vector2.Down;
+            //    Direction = Direction.Normalize();
+            //    pressed = true;
+            //}
+
+
             Move(Direction * Speed);
         }
         public void SetPosition(Vector2 pos)
@@ -189,8 +216,8 @@ namespace PongRoyale_client.Game.Balls
             }
             else if (obj != null)// collision with an arena object
             {
-                float offset = Diameter / 2f;
-                Vector2 impactPos = new Vector2(Position.X + offset, Position.Y + offset);
+                var offset = (Direction * Diameter * 0.5f);
+                Vector2 impactPos = Position + offset;
                 collisionNormal = obj.GetCollisionNormal(impactPos, Direction);
                 reboundStrategy = new ObstacleStrategy();
             }
@@ -200,9 +227,9 @@ namespace PongRoyale_client.Game.Balls
         private void Rebound(IReboundStrategy reboundStrategy, Vector2 surfaceNormal, Paddle p, ArenaObject obj)
         {
             var dir = reboundStrategy.ReboundDirection(Direction, surfaceNormal, p, obj);
-            var pos = reboundStrategy.ReboundPosition(Position, Direction, surfaceNormal, p, obj);
+            //var pos = reboundStrategy.ReboundPosition(Position, Direction, surfaceNormal, p, obj);
             Direction = dir;
-            SetPosition(pos);
+            //SetPosition(pos);
         }
         #endregion
     }

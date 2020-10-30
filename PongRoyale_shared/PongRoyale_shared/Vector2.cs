@@ -108,5 +108,14 @@ namespace PongRoyale_shared
         {
             return new Vector2(-a.X, -a.Y);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Vector2))
+                return false;
+
+            Vector2 v = obj as Vector2;
+            return (v.X == X && v.Y == Y);
+        }
     }
 }

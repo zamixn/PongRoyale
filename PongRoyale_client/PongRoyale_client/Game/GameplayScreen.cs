@@ -68,7 +68,7 @@ namespace PongRoyale_client.Game
             LifeFont = new Font(new FontFamily("Arial"), 16, FontStyle.Bold, GraphicsUnit.Pixel);
             LifeBrush = Brushes.Black;
             LifeStringFormat = new StringFormat()
-                { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+            { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
             LifeRadiusOffset = 14;
 
 
@@ -94,6 +94,7 @@ namespace PongRoyale_client.Game
                     DrawPaddleNormals(g);
                     DrawBallCollisions(g);
                     DrawRect2DBounds(g);
+                    DrawArenaObjectNormals(g);
                 }
             }
         }
@@ -107,6 +108,9 @@ namespace PongRoyale_client.Game
                 obj.Render(g, p, b);
                 p.Dispose();
                 b.Dispose();
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
             }
         }
         private void DrawBalls(Graphics g)
@@ -116,6 +120,9 @@ namespace PongRoyale_client.Game
                 Brush p = new SolidBrush(Color.Yellow);
                 ball.Render(g, p);
                 p.Dispose();
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
             }
         }
         private void DrawPlayers(Graphics g)
@@ -128,6 +135,9 @@ namespace PongRoyale_client.Game
 
                 PointF lifePos = Utilities.GetPointOnCircle(Center, Radius + LifeRadiusOffset, paddle.GetCenterAngle());
                 g.DrawString(paddle.Life.ToString(), LifeFont, LifeBrush, lifePos, LifeStringFormat);
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
             }
         }
 
@@ -144,14 +154,17 @@ namespace PongRoyale_client.Game
             Pen pp = new Pen(LocalBorderColor, LocalBorderWidth);
             p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
 
-            float angle = (float)(-Math.PI  / 2);
+            float angle = (float)(-Math.PI / 2);
             float angleDelta = (float)(Math.PI * 2 / RoomSettings.Instance.Players.Count);
             foreach (var player in RoomSettings.Instance.Players)
             {
-                if (Player.Instance.IdMatches(player.Key)) 
+                if (Player.Instance.IdMatches(player.Key))
                     g.DrawArc(pp, Origin.X, Origin.Y, Diameter, Diameter, SharedUtilities.RadToDeg(angle), SharedUtilities.RadToDeg(angleDelta));
                 g.DrawLine(p, Center, Utilities.GetPointOnCircle(Center, Radius, angle));
                 angle += angleDelta;
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
             }
 
             g.DrawEllipse(p, Origin.X, Origin.Y, Diameter, Diameter);
@@ -182,6 +195,9 @@ namespace PongRoyale_client.Game
                 Vector2 paddleCenter = Utilities.GetPointOnCircle(Center.ToVector2(), Radius, angle);
                 Vector2 paddleNormal = (Center.ToVector2() - paddleCenter).Normalize();
                 g.DrawVector(p, paddleCenter, paddleNormal);
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
             }
             p.Dispose();
         }
@@ -199,7 +215,13 @@ namespace PongRoyale_client.Game
                     Vector2 ballDir = b.Direction;
                     Vector2 bounceDir = SharedUtilities.GetBounceDirection(paddleNormal, ballDir);
                     g.DrawVector(p, paddleCenter, bounceDir);
+
+                    if (ArenaFacade.Instance.IsPaused)
+                        break;
                 }
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
             }
             p.Dispose();
         }
@@ -208,9 +230,46 @@ namespace PongRoyale_client.Game
         {
             Pen p = new Pen(Color.Magenta);
             foreach (var obj in ArenaFacade.Instance.ArenaObjects.Values)
+            {
                 g.DrawRect2D(p, obj.GetBounds());
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
+            }
             foreach (Ball ball in ArenaFacade.Instance.ArenaBalls.Values)
+            {
                 g.DrawRect2D(p, ball.GetBounds());
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
+            }
+            p.Dispose();
+        }
+
+        private void DrawArenaObjectNormals(Graphics g)
+        {
+            Pen p = new Pen(Color.Magenta);
+            Brush b = new SolidBrush(Color.Magenta);
+            foreach (var ball in ArenaFacade.Instance.ArenaBalls.Values)
+            {
+                var Direction = ball.Direction;
+                var Position = ball.Position;
+                var offset = (Direction * ball.Diameter * 0.5f);
+                Vector2 impactPos = Position + offset;
+                g.DrawPoint(b, impactPos);
+                foreach (var obj in ArenaFacade.Instance.ArenaObjects.Values)
+                {
+                    var collisionNormal = obj.GetCollisionNormal(impactPos, Direction);
+                    g.DrawVector(p, impactPos, collisionNormal);
+
+                    if (ArenaFacade.Instance.IsPaused)
+                        break;
+                }
+
+                if (ArenaFacade.Instance.IsPaused)
+                    break;
+            }
+            b.Dispose();
             p.Dispose();
         }
         #endregion

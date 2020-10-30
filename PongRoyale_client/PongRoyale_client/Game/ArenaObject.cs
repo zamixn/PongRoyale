@@ -36,7 +36,7 @@ namespace PongRoyale_client.Game
 
         public abstract void Render(Graphics g, Pen p, Brush b);
 
-        public virtual void Update() 
+        public virtual void Update()
         {
             TimeAlive += GameManager.Instance.DeltaTime;
             if (IsAppearing)
@@ -61,33 +61,41 @@ namespace PongRoyale_client.Game
 
         public virtual Vector2 GetCollisionNormal(Vector2 impactPoint, Vector2 impactDirection)
         {
-            Rect2D bounds = GetBounds();
-            Vector2 o = bounds.Origin;
-            Vector2 s = bounds.Size;
+            Rect2D rect = GetBounds();
+            Vector2 bounds = rect.Size * 0.5f;
+            Vector2 center = rect.Origin + bounds;
             Vector2 p = impactPoint;
 
-            bool insideX = Utilities.IsInsideRange(p.X, o.X, o.X + s.X);
-            bool insideY = Utilities.IsInsideRange(p.Y, o.Y, o.Y + s.Y);
-            bool insideRect = insideX && insideY;
+            int offset = 1;
+            bool insideX = center.X - bounds.X + offset < p.X && p.X < center.X + bounds.X - offset;
+            bool insideY = center.Y - bounds.Y + offset < p.Y && p.Y < center.Y + bounds.Y - offset;
+            bool pointInsideRectangle = insideX && insideY;
+            Vector2 normal = -impactDirection;
 
-            if (insideRect)
+            if (pointInsideRectangle)
             {
-                return impactDirection;
+                normal = impactDirection;
             }
-
-            if (insideX)
+            else
             {
-                if (p.X < o.X)
-                    return Vector2.Left;
-                return Vector2.Right;
+                if (insideX)
+                {
+                    if (p.Y < center.Y)
+                        normal = Vector2.Down;
+                    else
+                        normal = Vector2.Up;
+                }
+                if (insideY)
+                {
+                    if (p.X < center.X)
+                        normal = Vector2.Left;
+                    else
+                        normal = Vector2.Right;
+                }
             }
-            if (insideY)
-            {
-                if (p.Y < o.Y)
-                    return Vector2.Down;
-                return Vector2.Up;
-            }
-            return -impactDirection;
+            normal = normal.Normalize();
+            Debug.WriteLine(pointInsideRectangle + ", " + impactDirection);
+            return normal;
         }
 
         public virtual bool Intersects(Rect2D bounds)

@@ -14,12 +14,15 @@ namespace PongRoyale_client.Game
         private Dictionary<Keys, bool> InputBuffer = new Dictionary<Keys, bool>()
         {
             { Keys.Left, false },
-            { Keys.Right, false }
+            { Keys.Right, false },
+            { Keys.Up, false },
+            { Keys.Down, false }
         };
 
-        private void UpdateBuffer(Keys keycode, bool value)
+        private void TryUpdateBuffer(Keys keycode, bool value)
         {
-            InputBuffer[keycode] = value;
+            if(InputBuffer.ContainsKey(keycode))
+                InputBuffer[keycode] = value;
         }
 
         public bool IsKeyDown(Keys keycode)
@@ -32,24 +35,12 @@ namespace PongRoyale_client.Game
 
         public void OnKeyUp(Keys keycode)
         {
-            switch (keycode)
-            {
-                case Keys.Left:
-                case Keys.Right:
-                    UpdateBuffer(keycode, false);
-                    break;
-            }
+            TryUpdateBuffer(keycode, false);
         }
 
         public void OnKeyDown(Keys keycode)
         {
-            switch (keycode)
-            {
-                case Keys.Left:
-                case Keys.Right:
-                    UpdateBuffer(keycode, true);
-                    break;
-            }
+            TryUpdateBuffer(keycode, true);
         }
     }
 }
