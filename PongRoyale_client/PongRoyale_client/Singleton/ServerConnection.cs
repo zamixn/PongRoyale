@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Game;
+using PongRoyale_client.Game.Obstacles;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
@@ -129,6 +130,13 @@ namespace PongRoyale_client.Singleton
                         Converter.DecodeRoundOverData(message.ByteContents, 
                             out BallType[] ballTypes, out byte[] ballIds, out byte[] playerIds, out byte[] playerLifes);
                         ArenaFacade.Instance.ResetRoundMessageReceived(ballTypes, ballIds, playerIds, playerLifes);
+                    });
+                    break;
+                case NetworkMessage.MessageType.ObstacleSpawned:
+                    SafeInvoke.Instance.Invoke(() =>
+                    {
+                        Obstacle obs = Converter.DecodeObstacleData(message.ByteContents, out byte id);
+                        ArenaFacade.Instance.ObstacleSpawnedMessageReceived(id, obs);
                     });
                     break;
                 default:

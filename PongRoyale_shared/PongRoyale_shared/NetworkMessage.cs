@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace PongRoyale_shared
 {
     public class NetworkMessage
     {
+        public const int MAX_MESSAGE_BYTE_LENGTH = 64;
         public enum MessageType : byte
         {
             Invalid = 0,
@@ -18,7 +20,8 @@ namespace PongRoyale_shared
             BallSync = 4,
             GameStart = 5,
             GameEnd = 6,
-            RoundReset = 7
+            RoundReset = 7,
+            ObstacleSpawned = 8
         }
 
         public byte SenderId;
@@ -34,7 +37,10 @@ namespace PongRoyale_shared
 
         public byte[] ToBytes()
         {
-            return ByteContents.PrependBytes(new byte[] { SenderId, (byte)Type });
+            var data = ByteContents.PrependBytes(new byte[] { SenderId, (byte)Type });
+            if (NetworkMessage.MAX_MESSAGE_BYTE_LENGTH < data.Length)
+                throw new Exception("Network message data limit reached");
+            return data;
         }
 
         public static NetworkMessage FromBytes(byte[] buffer)

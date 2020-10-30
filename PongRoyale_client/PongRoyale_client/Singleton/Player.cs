@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.Game;
 using PongRoyale_client.Game.Balls;
+using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Observers;
 using PongRoyale_shared;
 using System;
@@ -54,6 +55,17 @@ namespace PongRoyale_client.Singleton
                 ServerConnection.Instance.SendDataToServer(message);
             }
         }
+
+        public void SendObstacleSpawnedMessage(byte id, Obstacle obs)
+        {
+            if (!ServerConnection.Instance.IsConnected())
+                return;
+
+            var data = Converter.EncodeObstacleData(id, obs);
+            NetworkMessage message = new NetworkMessage(Id, MessageType.ObstacleSpawned, data);
+            ServerConnection.Instance.SendDataToServer(message);
+        }
+
         public void SendStartGameMessage()
         {
             if (!ServerConnection.Instance.IsConnected())

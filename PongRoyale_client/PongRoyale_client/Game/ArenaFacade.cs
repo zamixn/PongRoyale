@@ -26,6 +26,11 @@ namespace PongRoyale_client.Game
         }
 
         private readonly NetworkDataConverterAdapter Converter = NetworkDataConverterAdapter.Instance;
+        private readonly Dictionary<ArenaObjectType, AbstractArenaObjectFactory> ArenaObjectFactories = new Dictionary<ArenaObjectType, AbstractArenaObjectFactory>()
+        {
+            { ArenaObjectType.NonPassable, new NonPassableArenaObjectFactory() },
+            { ArenaObjectType.Passable, new PassableArenaObjectFactory() }
+        };
 
         private List<ArenaObjectSpawner> Spawners;
 
@@ -84,7 +89,7 @@ namespace PongRoyale_client.Game
             ArenaBalls.Add(0, ball);
 
             Spawners = new List<ArenaObjectSpawner>();
-            Spawners.Add(new ObstacleSpawner(GameData.ObstacleSpawnerParams));
+            Spawners.Add(new ObstacleSpawner(GameData.ObstacleSpawnerParams, ArenaObjectFactories.Values.ToArray()));
 
             IsInitted = true;
             PauseGame(false);
@@ -96,6 +101,12 @@ namespace PongRoyale_client.Game
             byte id = idTmp++;
             ArenaObjects.Add(id, obj);
             obj.SetId(id);
+
+            if (Player.Instance.IsRoomMaster)
+            {
+                if(obj is Obstacle)
+                    Player.Instance.SendObstacleSpawnedMessage(id, obj as Obstacle);
+            }
         }
         public void OnArenaObjectExpire(byte id)
         {
@@ -113,8 +124,18 @@ namespace PongRoyale_client.Game
             PlayerCount = 0;
         }
 
+        public void ObstacleSpawnedMessageReceived(byte id, Obstacle obs)
+        {
+            obs.Init(GameData.ObstacleColors[obs.Type]);
+            ArenaObjects.Add(id, obs);
+            obs.SetId(id);
+        }
+
         public void PlayerSyncMessageReceived(NetworkMessage message)
         {
+            // sytnc message received after game end fix
+            if (!IsInitted)
+                return;
             float newPos = Converter.DecodeFloat(message.ByteContents);
             PlayerPaddles[message.SenderId].OnPosSync(newPos);
         }
@@ -122,7 +143,6 @@ namespace PongRoyale_client.Game
         public void BallSyncMessageReceived(NetworkMessage message)
         {
             Converter.DecodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions);
-            Debug.WriteLine(ids.Select(a => a.ToString()).Aggregate((b, c) => $"{b}, {c}"));
             for(int i = 0; i < ids.Length; i++)
             {
                 ArenaBalls[ids[i]].SetPosition(positions[i]);
@@ -191,7 +211,6 @@ namespace PongRoyale_client.Game
 
         public void ResetRoundMessageReceived(BallType[] newBalls, byte[] ballIds, byte[] playerIds, byte[] playerLifes)
         {
-            Debug.WriteLine("pausing");
             for (int i = 0; i < playerIds.Length; i++)
             {
                 RoomSettings.Instance.Players[playerIds[i]].SetLife(playerLifes[i]);
@@ -206,7 +225,7 @@ namespace PongRoyale_client.Game
             }
             ArenaObjects.Clear();
             SafeInvoke.Instance.DelayedInvoke(0.5f, 
-                () => { Debug.WriteLine("unpausing"); PauseGame(false); });
+                () => { PauseGame(false); });
         }
 
         public void ResetBall(Ball b)
@@ -228,6 +247,8 @@ namespace PongRoyale_client.Game
 
         private void UpdateGame()
         {
+            // note: order matters here
+
             if (IsPaused)
                 return;
 
@@ -242,15 +263,18 @@ namespace PongRoyale_client.Game
                     if (IsPaused)
                         break;
                 }
+            }
 
-                foreach (var kvp in ArenaObjects)
-                {
-                    kvp.Value.Update();
+            foreach (var kvp in ArenaObjects)
+            {
+                kvp.Value.Update();
 
-                    if (IsPaused)
-                        break;
-                }
+                if (IsPaused)
+                    break;
+            }
 
+            if (Player.Instance.IsRoomMaster)
+            {
                 foreach (var kvp in ArenaBalls)
                 {
                     var ball = kvp.Value;

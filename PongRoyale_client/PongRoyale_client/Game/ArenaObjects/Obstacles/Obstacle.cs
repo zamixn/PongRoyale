@@ -21,16 +21,6 @@ namespace PongRoyale_client.Game.Obstacles
             Width = width;
             Heigth = heigth;
         }
-        public Obstacle(float posX, float posY, float duration, Color color, float width, float heigth)
-        {
-            PosX = posX;
-            PosY = posY;
-            Duration = duration;
-            Width = width;
-            Heigth = heigth;
-            Color = color;
-        }
-
 
         public void Init(Color color)
         {
@@ -42,11 +32,6 @@ namespace PongRoyale_client.Game.Obstacles
             b = new SolidBrush(CurrentColor);
             g.FillRectangleAtCenter(b, PosX, PosY, Width, Heigth);
             b.Dispose();
-        }
-
-        public override void Update()
-        {
-            base.Update();
         }
 
         public override Rect2D GetBounds()

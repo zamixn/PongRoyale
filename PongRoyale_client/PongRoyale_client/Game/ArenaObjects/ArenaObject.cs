@@ -96,7 +96,6 @@ namespace PongRoyale_client.Game
                 }
             }
             normal = normal.Normalize();
-            Debug.WriteLine(pointInsideRectangle + ", " + impactDirection);
             return normal;
         }
 

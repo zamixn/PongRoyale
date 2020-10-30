@@ -125,30 +125,33 @@ namespace PongRoyale_shared
             }
         }
 
-        public byte[] EncodeObstacleData(float width, float height, Color color, float duration, float posX, float posY)
+        public byte[] EncodeObstacleData(byte id, float width, float height, float duration, float posX, float posY, byte type)
         {
-            return EncodeFloat(width)
+            return (new byte[] { id })
+                        .AppendBytes(EncodeFloat(width))
                         .AppendBytes(EncodeFloat(height))
-                        .AppendBytes(EncodeColor(color))
                         .AppendBytes(EncodeFloat(duration))
                         .AppendBytes(EncodeFloat(posX))
-                        .AppendBytes(EncodeFloat(posY));
+                        .AppendBytes(EncodeFloat(posY))
+                        .AppendBytes(new byte[] { type });
         }
 
-        public void DecodeObstacleData(byte[] data, out float width, out float height, out Color color, out float duration, out float posX, out float posY)
+        public void DecodeObstacleData(byte[] data, out byte id, out float width, out float height, out float duration, out float posX, out float posY, out byte type)
         {
             int index = 0;
+            id = data[0];
+            index += 1;
             width = DecodeFloat(data, index);
             index += 4;
             height = DecodeFloat(data, index);
-            index += 4;
-            color = DecodeColor(data, index);
             index += 4;
             duration = DecodeFloat(data, index);
             index += 4;
             posX = DecodeFloat(data, index);
             index += 4;
             posY = DecodeFloat(data, index);
+            index += 4;
+            type = data[index];
         }
     }
 }

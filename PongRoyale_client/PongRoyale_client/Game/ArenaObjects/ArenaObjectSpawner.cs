@@ -17,13 +17,10 @@ namespace PongRoyale_client.Game
         protected ArenaObjectSpawnerParams Params;
         protected AbstractArenaObjectFactory[] Factories;
 
-        protected ArenaObjectSpawner(ArenaObjectSpawnerParams _params)
+        protected ArenaObjectSpawner(ArenaObjectSpawnerParams _params, AbstractArenaObjectFactory[] factories)
         {
             Params = _params;
-            Factories = new AbstractArenaObjectFactory[] {
-                new PassableArenaObjectFactory(),
-                new NonPassableArenaObjectFactory()
-            };
+            Factories = factories;
             SpawnInterval = Params.RollInterval();
             LastSpawnTime = -SpawnInterval + Params.StartDelay;
         }

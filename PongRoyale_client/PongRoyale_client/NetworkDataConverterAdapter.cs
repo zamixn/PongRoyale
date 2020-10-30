@@ -103,22 +103,24 @@ namespace PongRoyale_client
             return Converter.EncodeVector(v);
         }
 
-        public byte[] EncodeObstacleData(float width, float height, Color color, float duration, float posX, float posY)
+        public byte[] EncodeObstacleData(byte id, float width, float height, float duration, float posX, float posY, byte type)
         {
-            return Converter.EncodeObstacleData(width, height, color, duration, posX, posY);
+            return Converter.EncodeObstacleData(id, width, height, duration, posX, posY, type);
         }
-        public void DecodeObstacleData(byte[] data, out float width, out float height, out Color color, out float duration, out float posX, out float posY)
+        public void DecodeObstacleData(byte[] data, out byte id, out float width, out float height, out float duration, out float posX, out float posY, out byte type)
         {
-            Converter.DecodeObstacleData(data, out width, out height, out color, out duration, out posX, out posY);
+            Converter.DecodeObstacleData(data, out id, out width, out height, out duration, out posX, out posY, out type);
         }
-        public byte[] EncodeObstacleData(Obstacle obstacle)
+        public byte[] EncodeObstacleData(byte id, Obstacle obstacle)
         {
-            return Converter.EncodeObstacleData(obstacle.Width, obstacle.Heigth, obstacle.Color, obstacle.Duration, obstacle.PosX, obstacle.PosY);
+            return Converter.EncodeObstacleData(id, obstacle.Width, obstacle.Heigth, obstacle.Duration, obstacle.PosX, obstacle.PosY, (byte)obstacle.Type);
         }
-        public Obstacle DecodeObstacleData(byte[] data)
+        public Obstacle DecodeObstacleData(byte[] data, out byte id)
         {
-            Converter.DecodeObstacleData(data, out float width, out float height, out Color color, out float duration, out float posX, out float posY);
-            return new Obstacle(posX, posY, duration, color, width, height);
+            Converter.DecodeObstacleData(data, out id, out float width, out float height, out float duration, out float posX, out float posY, out byte type);
+            var obs = new Obstacle(posX, posY, duration, width, height);
+            obs.SetTypeParams((ArenaObjectType)type);
+            return obs;
         }
     }
 }

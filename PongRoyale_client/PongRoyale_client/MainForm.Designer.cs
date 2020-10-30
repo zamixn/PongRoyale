@@ -35,11 +35,11 @@ namespace PongRoyale_client
             this.GameLoop = new System.Windows.Forms.Timer(this.components);
             this.FrameCountLabel = new System.Windows.Forms.Label();
             this.SyncLoop = new System.Windows.Forms.Timer(this.components);
+            this.GameEndMenu = new PongRoyale_client.Menu.GameEnd();
+            this.InGameMenu = new PongRoyale_client.Menu.InGameMenu();
             this.ChatUI = new PongRoyale_client.Menu.ChatUI();
             this.MainMenu = new PongRoyale_client.Menu.MainMenu();
             this.GameScreen = new PongRoyale_client.Game.GameplayScreen();
-            this.InGameMenu = new PongRoyale_client.Menu.InGameMenu();
-            this.GameEndMenu = new PongRoyale_client.Menu.GameEnd();
             this.SuspendLayout();
             // 
             // GameLoop
@@ -55,6 +55,20 @@ namespace PongRoyale_client
             this.FrameCountLabel.TabIndex = 0;
             this.FrameCountLabel.Text = "FrameCount";
             this.FrameCountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // GameEndMenu
+            // 
+            this.GameEndMenu.Location = new System.Drawing.Point(350, 21);
+            this.GameEndMenu.Name = "GameEndMenu";
+            this.GameEndMenu.Size = new System.Drawing.Size(150, 114);
+            this.GameEndMenu.TabIndex = 14;
+            // 
+            // InGameMenu
+            // 
+            this.InGameMenu.Location = new System.Drawing.Point(670, 1);
+            this.InGameMenu.Name = "InGameMenu";
+            this.InGameMenu.Size = new System.Drawing.Size(177, 449);
+            this.InGameMenu.TabIndex = 13;
             // 
             // ChatUI
             // 
@@ -77,20 +91,6 @@ namespace PongRoyale_client
             this.GameScreen.Name = "GameScreen";
             this.GameScreen.Size = new System.Drawing.Size(451, 451);
             this.GameScreen.TabIndex = 7;
-            // 
-            // InGameMenu
-            // 
-            this.InGameMenu.Location = new System.Drawing.Point(670, 1);
-            this.InGameMenu.Name = "InGameMenu";
-            this.InGameMenu.Size = new System.Drawing.Size(177, 449);
-            this.InGameMenu.TabIndex = 13;
-            // 
-            // GameEndMenu
-            // 
-            this.GameEndMenu.Location = new System.Drawing.Point(350, 21);
-            this.GameEndMenu.Name = "GameEndMenu";
-            this.GameEndMenu.Size = new System.Drawing.Size(150, 114);
-            this.GameEndMenu.TabIndex = 14;
             // 
             // MainForm
             // 

@@ -13,7 +13,8 @@ namespace PongRoyale_client.Game.Obstacles
 {
     public class ObstacleSpawner : ArenaObjectSpawner
     {
-        public ObstacleSpawner(ArenaObjectSpawnerParams _params) : base(_params)
+        public ObstacleSpawner(ArenaObjectSpawnerParams _params, AbstractArenaObjectFactory[] factories) 
+            : base(_params, factories)
         {            
         }
 

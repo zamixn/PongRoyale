@@ -32,8 +32,8 @@ namespace PongRoyale_shared
         byte[] EncodeRoundOverData(BallType[] ballTypes, byte[] ballIds, byte[] playerIds, byte[] playerLifes);
         void DecodeRoundOverData(byte[] data, out BallType[] ballTypes, out byte[] ids, out byte[] playerIds, out byte[] playerLifes);
 
-        byte[] EncodeObstacleData(float width, float height, Color color, float duration, float posX, float posY);
+        byte[] EncodeObstacleData(byte id, float width, float height, float duration, float posX, float posY, byte type);
 
-        void DecodeObstacleData(byte[] data, out float width, out float height, out Color color, out float duration, out float posX, out float posY);
+        void DecodeObstacleData(byte[] data, out byte id, out float width, out float height, out float duration, out float posX, out float posY, out byte type);
     }
 }
