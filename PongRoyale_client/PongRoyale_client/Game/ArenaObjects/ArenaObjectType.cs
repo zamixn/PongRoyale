@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Obstacles
 {
-    public enum ObstacleType
+    public enum ArenaObjectType
     {
-        yes = 1,
-        no = 2
+        Passable = 1,
+        NonPassable = 2
     }
 }

@@ -14,15 +14,8 @@ namespace PongRoyale_client.Game.Builders
         public float Duration { get; set; }
         public float PosX { get; set; }
         public float PosY { get; set; }
-        public Color Color { get; set; }
         public float Width = 0;
         public float Heigth = 0;
-
-        public ObstacleBuilder AddColor(Color color)
-        {
-            Color = color;
-            return this;
-        }
 
         public ObstacleBuilder AddDuration(float duration)
         {
@@ -60,7 +53,7 @@ namespace PongRoyale_client.Game.Builders
         }
         public ArenaObject CreateObject()
         {
-            return new Obstacle(PosX, PosY, Duration, Color, Width, Heigth);
+            return new Obstacle(PosX, PosY, Duration, Width, Heigth);
         }
     }
 }

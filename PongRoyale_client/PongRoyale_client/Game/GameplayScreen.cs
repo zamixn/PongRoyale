@@ -84,9 +84,9 @@ namespace PongRoyale_client.Game
                 Graphics g = pe.Graphics;
                 DrawBorder(g);
                 DrawArena(g);
+                DrawArenaObjects(g);
                 DrawPlayers(g);
                 DrawBalls(g);
-                DrawArenaObjects(g);
 
                 // debug stuff
                 if (GameManager.Instance.DebugMode)

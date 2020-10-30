@@ -9,7 +9,7 @@ namespace PongRoyale_client.Game
 {
     class LongPaddle : Paddle
     {
-        public LongPaddle() : base(GameSettings.PaddleSettingsDict[typeof(LongPaddle)])
+        public LongPaddle() : base(GameData.PaddleSettingsDict[typeof(LongPaddle)])
         {
         }
 

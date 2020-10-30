@@ -13,14 +13,28 @@ namespace PongRoyale_client.Game.Obstacles
     {
         public float Width;
         public float Heigth;
+        public Obstacle(float posX, float posY, float duration, float width, float heigth)
+        {
+            PosX = posX;
+            PosY = posY;
+            Duration = duration;
+            Width = width;
+            Heigth = heigth;
+        }
         public Obstacle(float posX, float posY, float duration, Color color, float width, float heigth)
         {
             PosX = posX;
             PosY = posY;
             Duration = duration;
-            Color = color;
             Width = width;
             Heigth = heigth;
+            Color = color;
+        }
+
+
+        public void Init(Color color)
+        {
+            Color = color;
         }
 
         public override void Render(Graphics g, Pen p, Brush b)

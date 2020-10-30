@@ -25,6 +25,15 @@ namespace PongRoyale_shared
             }
         }
 
+        public static float RandomFloat(float min, float max)
+        {
+            lock (syncLock)
+            {
+                var rnd = (float)random.NextDouble();
+                return min + (max - min) * rnd;
+            }
+        }
+
         public static float NextFloat()
         {
             lock (syncLock)
@@ -39,6 +48,11 @@ namespace PongRoyale_shared
             {
                 return (byte)random.Next(min, max);
             }
+        }
+
+        public static Vector2 RandomVector(Vector2 min, Vector2 max)
+        {
+            return new Vector2(RandomFloat(min.X, max.X), RandomFloat(min.Y, max.Y));
         }
 
         public static T[] GetArray<T>(int count, Func<T> randomGetter)

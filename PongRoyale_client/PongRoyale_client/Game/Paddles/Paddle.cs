@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static PongRoyale_client.Game.ArenaFacade;
-using static PongRoyale_client.Game.GameSettings;
+using static PongRoyale_client.Game.GameData;
 
 namespace PongRoyale_client.Game
 {

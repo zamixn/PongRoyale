@@ -209,17 +209,22 @@ namespace PongRoyale_client.Game.Balls
                         else //if (coll.AngularSpeed == 0)
                             reboundStrategy = new PaddleNotMoving();
                         break;
-                    default:
-                        reboundStrategy = null;
-                        break;
                 }
             }
             else if (obj != null)// collision with an arena object
             {
+                switch (obj.Type)
+                {
+                    case Obstacles.ArenaObjectType.Passable:
+                        reboundStrategy = new PassableObstacleStrategy();
+                        break;
+                    case Obstacles.ArenaObjectType.NonPassable:
+                        reboundStrategy = new NonPassableObstacleStrategy();
+                        break;
+                }
                 var offset = (Direction * Diameter * 0.5f);
                 Vector2 impactPos = Position + offset;
                 collisionNormal = obj.GetCollisionNormal(impactPos, Direction);
-                reboundStrategy = new ObstacleStrategy();
             }
             Rebound(reboundStrategy, collisionNormal, coll, obj);
         }

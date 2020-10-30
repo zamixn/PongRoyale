@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.ArenaObjects;
 using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Game.Builders;
 using PongRoyale_client.Game.Obstacles;
@@ -79,24 +80,24 @@ namespace PongRoyale_client.Game
             StartingAlivePaddleCount = AlivePaddleCount;
 
             BallType bType = RoomSettings.Instance.BallType;
-            Ball ball = Ball.CreateBall(bType, ArenaDimensions.Center, GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
+            Ball ball = Ball.CreateBall(bType, ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
             ArenaBalls.Add(0, ball);
 
             Spawners = new List<ArenaObjectSpawner>();
-            Spawners.Add(new ObstacleSpawner());
+            Spawners.Add(new ObstacleSpawner(GameData.ObstacleSpawnerParams));
 
             IsInitted = true;
             PauseGame(false);
         }
 
         byte idTmp = 0;
-        public void CreateArenaObject(ArenaObject obj)
+        public void OnArenaObjectCreated(ArenaObject obj)
         {
             byte id = idTmp++;
             ArenaObjects.Add(id, obj);
             obj.SetId(id);
         }
-        public void DestroyArenaObject(byte id)
+        public void OnArenaObjectExpire(byte id)
         {
             ArenaObjectsToDestroy.Add(id);
         }
@@ -200,7 +201,7 @@ namespace PongRoyale_client.Game
             ArenaBalls.Clear();
             for (int i = 0; i < newBalls.Length; i++)
             {
-                Ball ball = Ball.CreateBall(newBalls[i], ArenaDimensions.Center, GameSettings.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameSettings.DefaultBallSize);
+                Ball ball = Ball.CreateBall(newBalls[i], ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
                 ArenaBalls.Add(ballIds[i], ball);
             }
             ArenaObjects.Clear();

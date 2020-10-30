@@ -12,7 +12,6 @@ namespace PongRoyale_client.Game.Builders
         float Duration { get; set; }
         float PosX { get; set; }
         float PosY { get; set; }
-        Color Color { get; set; }
         ArenaObject CreateObject();
     }
 }

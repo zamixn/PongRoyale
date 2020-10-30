@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -23,6 +24,7 @@ namespace PongRoyale_client.Game
         public float PosY { get; set; }
         public Color Color { get; set; }
         public Color CurrentColor { get; set; }
+        public ArenaObjectType Type { get; private set; }
         protected float TimeAlive { get; set; } = 0;
         protected bool IsAppearing { get; set; } = true;
         protected bool IsDisappearing { get; set; } = true;
@@ -48,15 +50,15 @@ namespace PongRoyale_client.Game
             else if (IsDisappearing)
             {
                 CurrentColor = Utilities.Lerp(CurrentColor, Color.Transparent, TimeAlive - Duration);
-                if (CurrentColor == Color.Transparent)
-                    IsBeingDestroyed = false;
+                if (CurrentColor.A < 10)
+                    IsBeingDestroyed = true;
             }
             else if (TimeAlive >= Duration)
                 IsDisappearing = true;
 
 
             if (IsBeingDestroyed)
-                ArenaFacade.Instance.DestroyArenaObject(Id);
+                ArenaFacade.Instance.OnArenaObjectExpire(Id);
         }
 
         public virtual Vector2 GetCollisionNormal(Vector2 impactPoint, Vector2 impactDirection)
@@ -105,5 +107,10 @@ namespace PongRoyale_client.Game
         }
 
         public abstract Rect2D GetBounds();
+
+        public virtual void SetTypeParams(ArenaObjectType type)
+        {
+            Type = type;
+        }
     }
 }

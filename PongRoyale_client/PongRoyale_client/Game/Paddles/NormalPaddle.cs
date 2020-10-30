@@ -9,7 +9,7 @@ namespace PongRoyale_client.Game.Paddles
 {
     class NormalPaddle : Paddle
     {
-        public NormalPaddle() : base(GameSettings.PaddleSettingsDict[typeof(NormalPaddle)])
+        public NormalPaddle() : base(GameData.PaddleSettingsDict[typeof(NormalPaddle)])
         {
         }
 
