@@ -11,8 +11,6 @@ namespace PongRoyale_client.Game.Obstacles
 {
     public class Obstacle : ArenaObject
     {
-        public float Width;
-        public float Heigth;
         public Obstacle(float posX, float posY, float duration, float width, float heigth)
         {
             PosX = posX;

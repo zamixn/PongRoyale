@@ -52,6 +52,36 @@ namespace PongRoyale_client.Extensions
             g.FillRectangle(b, x - width / 2f, y - height / 2f, width, height);
         }
 
+        public static void FillCricleAtCenter(this Graphics g, Brush b, Vector2 point, float diameter = 10)
+        {
+            g.FillCricleAtCenter(b, point.X - diameter / 2f, point.Y - diameter / 2f, diameter);
+        }
+
+        public static void FillCricleAtCenter(this Graphics g, Brush b, float x, float y, float diameter = 10)
+        {
+            g.FillEllipse(b, x - diameter / 2f, y - diameter / 2f, diameter, diameter);
+        }
+
+        public static void FillNgonAtCenter(this Graphics g, Brush b, int n, Vector2 pos, float diameter = 10, float phase = 0)
+        {
+            g.FillNgonAtCenter(b, n, pos.X, pos.Y, diameter, phase);
+        }
+        public static void FillNgonAtCenter(this Graphics g, Brush b, int n, float x, float y, float diameter = 10, float phase = 0)
+        {
+            float radius = diameter / 2f;
+            PointF[] points = new PointF[n];
+            float angle = SharedUtilities.DegToRad(phase);
+            float deltaAngle = SharedUtilities.PI * 2f / n;
+            for (int i = 0; i < n; i++)
+            {
+                points[i] = new PointF(
+                    x + radius * SharedUtilities.CosF(angle), 
+                    y + radius * SharedUtilities.SinF(angle));
+                angle += deltaAngle;
+            }
+            g.FillPolygon(b, points);
+        }
+
         public static void DrawRect2D(this Graphics g, Pen p, Rect2D rect)
         {
             g.DrawRectangle(p, rect.Origin.X, rect.Origin.Y, rect.Size.X, rect.Size.Y);

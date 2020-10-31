@@ -22,6 +22,8 @@ namespace PongRoyale_client.Game
         public float Duration { get; set; }
         public float PosX { get; set; }
         public float PosY { get; set; }
+        public float Width { get; set; }
+        public float Heigth { get; set; }
         public Color Color { get; set; }
         public Color CurrentColor { get; set; }
         public ArenaObjectType Type { get; private set; }

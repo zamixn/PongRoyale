@@ -1,4 +1,5 @@
-﻿using PongRoyale_client.Singleton;
+﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Singleton;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,6 +11,9 @@ namespace PongRoyale_client.Game.Powerups
 {
     public class Powerup : ArenaObject
     {
+        private float Diameter => Width;
+        private float Radius => Diameter / 2f;
+
         public bool MakeBallDeadly;
         public bool MakeBallFaster;
         public bool ChangeBallDirection;
@@ -17,13 +21,14 @@ namespace PongRoyale_client.Game.Powerups
         public bool MakePaddleFaster;
         public bool MakePaddleSlower;
 
-        public Powerup(float duration, float posX, float posY, Color color,
+        public Powerup(float duration, float posX, float posY, float width, float height,
             bool makeBallDeadly, bool makeBallFaster, bool changeBallDirection, bool givePlayerLife, bool makePaddleFaster, bool makePaddleSlower)
         {
             Duration = duration;
             PosX = posX;
             PosY = posY;
-            Color = color;
+            Width = width;
+            Heigth = height;
             MakeBallDeadly = makeBallDeadly;
             MakeBallFaster = makeBallFaster;
             ChangeBallDirection = changeBallDirection;
@@ -32,19 +37,22 @@ namespace PongRoyale_client.Game.Powerups
             MakePaddleSlower = makePaddleSlower;
         }
 
-        public override void Render(Graphics g, Pen p, Brush b)
+        public void Init(Color color)
         {
-            throw new NotImplementedException();
+            Color = color;
         }
 
-        public override void Update()
+        public override void Render(Graphics g, Pen p, Brush b)
         {
-            throw new NotImplementedException();
+            b = new SolidBrush(CurrentColor);
+            g.FillNgonAtCenter(b, 8, PosX, PosY, Diameter);
+            b.Dispose();
         }
 
         public override Rect2D GetBounds()
         {
-            throw new NotImplementedException();
+            float offset = Radius;
+            return new Rect2D(PosX - offset, PosY - offset, Diameter, Diameter);
         }
     }
 }

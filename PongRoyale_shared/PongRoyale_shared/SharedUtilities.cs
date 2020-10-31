@@ -9,6 +9,8 @@ namespace PongRoyale_shared
         public const float PI = (float)Math.PI;
         private const double DegToRadConst = Math.PI / 180;
         private const double RadToDegConst = 180 / Math.PI;
+        public static float SinF(float angle) => (float)Math.Sin(angle);
+        public static float CosF(float angle) => (float)Math.Cos(angle);
 
         public static float DegToRad(float angle)
         {

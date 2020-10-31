@@ -23,6 +23,7 @@ namespace PongRoyale_client.Game
         {
             Powerup powerup = builder.CreateObject() as Powerup;
             powerup.SetTypeParams(ArenaObjectType.NonPassable);
+            powerup.Init(GameData.PowerupColors[ArenaObjectType.NonPassable]);
             return powerup;
         }
     }

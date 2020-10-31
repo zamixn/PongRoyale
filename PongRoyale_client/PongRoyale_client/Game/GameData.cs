@@ -51,7 +51,13 @@ namespace PongRoyale_client.Game
 
         public static readonly Dictionary<ArenaObjectType, Color> ObstacleColors = new Dictionary<ArenaObjectType, Color>()
         {
-            { ArenaObjectType.NonPassable, Color.DarkGray },
+            { ArenaObjectType.NonPassable, Color.SandyBrown },
+            { ArenaObjectType.Passable, Color.FromArgb(128, Color.SandyBrown) }
+        };
+
+        public static readonly Dictionary<ArenaObjectType, Color> PowerupColors = new Dictionary<ArenaObjectType, Color>()
+        {
+            { ArenaObjectType.NonPassable, Color.DarkGreen },
             { ArenaObjectType.Passable, Color.FromArgb(128, Color.DarkGreen) }
         };
 

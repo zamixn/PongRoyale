@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.ArenaObjects;
+using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Game.Builders;
 using PongRoyale_client.Game.Obstacles;
@@ -90,6 +91,7 @@ namespace PongRoyale_client.Game
 
             Spawners = new List<ArenaObjectSpawner>();
             Spawners.Add(new ObstacleSpawner(GameData.ObstacleSpawnerParams, ArenaObjectFactories.Values.ToArray()));
+            Spawners.Add(new PowerUpSpawner(GameData.PowerUpSpawnerParams, ArenaObjectFactories.Values.ToArray()));
 
             IsInitted = true;
             PauseGame(false);
