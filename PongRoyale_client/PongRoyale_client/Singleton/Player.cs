@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Game;
+using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Powerups;

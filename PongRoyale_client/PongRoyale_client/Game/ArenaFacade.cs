@@ -137,9 +137,9 @@ namespace PongRoyale_client.Game
             obs.SetId(id);
         }
 
-        public void PowerupSpawnedMessageReceived(byte id, Powerup pwu)
+        public void PowerupSpawnedMessageReceived(byte id, Powerup pwu, PowerUppedData data)
         {
-            pwu.Init(GameData.PowerupColors[pwu.Type]);
+            pwu.Init(GameData.PowerupColors[pwu.Type], data);
             ArenaObjects.Add(id, pwu);
             pwu.SetId(id);
         }

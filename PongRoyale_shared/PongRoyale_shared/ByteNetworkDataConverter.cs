@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 
 namespace PongRoyale_shared
@@ -154,17 +155,18 @@ namespace PongRoyale_shared
             type = data[index];
         }
 
-        public byte[] EncodePowerupData(byte id, float radius, float duration, float posX, float posY, byte type)
+        public byte[] EncodePowerupData(byte id, float radius, float duration, float posX, float posY, byte type, byte[] powerUppedData)
         {
             return (new byte[] { id })
                         .AppendBytes(EncodeFloat(radius))
                         .AppendBytes(EncodeFloat(duration))
                         .AppendBytes(EncodeFloat(posX))
                         .AppendBytes(EncodeFloat(posY))
-                        .AppendBytes(new byte[] { type });
+                        .AppendBytes(new byte[] { type })
+                        .AppendBytes(powerUppedData);
         }
 
-        public void DecodePowerupData(byte[] data, out byte id, out float radius, out float duration, out float posX, out float posY, out byte type)
+        public void DecodePowerupData(byte[] data, out byte id, out float radius, out float duration, out float posX, out float posY, out byte type, out byte[] powerUppedData)
         {
             int index = 0;
             id = data[0];
@@ -178,6 +180,10 @@ namespace PongRoyale_shared
             posY = DecodeFloat(data, index);
             index += 4;
             type = data[index];
+            index += 1;
+            powerUppedData = new byte[data.Length - index];
+            for (int i = 0; i < powerUppedData.Length; i++)
+                powerUppedData[i] = data[index++];
         }
     }
 }

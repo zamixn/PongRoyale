@@ -25,22 +25,22 @@ namespace PongRoyale_client.Game.ArenaObjects
 
         public float RollInterval()
         {
-            return RandomNumber.RandomFloat(MinInterval, MaxInterval);
+            return RandomNumber.NextFloat(MinInterval, MaxInterval);
         }
 
         public float RollWidth()
         {
-            return RandomNumber.RandomFloat(MinWidth, MaxWidth);
+            return RandomNumber.NextFloat(MinWidth, MaxWidth);
         }
 
         public float RollHeight()
         {
-            return RandomNumber.RandomFloat(MinHeight, MaxHeight);
+            return RandomNumber.NextFloat(MinHeight, MaxHeight);
         }
 
         public float RollDuration()
         {
-            return RandomNumber.RandomFloat(MinDuration, MaxDuration);
+            return RandomNumber.NextFloat(MinDuration, MaxDuration);
         }
 
         public Vector2 RollPosition()

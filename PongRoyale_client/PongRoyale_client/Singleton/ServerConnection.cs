@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Game;
+using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Powerups;
 using PongRoyale_shared;
@@ -143,8 +144,8 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.PowerupSpawned:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        Powerup pwu = Converter.DecodePowerupData(message.ByteContents, out byte id);
-                        ArenaFacade.Instance.PowerupSpawnedMessageReceived(id, pwu);
+                        Powerup pwu = Converter.DecodePowerupData(message.ByteContents, out byte id, out PowerUppedData data);
+                        ArenaFacade.Instance.PowerupSpawnedMessageReceived(id, pwu, data);
                     });
                     break;
                 default:

@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Singleton;
@@ -17,32 +18,21 @@ namespace PongRoyale_client.Game.Powerups
         public float Diameter => Width;
         public float Radius => Diameter / 2f;
 
-        public bool MakeBallDeadly;
-        public bool MakeBallFaster;
-        public bool ChangeBallDirection;
-        public bool GivePlayerLife;
-        public bool MakePaddleFaster;
-        public bool MakePaddleSlower;
+        public PowerUppedData PowerUppedData { get; private set; }
 
-        public Powerup(float duration, float posX, float posY, float width, float height,
-            bool makeBallDeadly, bool makeBallFaster, bool changeBallDirection, bool givePlayerLife, bool makePaddleFaster, bool makePaddleSlower)
+        public Powerup(float duration, float posX, float posY, float width, float height)
         {
             Duration = duration;
             PosX = posX;
             PosY = posY;
             Width = width;
             Heigth = height;
-            MakeBallDeadly = makeBallDeadly;
-            MakeBallFaster = makeBallFaster;
-            ChangeBallDirection = changeBallDirection;
-            GivePlayerLife = givePlayerLife;
-            MakePaddleFaster = makePaddleFaster;
-            MakePaddleSlower = makePaddleSlower;
         }
 
-        public void Init(Color color)
+        public void Init(Color color, PowerUppedData powerUppedData)
         {
             Color = color;
+            PowerUppedData = powerUppedData;
         }
 
         public override void Render(Graphics g, Pen p, Brush b)

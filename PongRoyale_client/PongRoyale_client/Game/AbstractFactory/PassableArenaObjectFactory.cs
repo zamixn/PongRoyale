@@ -1,4 +1,5 @@
-﻿using PongRoyale_client.Game.Builders;
+﻿using PongRoyale_client.Game.ArenaObjects.Powerups;
+using PongRoyale_client.Game.Builders;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Powerups;
 using System;
@@ -23,7 +24,7 @@ namespace PongRoyale_client.Game
         {
             Powerup powerup = builder.CreateObject() as Powerup;
             powerup.SetTypeParams(ArenaObjectType.Passable);
-            powerup.Init(GameData.PowerupColors[ArenaObjectType.Passable]);
+            powerup.Init(GameData.PowerupColors[ArenaObjectType.Passable], PowerUppedData.RollRandom());
             return powerup;
         }
     }

@@ -53,6 +53,7 @@
     <Compile Include="Game\ArenaObjects\ArenaObject.cs" />
     <Compile Include="Game\ArenaObjects\ArenaObjectSpawner.cs" />
     <Compile Include="Game\ArenaObjects\ArenaObjectSpawnerParams.cs" />
+    <Compile Include="Game\ArenaObjects\Powerups\PowerUppedData.cs" />
     <Compile Include="Game\ArenaObjects\Powerups\PowerUpSpawner.cs" />
     <Compile Include="Game\Balls\Ball.cs" />
     <Compile Include="Game\Balls\DeadlyBall.cs" />
@@ -69,9 +70,9 @@
     <Compile Include="Game\Balls\ReboundStrategy\PaddleNotMoving.cs" />
     <Compile Include="Game\Balls\ReboundStrategy\PassablePowerupStrategy.cs" />
     <Compile Include="Game\Balls\ReboundStrategy\PassableObstacleStrategy.cs" />
-    <Compile Include="Game\Builders\IArenaObjectBuilder.cs" />
-    <Compile Include="Game\Builders\ObstacleBuilder.cs" />
-    <Compile Include="Game\Builders\PowerUpBuilder.cs" />
+    <Compile Include="Game\ArenaObjects\Builders\IArenaObjectBuilder.cs" />
+    <Compile Include="Game\ArenaObjects\Builders\ObstacleBuilder.cs" />
+    <Compile Include="Game\ArenaObjects\Builders\PowerUpBuilder.cs" />
     <Compile Include="Game\Command\BallMoveCommand.cs" />
     <Compile Include="Game\Command\Command.cs" />
     <Compile Include="Game\Command\LifeLostCommand.cs" />

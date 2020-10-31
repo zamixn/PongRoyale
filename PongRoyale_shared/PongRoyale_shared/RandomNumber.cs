@@ -10,14 +10,14 @@ namespace PongRoyale_shared
     {
         private static readonly Random random = new Random();
         private static readonly object syncLock = new object();
-        public static int RandomNumb(int min, int max)
+        public static int NextInt(int min, int max)
         {
             lock (syncLock)
             { 
                 return random.Next(min, max);
             }
         }
-        public static double RandomNumb()
+        public static double NextDouble()
         {
             lock (syncLock)
             { 
@@ -25,7 +25,7 @@ namespace PongRoyale_shared
             }
         }
 
-        public static float RandomFloat(float min, float max)
+        public static float NextFloat(float min, float max)
         {
             lock (syncLock)
             {
@@ -52,7 +52,7 @@ namespace PongRoyale_shared
 
         public static Vector2 RandomVector(Vector2 min, Vector2 max)
         {
-            return new Vector2(RandomFloat(min.X, max.X), RandomFloat(min.Y, max.Y));
+            return new Vector2(NextFloat(min.X, max.X), NextFloat(min.Y, max.Y));
         }
 
         public static T[] GetArray<T>(int count, Func<T> randomGetter)

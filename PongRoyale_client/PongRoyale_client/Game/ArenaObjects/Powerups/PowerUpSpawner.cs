@@ -22,7 +22,7 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
             var pos = Params.RollPosition();
 
             var powerupBuilder = new PowerUpBuilder().AddDiameter(diameter).AddDuration(duration).AddPos(pos);
-            var powerup = Factories[RandomNumber.RandomNumb(0, Factories.Length)].CreatePowerup(powerupBuilder);
+            var powerup = Factories[RandomNumber.NextInt(0, Factories.Length)].CreatePowerup(powerupBuilder);
             ArenaFacade.Instance.OnArenaObjectCreated(powerup);
 
             SpawnInterval = Params.RollInterval();

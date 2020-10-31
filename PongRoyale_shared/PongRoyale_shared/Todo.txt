@@ -1,0 +1,23 @@
+﻿
+* Prototype : use on network message, to clone in server/client (need both shallow and deep cloning)
+
+* Decorator : use to change how the ball looks while it has a power up picked up
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**YES - Roundabout
+to be continued... 
+

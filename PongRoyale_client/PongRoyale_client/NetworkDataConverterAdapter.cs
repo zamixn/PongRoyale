@@ -1,4 +1,5 @@
-﻿using PongRoyale_client.Game.Obstacles;
+﻿using PongRoyale_client.Game.ArenaObjects.Powerups;
+using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Powerups;
 using PongRoyale_shared;
 using System;
@@ -124,24 +125,24 @@ namespace PongRoyale_client
             return obs;
         }
 
-        public byte[] EncodePowerupData(byte id, float radius, float duration, float posX, float posY, byte type)
+        public byte[] EncodePowerupData(byte id, float radius, float duration, float posX, float posY, byte type, byte[] powerUppedData)
         {
-            return Converter.EncodePowerupData(id, radius, duration, posX, posY, type);
+            return Converter.EncodePowerupData(id, radius, duration, posX, posY, type, powerUppedData);
         }
 
-        public void DecodePowerupData(byte[] data, out byte id, out float radius, out float duration, out float posX, out float posY, out byte type)
+        public void DecodePowerupData(byte[] data, out byte id, out float radius, out float duration, out float posX, out float posY, out byte type, out byte[] powerUppedData)
         {
-            Converter.DecodePowerupData(data, out id, out radius, out duration, out posX, out posY, out type);
+            Converter.DecodePowerupData(data, out id, out radius, out duration, out posX, out posY, out type, out powerUppedData);
         }
-        public byte[] EncodePowerupData(byte id, Powerup pwoerup)
+        public byte[] EncodePowerupData(byte id, Powerup powerup)
         {
-            return Converter.EncodePowerupData(id, pwoerup.Radius, pwoerup.Duration, pwoerup.PosX, pwoerup.PosY, (byte)pwoerup.Type);
+            return Converter.EncodePowerupData(id, powerup.Radius, powerup.Duration, powerup.PosX, powerup.PosY, (byte)powerup.Type, powerup.PowerUppedData.ToByteArray());
         }
-        public Powerup DecodePowerupData(byte[] data, out byte id)
+        public Powerup DecodePowerupData(byte[] data, out byte id, out PowerUppedData powerUppedData)
         {
-            Converter.DecodePowerupData(data, out id, out float radius, out float duration, out float posX, out float posY, out byte type);
-            var obs = new Powerup(duration, posX, posY,radius * 2f, radius * 2f, 
-                false, false, false, false, false, false);
+            Converter.DecodePowerupData(data, out id, out float radius, out float duration, out float posX, out float posY, out byte type, out byte[] powerUppedDataArray);
+            powerUppedData = PowerUppedData.FromByteArray(powerUppedDataArray);
+            var obs = new Powerup(duration, posX, posY,radius * 2f, radius * 2f);
             obs.SetTypeParams((ArenaObjectType)type);
             return obs;
         }

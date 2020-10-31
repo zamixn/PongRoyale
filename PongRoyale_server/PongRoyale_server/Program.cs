@@ -156,7 +156,7 @@ namespace PongRoyale_server
                         Converter.DecodeRoundOverData(networkMessage.ByteContents, out BallType[] oldBalls, out byte[] oldIds, out byte[] playerIDs, out byte[] playerLifes);
 
                         int ballCount = SharedUtilities.Clamp(
-                            playerIDs.Length + RandomNumber.RandomNumb(-1, 2), 1, playerIDs.Length + 1);
+                            playerIDs.Length + RandomNumber.NextInt(-1, 2), 1, playerIDs.Length + 1);
 
                         BallType[] newBallTypes = new BallType[ballCount];
                         byte[] newIds = new byte[newBallTypes.Length];
