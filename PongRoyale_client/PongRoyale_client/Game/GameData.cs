@@ -81,7 +81,7 @@ namespace PongRoyale_client.Game
 
         public static readonly ArenaObjectSpawnerParams PowerUpSpawnerParams = new ArenaObjectSpawnerParams()
         {
-            StartDelay = 2.5f,
+            StartDelay = 1.5f,
 
             MinInterval = 3f,
             MaxInterval = 6f,

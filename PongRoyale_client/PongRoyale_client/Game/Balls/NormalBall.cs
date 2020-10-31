@@ -10,21 +10,15 @@ namespace PongRoyale_client.Game.Balls
 {
     class NormalBall : Ball
     {
-        public override Ball Clone()
+
+        public override Color GetColor()
         {
-            return new NormalBall()
-            {
-                bType = bType,
-                Position = Position,
-                Direction = Direction,
-                Diameter = Diameter,
-                Speed = Speed,
-            };
+            return Color.Black;
         }
 
         public override void Render(Graphics g, Brush b)
         {
-            b = new SolidBrush(Color.OrangeRed);
+            b = new SolidBrush(Color.Black);
             base.Render(g, b);
         }
 

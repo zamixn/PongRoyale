@@ -17,6 +17,21 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
         public bool GivePlayerLife;
         public bool ChangePaddleSpeed;
 
+        public Vector2 RndDirection;
+        public PowerUppedData()
+        {
+            RndDirection = Vector2.RandomInUnitCircle();
+        }
+
+        public float GetDurationOnBall()
+        {
+            return (MakeBallDeadly ? 5f : 0) +
+                   (ChangeBallSpeed ? 5f : 0) +
+                   (ChangeBallDirection ? 1f : 0) +
+                   (GivePlayerLife ? 5f : 0) +
+                   (ChangePaddleSpeed ? 5f : 0);
+        }
+
         public bool[] GetAsArray()
         {
             return new bool[] { MakeBallDeadly, ChangeBallSpeed, ChangeBallDirection, GivePlayerLife, ChangePaddleSpeed };
@@ -48,6 +63,36 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
             bool[] array = new bool[BYTE_COUNT];
             array[RandomNumber.NextInt(0, BYTE_COUNT)] = true;
             return FromArray(array);
+        }
+
+        public override string ToString()
+        {
+            var d = ToByteArray();
+            var i = 0;
+            return $"(MakeBallDeadly: {d[i++]}; ChangeBallSpeed: {d[i++]}; ChangeBallDirection: {d[i++]}; GivePlayerLife: {d[i++]}; ChangePaddleSpeed: {d[i++]})";
+        }
+
+        public void Add(PowerUppedData data)
+        {
+            MakeBallDeadly = MakeBallDeadly || data.MakeBallDeadly;
+            ChangeBallSpeed = ChangeBallSpeed || data.ChangeBallSpeed;
+            ChangeBallDirection = ChangeBallDirection || data.ChangeBallDirection;
+            GivePlayerLife = GivePlayerLife || data.GivePlayerLife;
+            ChangePaddleSpeed = ChangePaddleSpeed || data.ChangePaddleSpeed;
+        }
+
+        public void Remove(PowerUppedData data)
+        {
+            MakeBallDeadly = MakeBallDeadly && !data.MakeBallDeadly;
+            ChangeBallSpeed = ChangeBallSpeed && !data.ChangeBallSpeed;
+            ChangeBallDirection = ChangeBallDirection && !data.ChangeBallDirection;
+            GivePlayerLife = GivePlayerLife && !data.GivePlayerLife;
+            ChangePaddleSpeed = ChangePaddleSpeed && !data.ChangePaddleSpeed;
+        }
+
+        public bool IsValid()
+        {
+            return MakeBallDeadly || ChangeBallSpeed || ChangeBallDirection || GivePlayerLife || ChangePaddleSpeed;
         }
     }
 }

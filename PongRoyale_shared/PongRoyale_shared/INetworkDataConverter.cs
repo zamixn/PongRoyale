@@ -25,19 +25,20 @@ namespace PongRoyale_shared
         byte[] EncodeGameStartMessage(byte[] playerIds, byte[] paddleTypes, byte ballType, byte roomMasterId);
         void DecodeGameStartMessage(byte[] data, out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType, out byte roomMasterId);
 
-        byte[] EncodeBallData(byte[] ballIds, Vector2[] ballPositions);
-
-        void DecodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions);
+        byte[] EncodeBallData(byte[] ballIds, Vector2[] ballPositions, Vector2[] ballDirections);
+        void DecodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions, out Vector2[] ballDirections);
 
         byte[] EncodeRoundOverData(BallType[] ballTypes, byte[] ballIds, byte[] playerIds, byte[] playerLifes);
         void DecodeRoundOverData(byte[] data, out BallType[] ballTypes, out byte[] ids, out byte[] playerIds, out byte[] playerLifes);
 
         byte[] EncodeObstacleData(byte id, float width, float height, float duration, float posX, float posY, byte type);
-
         void DecodeObstacleData(byte[] data, out byte id, out float width, out float height, out float duration, out float posX, out float posY, out byte type);
 
         byte[] EncodePowerupData(byte id, float radius, float duration, float posX, float posY, byte type, byte[] powerUppedData);
-
         void DecodePowerupData(byte[] data, out byte id, out float radius, out float duration, out float posX, out float posY, out byte type, out byte[] powerUppedData);
+
+
+        byte[] EncodeBallPoweredUpData(byte ballId, byte powerUpId, byte[] poweredUp);
+        void DecodeBallPoweredUpData(byte[] data, out byte ballId, out byte powerUpId, out byte[] poweredUp);
     }
 }

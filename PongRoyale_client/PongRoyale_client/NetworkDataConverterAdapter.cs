@@ -25,11 +25,6 @@ namespace PongRoyale_client
             Converter = converter;
         }
 
-        public void DecodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions)
-        {
-            Converter.DecodeBallData(data, out ballIds, out ballPositions);
-        }
-
         public Color DecodeColor(byte[] data, int index = 0)
         {
            return Converter.DecodeColor(data, index);
@@ -65,9 +60,13 @@ namespace PongRoyale_client
             return Converter.DecodeVector2(data, index);
         }
 
-        public byte[] EncodeBallData(byte[] ballIds, Vector2[] ballPositions)
+        public byte[] EncodeBallData(byte[] ballIds, Vector2[] ballPositions, Vector2[] ballDirections)
         {
-            return Converter.EncodeBallData(ballIds, ballPositions);
+            return Converter.EncodeBallData(ballIds, ballPositions, ballDirections);
+        }
+        public void DecodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions, out Vector2[] ballDirections)
+        {
+            Converter.DecodeBallData(data, out ballIds, out ballPositions, out ballDirections);
         }
 
         public byte[] EncodeColor(Color c)
@@ -145,6 +144,25 @@ namespace PongRoyale_client
             var obs = new Powerup(duration, posX, posY,radius * 2f, radius * 2f);
             obs.SetTypeParams((ArenaObjectType)type);
             return obs;
+        }
+
+        public byte[] EncodeBallPoweredUpData(byte ballId, byte powerUpId, byte[] poweredUp)
+        {
+            return Converter.EncodeBallPoweredUpData(ballId, powerUpId, poweredUp);
+        }
+        public void DecodeBallPoweredUpData(byte[] data, out byte ballId, out byte powerUpId, out byte[] poweredUp)
+        {
+            Converter.DecodeBallPoweredUpData(data, out ballId, out powerUpId, out poweredUp);
+        }
+
+        public byte[] EncodeBallPoweredUpData(byte ballId, byte powerupId, PowerUppedData poweredUp)
+        {
+            return Converter.EncodeBallPoweredUpData(ballId, powerupId, poweredUp.ToByteArray());
+        }
+        public void DecodeBallPoweredUpData(byte[] data, out byte ballId, out byte powerUpId, out PowerUppedData poweredUp)
+        {
+            Converter.DecodeBallPoweredUpData(data, out ballId, out powerUpId, out byte[] poweredUpArray);
+            poweredUp = PowerUppedData.FromByteArray(poweredUpArray);
         }
     }
 }

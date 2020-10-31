@@ -2,6 +2,7 @@
 using PongRoyale_client.Game.ArenaObjects;
 using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Balls;
+using PongRoyale_client.Game.Balls.Decorator;
 using PongRoyale_client.Game.Builders;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Paddles;
@@ -41,11 +42,10 @@ namespace PongRoyale_client.Game
         public Dictionary<byte, Paddle> PlayerPaddles { get; private set; }
         public int StartingAlivePaddleCount { get; private set; }
         public int AlivePaddleCount { get; private set; }
-        public Dictionary<byte, Ball> ArenaBalls { get; private set; }
+        public Dictionary<byte, IBall> ArenaBalls { get; private set; }
         public Dictionary<byte, ArenaObject> ArenaObjects { get; private set; }
-        private List<byte> ArenaObjectsToDestroy;
-        private List<byte> PaddlesToDestroy;
-        private List<byte> BallsToDestroy;
+
+        private List<Action> DoAfterGameLoop;
 
         public bool IsInitted { get; private set; }
 
@@ -61,12 +61,10 @@ namespace PongRoyale_client.Game
             var players = RoomSettings.Instance.Players;
             PlayerCount = players.Count;
 
+            DoAfterGameLoop = new List<Action>();
             PlayerPaddles = new Dictionary<byte, Paddle>();
-            ArenaBalls = new Dictionary<byte, Ball>();
+            ArenaBalls = new Dictionary<byte, IBall>();
             ArenaObjects = new Dictionary<byte, ArenaObject>();
-            ArenaObjectsToDestroy = new List<byte>();
-            PaddlesToDestroy = new List<byte>();
-            BallsToDestroy = new List<byte>();
 
             float deltaAngle = SharedUtilities.PI * 2 / PlayerCount;
             float angle = (-SharedUtilities.PI + deltaAngle) / 2f;
@@ -87,7 +85,7 @@ namespace PongRoyale_client.Game
             StartingAlivePaddleCount = AlivePaddleCount;
 
             BallType bType = RoomSettings.Instance.BallType;
-            Ball ball = Ball.CreateBall(bType, ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
+            Ball ball = Ball.CreateBall(0, bType, ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
             ArenaBalls.Add(0, ball);
 
             Spawners = new List<ArenaObjectSpawner>();
@@ -116,7 +114,41 @@ namespace PongRoyale_client.Game
         }
         public void OnArenaObjectExpire(byte id)
         {
-            ArenaObjectsToDestroy.Add(id);
+            DoAfterGameLoop.Add(() => ArenaObjects.Remove(id));
+        }
+
+        public void BallHasCollectedPowerUp(Powerup p, IBall b)
+        {
+            if (!p.isUsedUp)
+            {
+                var data = p.PowerUppedData;
+                if (Player.Instance.IsRoomMaster)
+                    Player.Instance.SendBallPoweredUpMessage(b.GetId(), p.Id, data);
+                OnReceivedBallPowerUpMessage(b.GetId(), p.Id, data);
+            }
+        }
+        public void OnReceivedBallPowerUpMessage(byte ballId, byte powerUpId, PowerUppedData data)
+        {
+            if (ArenaObjects.TryGetValue(powerUpId, out ArenaObject pwp)) {
+                var ball = ArenaBalls[ballId];
+                var poweredUpBall = ball.ApplyPowerup(data);
+                DoAfterGameLoop.Add(() => {
+                    ArenaBalls[ball.GetId()] = poweredUpBall;
+                });
+                // remove after a duration
+                SafeInvoke.Instance.DelayedInvoke(data.GetDurationOnBall(), () =>
+                {
+                    RemoveBallPowerUp(ball, data);
+                });
+                (pwp as Powerup).Use();
+            }
+        }
+
+
+        private void RemoveBallPowerUp(IBall ball, PowerUppedData data)
+        {
+            DoAfterGameLoop.Add(() => ArenaBalls[ball.GetId()] = ball);
+            ball.RemovePowerUpData(data);
         }
 
         public void DestroyGame()
@@ -155,10 +187,11 @@ namespace PongRoyale_client.Game
 
         public void BallSyncMessageReceived(NetworkMessage message)
         {
-            Converter.DecodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions);
+            Converter.DecodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions, out Vector2[] directions);
             for(int i = 0; i < ids.Length; i++)
             {
                 ArenaBalls[ids[i]].SetPosition(positions[i]);
+                ArenaBalls[ids[i]].SetDirection(directions[i]);
             }
         }
         public void PLayerLostLifeMessageReceived(NetworkMessage message)
@@ -197,7 +230,7 @@ namespace PongRoyale_client.Game
 
         private void ResetRound()
         {
-            var ballTypes = ArenaBalls.Select(b => b.Value.bType).ToArray();
+            var ballTypes = ArenaBalls.Select(b => b.Value.GetBallType()).ToArray();
             var ballIds = ArenaBalls.Select(b => b.Key).ToArray();
             byte[] playerIds = RoomSettings.Instance.Players.Select(kvp => kvp.Key).ToArray();
             byte[] playerLifes = RoomSettings.Instance.Players.Select(kvp => kvp.Value.Life).ToArray();
@@ -233,7 +266,7 @@ namespace PongRoyale_client.Game
             ArenaBalls.Clear();
             for (int i = 0; i < newBalls.Length; i++)
             {
-                Ball ball = Ball.CreateBall(newBalls[i], ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
+                Ball ball = Ball.CreateBall(ballIds[i], newBalls[i], ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
                 ArenaBalls.Add(ballIds[i], ball);
             }
             ArenaObjects.Clear();
@@ -311,23 +344,11 @@ namespace PongRoyale_client.Game
 
         private void CleanUp()
         {
-            foreach (var id in ArenaObjectsToDestroy)
+            foreach (var a in DoAfterGameLoop)
             {
-                ArenaObjects.Remove(id);
+                a?.Invoke();
             }
-            ArenaObjectsToDestroy.Clear();
-
-            foreach (var id in BallsToDestroy)
-            {
-                ArenaBalls.Remove(id);
-            }
-            BallsToDestroy.Clear();
-
-            foreach (var id in PaddlesToDestroy)
-            {
-                PlayerPaddles.Remove(id);
-            }
-            PaddlesToDestroy.Clear();
+            DoAfterGameLoop.Clear();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -73,17 +74,21 @@ namespace PongRoyale_shared
             }
         }
 
-        public byte[] EncodeBallData(byte[] ballIds, Vector2[] ballPositions)
+        public byte[] EncodeBallData(byte[] ballIds, Vector2[] ballPositions, Vector2[] ballDirections)
         {
             byte[] data = ballIds.PrependBytes(new byte[] { (byte)ballIds.Length });
             for (int i = 0; i < ballPositions.Length; i++)
             {
                 data = data.AppendBytes(EncodeVector(ballPositions[i]));
             }
+            for (int i = 0; i < ballDirections.Length; i++)
+            {
+                data = data.AppendBytes(EncodeVector(ballDirections[i]));
+            }
             return data;
         }
 
-        public void DecodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions)
+        public void DecodeBallData(byte[] data, out byte[] ballIds, out Vector2[] ballPositions, out Vector2[] ballDirections)
         {
             byte length = data[0];
             ballIds = new byte[length];
@@ -93,6 +98,12 @@ namespace PongRoyale_shared
                 ballIds[i] = data[i + 1];
                 int index = length + (Vector2.ByteSize) * i;
                 ballPositions[i] = DecodeVector2(data, index + 1);
+            }
+            ballDirections = new Vector2[length];
+            for (int i = 0; i < length; i++)
+            {
+                int index = length + (Vector2.ByteSize * length) + (Vector2.ByteSize * i);
+                ballDirections[i] = DecodeVector2(data, index + 1);
             }
         }
 
@@ -184,6 +195,19 @@ namespace PongRoyale_shared
             powerUppedData = new byte[data.Length - index];
             for (int i = 0; i < powerUppedData.Length; i++)
                 powerUppedData[i] = data[index++];
+        }
+
+        public byte[] EncodeBallPoweredUpData(byte ballId, byte powerupId, byte[] poweredUp)
+        {
+            return poweredUp.PrependBytes(new byte[] { ballId, powerupId });
+        }
+        public void DecodeBallPoweredUpData(byte[] data, out byte ballId, out byte powerUpId, out byte[] poweredUp)
+        {
+            ballId = data[0];
+            powerUpId = data[1];
+            poweredUp = new byte[data.Length - 2];
+            for (int i = 0; i < poweredUp.Length; i++)
+                poweredUp[i] = data[i + 2];
         }
     }
 }

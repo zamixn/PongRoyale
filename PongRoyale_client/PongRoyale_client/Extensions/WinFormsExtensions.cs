@@ -24,6 +24,17 @@ namespace PongRoyale_client.Extensions
             box.SelectionColor = box.ForeColor;
         }
 
+        public static void DrawCircleAtCenter(this Graphics g, Pen p, Vector2 pos, float diameter)
+        {
+            g.DrawCircleAtCenter(p, pos.X, pos.Y, diameter);
+        }
+
+        public static void DrawCircleAtCenter(this Graphics g, Pen p, float x, float y, float diameter)
+        {
+            float radius = diameter / 2f;
+            g.DrawEllipse(p, x - radius, y - radius, diameter, diameter);
+        }
+
         public static void DrawLine(this Graphics g, Pen p, Vector2 p1, Vector2 p2)
         {
             g.DrawLine(p, p1.X, p1.Y, p2.X, p2.Y);
@@ -80,6 +91,26 @@ namespace PongRoyale_client.Extensions
                 angle += deltaAngle;
             }
             g.FillPolygon(b, points);
+        }
+
+        public static void DrawNgonAtCenter(this Graphics g, Pen p, int n, Vector2 pos, float diameter = 10, float phase = 0)
+        {
+            g.DrawNgonAtCenter(p, n, pos.X, pos.Y, diameter, phase);
+        }
+        public static void DrawNgonAtCenter(this Graphics g, Pen p, int n, float x, float y, float diameter = 10, float phase = 0)
+        {
+            float radius = diameter / 2f;
+            PointF[] points = new PointF[n];
+            float angle = SharedUtilities.DegToRad(phase);
+            float deltaAngle = SharedUtilities.PI * 2f / n;
+            for (int i = 0; i < n; i++)
+            {
+                points[i] = new PointF(
+                    x + radius * SharedUtilities.CosF(angle),
+                    y + radius * SharedUtilities.SinF(angle));
+                angle += deltaAngle;
+            }
+            g.DrawPolygon(p, points);
         }
 
         public static void DrawRect2D(this Graphics g, Pen p, Rect2D rect)

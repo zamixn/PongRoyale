@@ -9,13 +9,16 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
 {
     class PassableObstacleStrategy : IReboundStrategy
     {
-        public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal, Paddle p, ArenaObject obj)
+        public Vector2 ReboundDirection(Ball b, Vector2 collisionNormal, Paddle p, ArenaObject obj)
         {
+            var ballDirection = b.Direction;
             return ballDirection;
         }
 
-        public Vector2 ReboundPosition(Vector2 ballPos, Vector2 ballDirection, Vector2 collisionNormal, Paddle p, ArenaObject obj)
+        public Vector2 ReboundPosition(Ball b, Vector2 collisionNormal, Paddle p, ArenaObject obj)
         {
+            var ballPos = b.Position;
+            var ballDirection = b.Direction;
             return ballPos;
         }
     }

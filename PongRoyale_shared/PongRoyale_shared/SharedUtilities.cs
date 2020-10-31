@@ -59,5 +59,16 @@ namespace PongRoyale_shared
             Vector2 dir = p2 - p1;
             return new Vector2(-dir.Y, dir.X).Normalize();
         }
+
+
+        public static int Lerp(int a, int b, float t)
+        {
+            return (int)(a + t * (b - a));
+        }
+
+        public static float Lerp(float a, float b, float t)
+        {
+            return a + t * (b - a);
+        }
     }
 }

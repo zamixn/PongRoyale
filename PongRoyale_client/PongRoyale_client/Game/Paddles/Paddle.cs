@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
@@ -98,6 +99,14 @@ namespace PongRoyale_client.Game
                 Move(1);
             else
                 Move(0);
+        }
+
+        public virtual void TransferPowerUp(PowerUppedData data)
+        {
+            if (data.IsValid())
+            {
+                Debug.WriteLine("transfering: " + data);
+            }
         }
     }
 }

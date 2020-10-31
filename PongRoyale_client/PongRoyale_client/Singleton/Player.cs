@@ -50,12 +50,23 @@ namespace PongRoyale_client.Singleton
             {
                 var balls = ArenaFacade.Instance.ArenaBalls;
                 var ids = balls.Select(b => b.Key).ToArray();
-                var positions = balls.Select(b => b.Value.Position).ToArray();
+                var positions = balls.Select(b => b.Value.GetPosition()).ToArray();
+                var directions = balls.Select(b => b.Value.GetDirection()).ToArray();
 
-                message = new NetworkMessage(Id, MessageType.BallSync,
-                    Converter.EncodeBallData(ids, positions));
+                byte[] data = Converter.EncodeBallData(ids, positions, directions);
+                message = new NetworkMessage(Id, MessageType.BallSync, data);
                 ServerConnection.Instance.SendDataToServer(message);
             }
+        }
+
+        public void SendBallPoweredUpMessage(byte ballId, byte powerUpId, PowerUppedData poweredUp)
+        {
+            if (!ServerConnection.Instance.IsConnected())
+                return;
+
+            var data = Converter.EncodeBallPoweredUpData(ballId, powerUpId, poweredUp);
+            NetworkMessage message = new NetworkMessage(Id, MessageType.BallPoweredUp, data);
+            ServerConnection.Instance.SendDataToServer(message);
         }
 
         public void SendObstacleSpawnedMessage(byte id, Obstacle obs)

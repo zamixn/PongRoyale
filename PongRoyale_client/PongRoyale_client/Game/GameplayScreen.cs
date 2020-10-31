@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.Balls;
+using PongRoyale_client.Game.Balls.Decorator;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Singleton;
@@ -116,7 +117,7 @@ namespace PongRoyale_client.Game
         }
         private void DrawBalls(Graphics g)
         {
-            foreach (Ball ball in ArenaFacade.Instance.ArenaBalls.Values)
+            foreach (IBall ball in ArenaFacade.Instance.ArenaBalls.Values)
             {
                 Brush p = new SolidBrush(Color.Yellow);
                 ball.Render(g, p);
@@ -211,9 +212,9 @@ namespace PongRoyale_client.Game
                 float angle = paddle.GetCenterAngle();
                 Vector2 paddleCenter = Utilities.GetPointOnCircle(Center.ToVector2(), Radius, angle);
                 Vector2 paddleNormal = (Center.ToVector2() - paddleCenter).Normalize();
-                foreach (Ball b in ArenaFacade.Instance.ArenaBalls.Values)
+                foreach (IBall b in ArenaFacade.Instance.ArenaBalls.Values)
                 {
-                    Vector2 ballDir = b.Direction;
+                    Vector2 ballDir = b.GetDirection();
                     Vector2 bounceDir = SharedUtilities.GetBounceDirection(paddleNormal, ballDir);
                     g.DrawVector(p, paddleCenter, bounceDir);
 
@@ -237,7 +238,7 @@ namespace PongRoyale_client.Game
                 if (ArenaFacade.Instance.IsPaused)
                     break;
             }
-            foreach (Ball ball in ArenaFacade.Instance.ArenaBalls.Values)
+            foreach (IBall ball in ArenaFacade.Instance.ArenaBalls.Values)
             {
                 g.DrawRect2D(p, ball.GetBounds());
 
@@ -253,9 +254,9 @@ namespace PongRoyale_client.Game
             Brush b = new SolidBrush(Color.Magenta);
             foreach (var ball in ArenaFacade.Instance.ArenaBalls.Values)
             {
-                var Direction = ball.Direction;
-                var Position = ball.Position;
-                var offset = (Direction * ball.Diameter * 0.5f);
+                var Direction = ball.GetDirection();
+                var Position = ball.GetPosition();
+                var offset = (Direction * ball.GetDiameter() * 0.5f);
                 Vector2 impactPos = Position + offset;
                 g.DrawPoint(b, impactPos);
                 foreach (var obj in ArenaFacade.Instance.ArenaObjects.Values)

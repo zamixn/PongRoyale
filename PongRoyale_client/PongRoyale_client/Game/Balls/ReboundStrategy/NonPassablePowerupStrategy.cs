@@ -1,4 +1,6 @@
-﻿using PongRoyale_shared;
+﻿using PongRoyale_client.Game.ArenaObjects.Powerups;
+using PongRoyale_client.Game.Powerups;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,16 +12,23 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
 {
     public class NonPassablePowerupStrategy : IReboundStrategy
     {
-        public Vector2 ReboundDirection(Vector2 ballDirection, Vector2 collisionNormal, Paddle p, ArenaObject obj)
+        public Vector2 ReboundDirection(Ball b, Vector2 collisionNormal, Paddle p, ArenaObject obj)
         {
+            var ballDirection = b.Direction;
             if (collisionNormal.Equals(-ballDirection))
                 return collisionNormal;
             var dir = (collisionNormal + ballDirection).Normalize();
+
+            var powerup = (obj as Powerup);
+            ArenaFacade.Instance.BallHasCollectedPowerUp(powerup, b);
             return dir;
         }
 
-        public Vector2 ReboundPosition(Vector2 ballPos, Vector2 ballDirection, Vector2 collisionNormal, Paddle p, ArenaObject obj)
+        public Vector2 ReboundPosition(Ball b, Vector2 collisionNormal, Paddle p, ArenaObject obj)
         {
+            var ballPos = b.Position;
+            var ballDirection = b.Direction;
+
             var offset = ballDirection * 10;
             return obj.GetBounds().GetClosestPointOnBorder(ballPos) + offset;
         }

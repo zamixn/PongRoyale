@@ -22,7 +22,8 @@ namespace PongRoyale_shared
             GameEnd = 6,
             RoundReset = 7,
             ObstacleSpawned = 8,
-            PowerupSpawned = 9
+            PowerupSpawned = 9,
+            BallPoweredUp = 10,
         }
 
         public byte SenderId;

@@ -64,6 +64,11 @@ namespace PongRoyale_client.Game
                 ArenaFacade.Instance.OnArenaObjectExpire(Id);
         }
 
+        protected void ForceDestroy()
+        {
+            TimeAlive = Duration;
+        }
+
         public abstract Vector2 GetCollisionNormal(Vector2 impactPoint, Vector2 impactDirection);
 
         public virtual bool Intersects(Rect2D bounds)

@@ -19,6 +19,7 @@ namespace PongRoyale_client.Game.Powerups
         public float Radius => Diameter / 2f;
 
         public PowerUppedData PowerUppedData { get; private set; }
+        public bool isUsedUp { get; private set; }
 
         public Powerup(float duration, float posX, float posY, float width, float height)
         {
@@ -72,6 +73,12 @@ namespace PongRoyale_client.Game.Powerups
             Vector2 normal = p - center;
             normal = normal.Normalize();
             return normal;
+        }
+
+        public void Use() 
+        {
+            isUsedUp = true;
+            ForceDestroy();
         }
     }
 }

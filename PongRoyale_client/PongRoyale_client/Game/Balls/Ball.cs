@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Balls.Decorator;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Command;
@@ -15,15 +16,20 @@ using System.Windows.Forms;
 
 namespace PongRoyale_client.Game.Balls
 {
-    public abstract class Ball : IBall, IClonable<Ball>
+    public abstract class Ball : IBall
     {
+        public byte Id { get; protected set; }
         public BallType bType { get; protected set; }
         public Vector2 Position { get; protected set; }
         public Vector2 Direction { get; protected set; }
         public float Diameter { get; protected set; }
         public float Speed { get; protected set; }
+        public PowerUppedData PoweredUpData { get; protected set; }
 
-        public abstract Ball Clone();
+        public Vector2 GetDirection() => Direction;
+        public Vector2 GetPosition() => Position;
+        public float GetDiameter() => Diameter;
+        public PowerUppedData GetPoweredUpData() => PoweredUpData;
 
         public virtual void Render(Graphics g, Brush p)
         {
@@ -37,7 +43,7 @@ namespace PongRoyale_client.Game.Balls
                 Debug.WriteLine("Error while drawing ball");
             }
         }
-        public static Ball CreateBall(BallType type, Vector2 position, float speed, Vector2 direction, float diameter)
+        public static Ball CreateBall(byte id, BallType type, Vector2 position, float speed, Vector2 direction, float diameter)
         {
             Ball ball;
             switch (type)
@@ -59,44 +65,62 @@ namespace PongRoyale_client.Game.Balls
             ball.Speed = speed;
             ball.Direction = direction;
             ball.Diameter = diameter;
+            ball.PoweredUpData = new PowerUppedData();
 
             return ball;
         }
 
-        public override void LocalMove()
+        public virtual void LocalMove()
         {
-            //bool pressed = false;
-            //if (InputManager.Instance.IsKeyDown(Keys.Left))
-            //{
-            //    Direction = pressed ? Direction + Vector2.Left : Vector2.Left;
-            //    Direction = Direction.Normalize();
-            //    pressed = true;
-            //}
-            //if (InputManager.Instance.IsKeyDown(Keys.Right))
-            //{
-            //    Direction = pressed ? Direction + Vector2.Right : Vector2.Right;
-            //    Direction = Direction.Normalize();
-            //    pressed = true;
-            //}
-            //if (InputManager.Instance.IsKeyDown(Keys.Down))
-            //{
-            //    Direction = pressed ? Direction + Vector2.Up : Vector2.Up;
-            //    Direction = Direction.Normalize();
-            //    pressed = true;
-            //}
-            //if (InputManager.Instance.IsKeyDown(Keys.Up))
-            //{
-            //    Direction = pressed ? Direction + Vector2.Down : Vector2.Down;
-            //    Direction = Direction.Normalize();
-            //    pressed = true;
-            //}
+            bool pressed = false;
+            if (InputManager.Instance.IsKeyDown(Keys.Left))
+            {
+                Direction = pressed ? Direction + Vector2.Left : Vector2.Left;
+                Direction = Direction.Normalize();
+                pressed = true;
+            }
+            if (InputManager.Instance.IsKeyDown(Keys.Right))
+            {
+                Direction = pressed ? Direction + Vector2.Right : Vector2.Right;
+                Direction = Direction.Normalize();
+                pressed = true;
+            }
+            if (InputManager.Instance.IsKeyDown(Keys.Down))
+            {
+                Direction = pressed ? Direction + Vector2.Up : Vector2.Up;
+                Direction = Direction.Normalize();
+                pressed = true;
+            }
+            if (InputManager.Instance.IsKeyDown(Keys.Up))
+            {
+                Direction = pressed ? Direction + Vector2.Down : Vector2.Down;
+                Direction = Direction.Normalize();
+                pressed = true;
+            }
+
+            float actualSpeed = Speed;
+            if (PoweredUpData.ChangeBallDirection)
+                Direction = Vector2.Lerp(Direction, PoweredUpData.RndDirection, GameManager.Instance.DeltaTime * 5);
+            if (PoweredUpData.ChangeBallSpeed)
+                actualSpeed = Speed * 2f;
+            if (PoweredUpData.ChangePaddleSpeed)
+                actualSpeed = Speed * 1.1f;
+            if (PoweredUpData.GivePlayerLife)
+                actualSpeed = Speed * 1.1f;
+            if (PoweredUpData.MakeBallDeadly)
+                actualSpeed = Speed * 1.1f;
 
 
-            Move(Direction * Speed);
+            Move(Direction * actualSpeed);
         }
         public void SetPosition(Vector2 pos)
         {
             Position = pos;
+        }
+
+        public BallType GetBallType()
+        {
+            return bType;
         }
 
         public void SetDirection(Vector2 dir)
@@ -180,7 +204,36 @@ namespace PongRoyale_client.Game.Balls
             return isOutOfBounds;
         }
 
+        public IBall ApplyPowerup(PowerUppedData data)
+        {
+            IBall result = this;
+            PoweredUpData.Add(data);
+            if (data.ChangeBallDirection)
+                result = new BallDirectionDecorator(this);
+            if (data.ChangeBallSpeed)
+                result = new BallSpeedDecorator(this);
+            if (data.ChangePaddleSpeed)
+                result = new PaddleSpeedDecorator(this);
+            if (data.GivePlayerLife)
+                result = new PlayerLifeDecorator(this);
+            if (data.MakeBallDeadly)
+                result = new DeadlyBallDecorator(this);
+            return result;
+        }
+        public void RemovePowerUpData(PowerUppedData data)
+        {
+            PoweredUpData.Remove(data);
+        }
 
+        public byte GetId()
+        {
+            return Id;
+        }
+
+        public virtual Color GetColor()
+        {
+            return Color.Magenta;
+        }
 
         #region collisions
         public void OnCollision(Paddle coll, ArenaObject obj)
@@ -223,7 +276,7 @@ namespace PongRoyale_client.Game.Balls
 
         private void Rebound(IReboundStrategy reboundStrategy, Vector2 surfaceNormal, Paddle p, ArenaObject obj)
         {
-            var dir = reboundStrategy.ReboundDirection(Direction, surfaceNormal, p, obj);
+            var dir = reboundStrategy.ReboundDirection(this, surfaceNormal, p, obj);
             //var pos = reboundStrategy.ReboundPosition(Position, Direction, surfaceNormal, p, obj);
             Direction = dir;
             //SetPosition(pos);

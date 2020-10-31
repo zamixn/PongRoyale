@@ -118,5 +118,18 @@ namespace PongRoyale_shared
             Vector2 v = obj as Vector2;
             return (v.X == X && v.Y == Y);
         }
+
+        public static Vector2 Lerp(Vector2 a, Vector2 b, float t)
+        {
+            if (t <= 0)
+                return a;
+            if (t >= 1)
+                return b;
+
+            return new Vector2(
+                SharedUtilities.Lerp(a.X, b.X, t),
+                SharedUtilities.Lerp(a.Y, b.Y, t)
+                );
+        }
     }
 }
