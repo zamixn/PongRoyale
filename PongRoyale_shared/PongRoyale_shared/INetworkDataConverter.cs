@@ -35,5 +35,9 @@ namespace PongRoyale_shared
         byte[] EncodeObstacleData(byte id, float width, float height, float duration, float posX, float posY, byte type);
 
         void DecodeObstacleData(byte[] data, out byte id, out float width, out float height, out float duration, out float posX, out float posY, out byte type);
+
+        byte[] EncodePowerupData(byte id, float radius, float duration, float posX, float posY, byte type);
+
+        void DecodePowerupData(byte[] data, out byte id, out float radius, out float duration, out float posX, out float posY, out byte type);
     }
 }

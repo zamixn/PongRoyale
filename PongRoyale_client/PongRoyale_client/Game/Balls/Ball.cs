@@ -213,15 +213,7 @@ namespace PongRoyale_client.Game.Balls
             }
             else if (obj != null)// collision with an arena object
             {
-                switch (obj.Type)
-                {
-                    case Obstacles.ArenaObjectType.Passable:
-                        reboundStrategy = new PassableObstacleStrategy();
-                        break;
-                    case Obstacles.ArenaObjectType.NonPassable:
-                        reboundStrategy = new NonPassableObstacleStrategy();
-                        break;
-                }
+                reboundStrategy = obj.GetReboundStrategy();
                 var offset = (Direction * Diameter * 0.5f);
                 Vector2 impactPos = Position + offset;
                 collisionNormal = obj.GetCollisionNormal(impactPos, Direction);

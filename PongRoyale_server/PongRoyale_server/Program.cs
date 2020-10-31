@@ -117,6 +117,7 @@ namespace PongRoyale_server
                         SendMessageToAllPlayers(responseMessage);
                         break;
                     }
+                case NetworkMessage.MessageType.PowerupSpawned:
                 case NetworkMessage.MessageType.ObstacleSpawned:
                 case NetworkMessage.MessageType.BallSync:
                 case NetworkMessage.MessageType.PlayerSync:
@@ -140,6 +141,7 @@ namespace PongRoyale_server
                 case NetworkMessage.MessageType.BallSync:
                 case NetworkMessage.MessageType.GameEnd:
                 case NetworkMessage.MessageType.ObstacleSpawned:
+                case NetworkMessage.MessageType.PowerupSpawned:
                     return new NetworkMessage(sender.Id, networkMessage.Type, networkMessage.ByteContents);
                 case NetworkMessage.MessageType.GameStart:
                     {

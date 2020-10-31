@@ -1,6 +1,7 @@
 ﻿using PongRoyale_client.Game;
 using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Game.Obstacles;
+using PongRoyale_client.Game.Powerups;
 using PongRoyale_client.Observers;
 using PongRoyale_shared;
 using System;
@@ -63,6 +64,16 @@ namespace PongRoyale_client.Singleton
 
             var data = Converter.EncodeObstacleData(id, obs);
             NetworkMessage message = new NetworkMessage(Id, MessageType.ObstacleSpawned, data);
+            ServerConnection.Instance.SendDataToServer(message);
+        }
+
+        public void SendPowerupSpawnedMessage(byte id, Powerup pwu)
+        {
+            if (!ServerConnection.Instance.IsConnected())
+                return;
+
+            var data = Converter.EncodePowerupData(id, pwu);
+            NetworkMessage message = new NetworkMessage(Id, MessageType.PowerupSpawned, data);
             ServerConnection.Instance.SendDataToServer(message);
         }
 

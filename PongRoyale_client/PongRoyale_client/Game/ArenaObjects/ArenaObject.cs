@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
@@ -63,43 +64,7 @@ namespace PongRoyale_client.Game
                 ArenaFacade.Instance.OnArenaObjectExpire(Id);
         }
 
-        public virtual Vector2 GetCollisionNormal(Vector2 impactPoint, Vector2 impactDirection)
-        {
-            Rect2D rect = GetBounds();
-            Vector2 bounds = rect.Size * 0.5f;
-            Vector2 center = rect.Origin + bounds;
-            Vector2 p = impactPoint;
-
-            int offset = 1;
-            bool insideX = center.X - bounds.X + offset < p.X && p.X < center.X + bounds.X - offset;
-            bool insideY = center.Y - bounds.Y + offset < p.Y && p.Y < center.Y + bounds.Y - offset;
-            bool pointInsideRectangle = insideX && insideY;
-            Vector2 normal = -impactDirection;
-
-            if (pointInsideRectangle)
-            {
-                normal = impactDirection;
-            }
-            else
-            {
-                if (insideX)
-                {
-                    if (p.Y < center.Y)
-                        normal = Vector2.Down;
-                    else
-                        normal = Vector2.Up;
-                }
-                if (insideY)
-                {
-                    if (p.X < center.X)
-                        normal = Vector2.Left;
-                    else
-                        normal = Vector2.Right;
-                }
-            }
-            normal = normal.Normalize();
-            return normal;
-        }
+        public abstract Vector2 GetCollisionNormal(Vector2 impactPoint, Vector2 impactDirection);
 
         public virtual bool Intersects(Rect2D bounds)
         {
@@ -113,5 +78,8 @@ namespace PongRoyale_client.Game
         {
             Type = type;
         }
+
+
+        public abstract IReboundStrategy GetReboundStrategy();
     }
 }

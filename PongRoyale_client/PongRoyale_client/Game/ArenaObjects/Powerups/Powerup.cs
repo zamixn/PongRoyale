@@ -1,5 +1,8 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.Balls.ReboundStrategy;
+using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Singleton;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,8 +14,8 @@ namespace PongRoyale_client.Game.Powerups
 {
     public class Powerup : ArenaObject
     {
-        private float Diameter => Width;
-        private float Radius => Diameter / 2f;
+        public float Diameter => Width;
+        public float Radius => Diameter / 2f;
 
         public bool MakeBallDeadly;
         public bool MakeBallFaster;
@@ -51,8 +54,34 @@ namespace PongRoyale_client.Game.Powerups
 
         public override Rect2D GetBounds()
         {
-            float offset = Radius;
-            return new Rect2D(PosX - offset, PosY - offset, Diameter, Diameter);
+            float diameter = Diameter * .8f;
+            float radius = diameter / 2f;
+            return new Rect2D(PosX - radius, PosY - radius, diameter, diameter);
+        }
+
+        public override IReboundStrategy GetReboundStrategy()
+        {
+            switch (Type)
+            {
+                case ArenaObjectType.Passable:
+                    return new PassablePowerupStrategy();
+                case ArenaObjectType.NonPassable:
+                    return new NonPassablePowerupStrategy();
+                default:
+                    return null;
+            }
+        }
+
+        public override Vector2 GetCollisionNormal(Vector2 impactPoint, Vector2 impactDirection)
+        {
+            Rect2D rect = GetBounds();
+            Vector2 bounds = rect.Size * 0.5f;
+            Vector2 center = rect.Origin + bounds;
+            Vector2 p = impactPoint;
+
+            Vector2 normal = p - center;
+            normal = normal.Normalize();
+            return normal;
         }
     }
 }

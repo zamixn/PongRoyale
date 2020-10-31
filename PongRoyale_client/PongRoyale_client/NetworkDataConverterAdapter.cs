@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Game.Obstacles;
+using PongRoyale_client.Game.Powerups;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
@@ -119,6 +120,28 @@ namespace PongRoyale_client
         {
             Converter.DecodeObstacleData(data, out id, out float width, out float height, out float duration, out float posX, out float posY, out byte type);
             var obs = new Obstacle(posX, posY, duration, width, height);
+            obs.SetTypeParams((ArenaObjectType)type);
+            return obs;
+        }
+
+        public byte[] EncodePowerupData(byte id, float radius, float duration, float posX, float posY, byte type)
+        {
+            return Converter.EncodePowerupData(id, radius, duration, posX, posY, type);
+        }
+
+        public void DecodePowerupData(byte[] data, out byte id, out float radius, out float duration, out float posX, out float posY, out byte type)
+        {
+            Converter.DecodePowerupData(data, out id, out radius, out duration, out posX, out posY, out type);
+        }
+        public byte[] EncodePowerupData(byte id, Powerup pwoerup)
+        {
+            return Converter.EncodePowerupData(id, pwoerup.Radius, pwoerup.Duration, pwoerup.PosX, pwoerup.PosY, (byte)pwoerup.Type);
+        }
+        public Powerup DecodePowerupData(byte[] data, out byte id)
+        {
+            Converter.DecodePowerupData(data, out id, out float radius, out float duration, out float posX, out float posY, out byte type);
+            var obs = new Powerup(duration, posX, posY,radius * 2f, radius * 2f, 
+                false, false, false, false, false, false);
             obs.SetTypeParams((ArenaObjectType)type);
             return obs;
         }

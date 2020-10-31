@@ -5,6 +5,7 @@ using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Game.Builders;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Paddles;
+using PongRoyale_client.Game.Powerups;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -108,6 +109,9 @@ namespace PongRoyale_client.Game
             {
                 if(obj is Obstacle)
                     Player.Instance.SendObstacleSpawnedMessage(id, obj as Obstacle);
+                else if(obj is Powerup)
+                    Player.Instance.SendPowerupSpawnedMessage(id, obj as Powerup);
+
             }
         }
         public void OnArenaObjectExpire(byte id)
@@ -131,6 +135,13 @@ namespace PongRoyale_client.Game
             obs.Init(GameData.ObstacleColors[obs.Type]);
             ArenaObjects.Add(id, obs);
             obs.SetId(id);
+        }
+
+        public void PowerupSpawnedMessageReceived(byte id, Powerup pwu)
+        {
+            pwu.Init(GameData.PowerupColors[pwu.Type]);
+            ArenaObjects.Add(id, pwu);
+            pwu.SetId(id);
         }
 
         public void PlayerSyncMessageReceived(NetworkMessage message)

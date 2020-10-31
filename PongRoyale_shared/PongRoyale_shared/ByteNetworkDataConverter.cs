@@ -153,5 +153,31 @@ namespace PongRoyale_shared
             index += 4;
             type = data[index];
         }
+
+        public byte[] EncodePowerupData(byte id, float radius, float duration, float posX, float posY, byte type)
+        {
+            return (new byte[] { id })
+                        .AppendBytes(EncodeFloat(radius))
+                        .AppendBytes(EncodeFloat(duration))
+                        .AppendBytes(EncodeFloat(posX))
+                        .AppendBytes(EncodeFloat(posY))
+                        .AppendBytes(new byte[] { type });
+        }
+
+        public void DecodePowerupData(byte[] data, out byte id, out float radius, out float duration, out float posX, out float posY, out byte type)
+        {
+            int index = 0;
+            id = data[0];
+            index += 1;
+            radius = DecodeFloat(data, index);
+            index += 4;
+            duration = DecodeFloat(data, index);
+            index += 4;
+            posX = DecodeFloat(data, index);
+            index += 4;
+            posY = DecodeFloat(data, index);
+            index += 4;
+            type = data[index];
+        }
     }
 }
