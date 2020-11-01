@@ -182,7 +182,7 @@ namespace PongRoyale_client.Game
                 Radius = Diameter / 2f;
                 Origin = new PointF(ArenaMargin, ArenaMargin);
                 Center = new PointF(Origin.X + Radius, Origin.Y + Radius);
-                ArenaFacade.Instance.UpdateDimentions(new Vector2(Width, Height), Center.ToVector2(), Radius);
+                ArenaFacade.Instance.UpdateDimensions(new Vector2(Width, Height), Center.ToVector2(), Radius);
                 AreStatsInitted = true;
             }
         }

@@ -19,7 +19,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
                 return collisionNormal;
             var dir = (collisionNormal + ballDirection).Normalize();
 
-            var powerup = (obj as Powerup);
+            var powerup = (obj as PowerUp);
             ArenaFacade.Instance.BallHasCollectedPowerUp(powerup, b);
             return dir;
         }

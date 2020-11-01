@@ -49,7 +49,7 @@ namespace PongRoyale_client.Game.Builders
 
         public ArenaObject CreateObject()
         {
-            return new Powerup(Duration, PosX, PosY, Diameter, Diameter);
+            return new PowerUp(Duration, PosX, PosY, Diameter, Diameter);
         }
     }
 }

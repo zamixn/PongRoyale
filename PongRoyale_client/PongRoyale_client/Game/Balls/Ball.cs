@@ -24,12 +24,12 @@ namespace PongRoyale_client.Game.Balls
         public Vector2 Direction { get; protected set; }
         public float Diameter { get; protected set; }
         public float Speed { get; protected set; }
-        public PowerUppedData PoweredUpData { get; protected set; }
+        public PoweredUpData PoweredUpData { get; protected set; }
 
         public Vector2 GetDirection() => Direction;
         public Vector2 GetPosition() => Position;
         public float GetDiameter() => Diameter;
-        public PowerUppedData GetPoweredUpData() => PoweredUpData;
+        public PoweredUpData GetPoweredUpData() => PoweredUpData;
 
         public virtual void Render(Graphics g, Brush p)
         {
@@ -65,7 +65,7 @@ namespace PongRoyale_client.Game.Balls
             ball.Speed = speed;
             ball.Direction = direction;
             ball.Diameter = diameter;
-            ball.PoweredUpData = new PowerUppedData();
+            ball.PoweredUpData = new PoweredUpData();
 
             return ball;
         }
@@ -204,7 +204,7 @@ namespace PongRoyale_client.Game.Balls
             return isOutOfBounds;
         }
 
-        public IBall ApplyPowerup(PowerUppedData data)
+        public IBall ApplyPowerup(PoweredUpData data)
         {
             IBall result = this;
             PoweredUpData.Add(data);
@@ -220,7 +220,7 @@ namespace PongRoyale_client.Game.Balls
                 result = new DeadlyBallDecorator(this);
             return result;
         }
-        public IBall RemovePowerUpData(PowerUppedData data)
+        public IBall RemovePowerUpData(PoweredUpData data)
         {
             PoweredUpData.Remove(data);
             return this;

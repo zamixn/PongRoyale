@@ -10,15 +10,7 @@ namespace PongRoyale_client.Singleton
 {
     public class GameManager : Singleton<GameManager>, IObserverPublisher<GameStateObserver>
     {
-        public enum GameState
-        {
-            InMainMenu_NotConnected,
-            InMainMenu_Connected,
-            GameEnded,
-            InGame
-        }
-
-        public bool DebugMode { get; private set; } = true;
+        public bool DebugMode { get; private set; } = false;
         public void SetDebugMode(bool value)
         {
             DebugMode = value;

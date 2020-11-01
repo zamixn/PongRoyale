@@ -36,12 +36,12 @@ namespace PongRoyale_client.Game
         public int Life { get; protected set; }
         public byte Id { get; protected set; }
 
-        public PowerUppedData PowerUppedData { get; protected set; }
+        public PoweredUpData PowerUppedData { get; protected set; }
 
         public Paddle(PaddleSettings settings, byte id)
         {
             Id = id;
-            PowerUppedData = new PowerUppedData();
+            PowerUppedData = new PoweredUpData();
             AngularSize = settings.Size;
             MaxAngularSpeed = settings.Speed;
             Thickness = settings.Thickness;
@@ -127,7 +127,7 @@ namespace PongRoyale_client.Game
                 Move(0);
         }
 
-        public virtual void TransferPowerUp(PowerUppedData data)
+        public virtual void TransferPowerUp(PoweredUpData data)
         {
             if (data.IsValid())
             {

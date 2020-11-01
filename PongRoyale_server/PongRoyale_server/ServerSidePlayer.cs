@@ -5,12 +5,12 @@ using System.Text;
 
 namespace PongRoyale_server
 {
-    public class Player
+    public class ServerSidePlayer
     {
         public byte Id { get; private set; }
         public TcpClient TcpClient;
 
-        public Player(byte id, TcpClient client)
+        public ServerSidePlayer(byte id, TcpClient client)
         {
             Id = id;
             TcpClient = client;

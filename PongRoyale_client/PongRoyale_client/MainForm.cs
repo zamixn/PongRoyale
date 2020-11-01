@@ -34,7 +34,7 @@ namespace PongRoyale_client
 
             SafeInvoke.Instance.Setup(this);
             MainMenu.ConnectToServerButton.Text = Constants.ConnectToServer;
-            GameManager.Instance.SetGameState(GameManager.GameState.InMainMenu_NotConnected);
+            GameManager.Instance.SetGameState(GameState.InMainMenu_NotConnected);
 
             //tests            
             //UnitTests.NetworkMessageUnitTests.TestBallSyncEncodingAndDecoding();
@@ -109,25 +109,25 @@ namespace PongRoyale_client
 
             switch (state)
             {
-                case GameManager.GameState.InMainMenu_NotConnected:
+                case GameState.InMainMenu_NotConnected:
                     break;
-                case GameManager.GameState.InMainMenu_Connected:
+                case GameState.InMainMenu_Connected:
                     break;
-                case GameManager.GameState.GameEnded:
+                case GameState.GameEnded:
                     EndGame();
                     break;
-                case GameManager.GameState.InGame:
+                case GameState.InGame:
                     StartGame();
                     break;
                 default:
                     break;
             }
 
-            ChatUI.Visible = state != GameManager.GameState.InMainMenu_NotConnected;
-            GameScreen.Visible = state == GameManager.GameState.InGame;
-            MainMenu.Visible = state != GameManager.GameState.InGame;
-            InGameMenu.Visible = state == GameManager.GameState.InGame;
-            GameEndMenu.Visible = state == GameManager.GameState.GameEnded;
+            ChatUI.Visible = state != GameState.InMainMenu_NotConnected;
+            GameScreen.Visible = state == GameState.InGame;
+            MainMenu.Visible = state != GameState.InGame;
+            InGameMenu.Visible = state == GameState.InGame;
+            GameEndMenu.Visible = state == GameState.GameEnded;
 
         }
     }

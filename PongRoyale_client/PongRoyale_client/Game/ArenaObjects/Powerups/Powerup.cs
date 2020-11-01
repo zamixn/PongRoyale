@@ -13,15 +13,15 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Powerups
 {
-    public class Powerup : ArenaObject
+    public class PowerUp : ArenaObject
     {
         public float Diameter => Width;
         public float Radius => Diameter / 2f;
 
-        public PowerUppedData PowerUppedData { get; private set; }
+        public PoweredUpData PowerUppedData { get; private set; }
         public bool isUsedUp { get; private set; }
 
-        public Powerup(float duration, float posX, float posY, float width, float height)
+        public PowerUp(float duration, float posX, float posY, float width, float height)
         {
             Duration = duration;
             PosX = posX;
@@ -30,7 +30,7 @@ namespace PongRoyale_client.Game.Powerups
             Heigth = height;
         }
 
-        public void Init(Color color, PowerUppedData powerUppedData)
+        public void Init(Color color, PoweredUpData powerUppedData)
         {
             Color = color;
             PowerUppedData = powerUppedData;

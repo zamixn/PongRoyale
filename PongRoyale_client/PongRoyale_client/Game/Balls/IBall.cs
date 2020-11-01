@@ -27,10 +27,10 @@ namespace PongRoyale_client.Game.Balls.Decorator
         void CheckCollisionWithArenaObjects(Dictionary<byte, ArenaObject> objects);
         bool CheckOutOfBounds(float startAngle, Dictionary<byte, Paddle> paddles, out byte paddleId);
 
-        IBall ApplyPowerup(PowerUppedData data);
+        IBall ApplyPowerup(PoweredUpData data);
         byte GetId();
         Color GetColor();
-        PowerUppedData GetPoweredUpData();
-        IBall RemovePowerUpData(PowerUppedData data);
+        PoweredUpData GetPoweredUpData();
+        IBall RemovePowerUpData(PoweredUpData data);
     }
 }

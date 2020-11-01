@@ -23,12 +23,11 @@ namespace PongRoyale_client.Game
     public class ArenaFacade : Singleton<ArenaFacade>
     {
         public ArenaDimensions ArenaDimensions { get; private set; }
-        public void UpdateDimentions(Vector2 size, Vector2 center, float radius)
+        public void UpdateDimensions(Vector2 size, Vector2 center, float radius)
         {
             ArenaDimensions = new ArenaDimensions(size, center, radius);
         }
 
-        private readonly NetworkDataConverterAdapter Converter = NetworkDataConverterAdapter.Instance;
         private readonly Dictionary<ArenaObjectType, AbstractArenaObjectFactory> ArenaObjectFactories = new Dictionary<ArenaObjectType, AbstractArenaObjectFactory>()
         {
             { ArenaObjectType.NonPassable, new NonPassableArenaObjectFactory() },
@@ -107,17 +106,17 @@ namespace PongRoyale_client.Game
             {
                 if(obj is Obstacle)
                     ServerConnection.Instance.SendObstacleSpawnedMessage(id, obj as Obstacle);
-                else if(obj is Powerup)
-                    ServerConnection.Instance.SendPowerupSpawnedMessage(id, obj as Powerup);
+                else if(obj is PowerUp)
+                    ServerConnection.Instance.SendPowerupSpawnedMessage(id, obj as PowerUp);
 
             }
         }
-        public void OnArenaObjectExpire(byte id)
+        public void OnArenaObjectExpired(byte id)
         {
             DoAfterGameLoop.Add(() => ArenaObjects.Remove(id));
         }
 
-        public void BallHasCollectedPowerUp(Powerup p, IBall b)
+        public void BallHasCollectedPowerUp(PowerUp p, IBall b)
         {
             if (!p.isUsedUp)
             {
@@ -127,7 +126,7 @@ namespace PongRoyale_client.Game
                 OnReceivedBallPowerUpMessage(b.GetId(), p.Id, data);
             }
         }
-        public void OnReceivedBallPowerUpMessage(byte ballId, byte powerUpId, PowerUppedData data)
+        public void OnReceivedBallPowerUpMessage(byte ballId, byte powerUpId, PoweredUpData data)
         {
             if (ArenaObjects.TryGetValue(powerUpId, out ArenaObject pwp)) {
                 var ball = ArenaBalls[ballId];
@@ -140,33 +139,33 @@ namespace PongRoyale_client.Game
                 {
                     RemoveBallPowerUp(poweredUpBall, data);
                 });
-                (pwp as Powerup).Use();
+                (pwp as PowerUp).Use();
             }
         }
-        private void RemoveBallPowerUp(IBall poweredUpBall, PowerUppedData data)
+        private void RemoveBallPowerUp(IBall poweredUpBall, PoweredUpData data)
         {
             DoAfterGameLoop.Add(() => ArenaBalls[poweredUpBall.GetId()] = poweredUpBall.RemovePowerUpData(data));
         }
 
-        public void TransferPowerUpToPaddle(byte paddleId, byte ballId, PowerUppedData powerUppedData)
+        public void TransferPowerUpToPaddle(byte paddleId, byte ballId, PoweredUpData poweredUpData)
         {
-            if (powerUppedData.IsValid())
+            if (poweredUpData.IsValid())
             {
                 if (ServerConnection.Instance.IsRoomMaster)
-                    ServerConnection.Instance.SendTranferPowerUpToPaddle(paddleId, ballId, powerUppedData);
-                OnReceivedTransferPowerUpessage(paddleId, ballId, powerUppedData);
+                    ServerConnection.Instance.SendTranferPowerUpToPaddle(paddleId, ballId, poweredUpData);
+                OnReceivedTransferPowerUpMessage(paddleId, ballId, poweredUpData);
 
             }
         }
-        public void OnReceivedTransferPowerUpessage(byte paddleId, byte ballId, PowerUppedData powerUppedData)
+        public void OnReceivedTransferPowerUpMessage(byte paddleId, byte ballId, PoweredUpData poweredUpData)
         {
             if (PlayerPaddles.TryGetValue(paddleId, out Paddle paddle))
             {
-                paddle.TransferPowerUp(powerUppedData);
+                paddle.TransferPowerUp(poweredUpData);
             }
             if (ArenaBalls.TryGetValue(ballId, out IBall ball))
             {
-                ball.RemovePowerUpData(powerUppedData);
+                ball.RemovePowerUpData(poweredUpData);
             }
         }
 
@@ -181,18 +180,18 @@ namespace PongRoyale_client.Game
             PlayerCount = 0;
         }
 
-        public void ObstacleSpawnedMessageReceived(byte id, Obstacle obs)
+        public void ObstacleSpawnedMessageReceived(byte id, Obstacle obstacle)
         {
-            obs.Init(GameData.ObstacleColors[obs.Type]);
-            ArenaObjects.Add(id, obs);
-            obs.SetId(id);
+            obstacle.Init(GameData.ObstacleColors[obstacle.Type]);
+            ArenaObjects.Add(id, obstacle);
+            obstacle.SetId(id);
         }
 
-        public void PowerupSpawnedMessageReceived(byte id, Powerup pwu, PowerUppedData data)
+        public void PowerUpSpawnedMessageReceived(byte id, PowerUp powerUp, PoweredUpData data)
         {
-            pwu.Init(GameData.PowerupColors[pwu.Type], data);
-            ArenaObjects.Add(id, pwu);
-            pwu.SetId(id);
+            powerUp.Init(GameData.PowerupColors[powerUp.Type], data);
+            ArenaObjects.Add(id, powerUp);
+            powerUp.SetId(id);
         }
 
         public void PlayerSyncMessageReceived(NetworkMessage message)
@@ -200,28 +199,21 @@ namespace PongRoyale_client.Game
             // sytnc message received after game end fix
             if (!IsInitted)
                 return;
-            float newPos = Converter.DecodeFloat(message.ByteContents);
+            float newPos = NetworkDataAdapter.Instance.DecodeFloat(message.ByteContents);
             PlayerPaddles[message.SenderId].OnPosSync(newPos);
         }
 
         public void BallSyncMessageReceived(NetworkMessage message)
         {
-            Converter.DecodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions, out Vector2[] directions);
+            NetworkDataAdapter.Instance.DecodeBallData(message.ByteContents, out byte[] ids, out Vector2[] positions, out Vector2[] directions);
             for(int i = 0; i < ids.Length; i++)
             {
                 ArenaBalls[ids[i]].SetPosition(positions[i]);
                 ArenaBalls[ids[i]].SetDirection(directions[i]);
             }
         }
-        public void PLayerLostLifeMessageReceived(NetworkMessage message)
-        {
-            byte playerId = message.ByteContents[0];
-            byte life = message.ByteContents[1];
-            PlayerPaddles[playerId].SetLife(life);
-            RoomSettings.Instance.Players[playerId].SetLife(life);
-        }
 
-        public void OutOfBounds(byte ballId, byte paddleId)
+        public void HandleOutOfBounds(byte ballId, byte paddleId)
         {
             Paddle paddle = PlayerPaddles[paddleId];
             PaddleLost(paddleId);
@@ -350,7 +342,7 @@ namespace PongRoyale_client.Game
                     ball.CheckCollisionWithPaddles(PlayerPaddles);
                     ball.CheckCollisionWithArenaObjects(ArenaObjects);
                     if (ball.CheckOutOfBounds((float)(-Math.PI / 2), PlayerPaddles, out byte paddleId))
-                        OutOfBounds(kvp.Key, paddleId);
+                        HandleOutOfBounds(kvp.Key, paddleId);
 
                     if (IsPaused)
                         break;

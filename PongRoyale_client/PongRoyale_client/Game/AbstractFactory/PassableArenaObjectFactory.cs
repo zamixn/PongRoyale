@@ -20,11 +20,11 @@ namespace PongRoyale_client.Game
             return obstacle;
         }
 
-        public override Powerup CreatePowerup(IArenaObjectBuilder builder)
+        public override PowerUp CreatePowerup(IArenaObjectBuilder builder)
         {
-            Powerup powerup = builder.CreateObject() as Powerup;
+            PowerUp powerup = builder.CreateObject() as PowerUp;
             powerup.SetTypeParams(ArenaObjectType.Passable);
-            powerup.Init(GameData.PowerupColors[ArenaObjectType.Passable], PowerUppedData.RollRandom());
+            powerup.Init(GameData.PowerupColors[ArenaObjectType.Passable], PoweredUpData.RollRandom());
             return powerup;
         }
     }

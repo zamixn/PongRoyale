@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Builders
 {
-    class ObstacleBuilder : IArenaObjectBuilder
+    public class ObstacleBuilder : IArenaObjectBuilder
     {
         public float Duration { get; set; }
         public float PosX { get; set; }

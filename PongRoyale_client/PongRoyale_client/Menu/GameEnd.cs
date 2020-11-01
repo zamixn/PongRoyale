@@ -26,7 +26,7 @@ namespace PongRoyale_client.Menu
             var state = GameManager.Instance.CurrentGameState;
             switch (state)
             {
-                case GameManager.GameState.GameEnded:
+                case GameState.GameEnded:
                     PlayerNameLabel.Text = RoomSettings.Instance.GetPlayerWonName();
                     break;
             }

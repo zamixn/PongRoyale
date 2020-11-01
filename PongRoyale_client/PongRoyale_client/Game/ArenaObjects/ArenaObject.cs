@@ -61,7 +61,7 @@ namespace PongRoyale_client.Game
 
 
             if (IsBeingDestroyed)
-                ArenaFacade.Instance.OnArenaObjectExpire(Id);
+                ArenaFacade.Instance.OnArenaObjectExpired(Id);
         }
 
         protected void ForceDestroy()

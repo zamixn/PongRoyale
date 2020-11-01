@@ -18,7 +18,7 @@ namespace PongRoyale_client.Singleton
 {
     public class ServerConnection : Singleton<ServerConnection>
     {
-        private readonly NetworkDataConverterAdapter Converter = NetworkDataConverterAdapter.Instance;
+        private readonly NetworkDataAdapter Converter = NetworkDataAdapter.Instance;
         public string PlayerName { get { return ConstructName(Id); } }
         public static string ConstructName(byte id) { return $"Player{id}"; }
         public byte Id { get; private set; }
@@ -59,7 +59,7 @@ namespace PongRoyale_client.Singleton
             }
         }
 
-        public void SendBallPoweredUpMessage(byte ballId, byte powerUpId, PowerUppedData poweredUp)
+        public void SendBallPoweredUpMessage(byte ballId, byte powerUpId, PoweredUpData poweredUp)
         {
             if (!ServerConnection.Instance.IsConnected())
                 return;
@@ -69,7 +69,7 @@ namespace PongRoyale_client.Singleton
             ServerConnection.Instance.SendDataToServer(message);
         }
 
-        public void SendTranferPowerUpToPaddle(byte paddleId, byte ballId, PowerUppedData poweredUp)
+        public void SendTranferPowerUpToPaddle(byte paddleId, byte ballId, PoweredUpData poweredUp)
         {
             if (!ServerConnection.Instance.IsConnected())
                 return;
@@ -79,22 +79,22 @@ namespace PongRoyale_client.Singleton
             ServerConnection.Instance.SendDataToServer(message);
         }
 
-        public void SendObstacleSpawnedMessage(byte id, Obstacle obs)
+        public void SendObstacleSpawnedMessage(byte id, Obstacle obstacle)
         {
             if (!ServerConnection.Instance.IsConnected())
                 return;
 
-            var data = Converter.EncodeObstacleData(id, obs);
+            var data = Converter.EncodeObstacleData(id, obstacle);
             NetworkMessage message = new NetworkMessage(Id, MessageType.ObstacleSpawned, data);
             ServerConnection.Instance.SendDataToServer(message);
         }
 
-        public void SendPowerupSpawnedMessage(byte id, Powerup pwu)
+        public void SendPowerupSpawnedMessage(byte id, PowerUp powerup)
         {
             if (!ServerConnection.Instance.IsConnected())
                 return;
 
-            var data = Converter.EncodePowerupData(id, pwu);
+            var data = Converter.EncodePowerupData(id, powerup);
             NetworkMessage message = new NetworkMessage(Id, MessageType.PowerupSpawned, data);
             ServerConnection.Instance.SendDataToServer(message);
         }
@@ -235,14 +235,14 @@ namespace PongRoyale_client.Singleton
                         Converter.DecodeGameStartMessage(message.ByteContents,
                             out byte[] playerIds, out PaddleType[] paddleTypes, out BallType ballType, out byte roomMasterId);
                         RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, roomMasterId);
-                        GameManager.Instance.SetGameState(GameManager.GameState.InGame);
+                        GameManager.Instance.SetGameState(GameState.InGame);
                     });
                     break;
                 case NetworkMessage.MessageType.GameEnd:
                     SafeInvoke.Instance.Invoke(() =>
                     {
                         RoomSettings.Instance.SetPlayerWon(message.ByteContents[0]);
-                        GameManager.Instance.SetGameState(GameManager.GameState.GameEnded);
+                        GameManager.Instance.SetGameState(GameState.GameEnded);
                     });
                     break;
                 case NetworkMessage.MessageType.RoundReset:
@@ -263,22 +263,22 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.PowerupSpawned:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        Powerup pwu = Converter.DecodePowerupData(message.ByteContents, out byte id, out PowerUppedData data);
-                        ArenaFacade.Instance.PowerupSpawnedMessageReceived(id, pwu, data);
+                        PowerUp pwu = Converter.DecodePowerupData(message.ByteContents, out byte id, out PoweredUpData data);
+                        ArenaFacade.Instance.PowerUpSpawnedMessageReceived(id, pwu, data);
                     });
                     break;
                 case NetworkMessage.MessageType.BallPoweredUp:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        Converter.DecodeBallPoweredUpData(message.ByteContents, out byte ballId, out byte powerupId, out PowerUppedData data);
+                        Converter.DecodeBallPoweredUpData(message.ByteContents, out byte ballId, out byte powerupId, out PoweredUpData data);
                         ArenaFacade.Instance.OnReceivedBallPowerUpMessage(ballId, powerupId, data);
                     });
                     break;
                 case NetworkMessage.MessageType.PaddlePowerUp:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        Converter.DecodePaddlePoweredUpData(message.ByteContents, out byte paddleId, out byte ballId, out PowerUppedData data);
-                        ArenaFacade.Instance.OnReceivedTransferPowerUpessage(paddleId, ballId, data);
+                        Converter.DecodePaddlePoweredUpData(message.ByteContents, out byte paddleId, out byte ballId, out PoweredUpData data);
+                        ArenaFacade.Instance.OnReceivedTransferPowerUpMessage(paddleId, ballId, data);
                     });
                     break;
                 default:
@@ -330,9 +330,9 @@ namespace PongRoyale_client.Singleton
             }
         }
 
-        public void LogConnectionException(Exception ex)
+        public void LogConnectionException(Exception exception)
         {
-            Debug.WriteLine(string.Format("Exception occured: {0}", ex.Message ?? "null"));
+            Debug.WriteLine(string.Format("Exception occured: {0}", exception.Message ?? "null"));
         }
         public void LogConnectionDataReceived(NetworkMessage response)
         {

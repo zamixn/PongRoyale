@@ -79,7 +79,7 @@ namespace PongRoyale_client.Game.Balls.Decorator
             return Ball.GetBounds();
         }
 
-        public IBall ApplyPowerup(PowerUppedData data)
+        public IBall ApplyPowerup(PoweredUpData data)
         {
             return Ball.ApplyPowerup(data);
         }
@@ -94,12 +94,12 @@ namespace PongRoyale_client.Game.Balls.Decorator
             return Ball.GetColor();
         }
 
-        public PowerUppedData GetPoweredUpData()
+        public PoweredUpData GetPoweredUpData()
         {
             return Ball.GetPoweredUpData();
         }
 
-        public IBall RemovePowerUpData(PowerUppedData data)
+        public IBall RemovePowerUpData(PoweredUpData data)
         {
             return Ball.RemovePowerUpData(data);
         }

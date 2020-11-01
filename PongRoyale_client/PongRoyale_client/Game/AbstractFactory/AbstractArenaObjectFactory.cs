@@ -12,6 +12,6 @@ namespace PongRoyale_client.Game
     public abstract class AbstractArenaObjectFactory
     {
         public abstract Obstacle CreateObstacle(IArenaObjectBuilder builder);
-        public abstract Powerup CreatePowerup(IArenaObjectBuilder builder);
+        public abstract PowerUp CreatePowerup(IArenaObjectBuilder builder);
     }
 }

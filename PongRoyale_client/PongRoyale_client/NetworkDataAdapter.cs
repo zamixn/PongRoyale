@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client
 {
-    public class NetworkDataConverterAdapter : Singleton<NetworkDataConverterAdapter>, INetworkDataConverter
+    public class NetworkDataAdapter : Singleton<NetworkDataAdapter>, INetworkDataConverter
     {
         private INetworkDataConverter Converter;
 
-        public NetworkDataConverterAdapter()
+        public NetworkDataAdapter()
         {
             Converter = new ByteNetworkDataConverter();
         }
 
-        public NetworkDataConverterAdapter(INetworkDataConverter converter)
+        public NetworkDataAdapter(INetworkDataConverter converter)
         {
             Converter = converter;
         }
@@ -133,15 +133,15 @@ namespace PongRoyale_client
         {
             Converter.DecodePowerupData(data, out id, out radius, out duration, out posX, out posY, out type, out powerUppedData);
         }
-        public byte[] EncodePowerupData(byte id, Powerup powerup)
+        public byte[] EncodePowerupData(byte id, PowerUp powerup)
         {
             return Converter.EncodePowerupData(id, powerup.Radius, powerup.Duration, powerup.PosX, powerup.PosY, (byte)powerup.Type, powerup.PowerUppedData.ToByteArray());
         }
-        public Powerup DecodePowerupData(byte[] data, out byte id, out PowerUppedData powerUppedData)
+        public PowerUp DecodePowerupData(byte[] data, out byte id, out PoweredUpData powerUppedData)
         {
             Converter.DecodePowerupData(data, out id, out float radius, out float duration, out float posX, out float posY, out byte type, out byte[] powerUppedDataArray);
-            powerUppedData = PowerUppedData.FromByteArray(powerUppedDataArray);
-            var obs = new Powerup(duration, posX, posY,radius * 2f, radius * 2f);
+            powerUppedData = PoweredUpData.FromByteArray(powerUppedDataArray);
+            var obs = new PowerUp(duration, posX, posY,radius * 2f, radius * 2f);
             obs.SetTypeParams((ArenaObjectType)type);
             return obs;
         }
@@ -155,14 +155,14 @@ namespace PongRoyale_client
             Converter.DecodeBallPoweredUpData(data, out ballId, out powerUpId, out poweredUp);
         }
 
-        public byte[] EncodeBallPoweredUpData(byte ballId, byte powerupId, PowerUppedData poweredUp)
+        public byte[] EncodeBallPoweredUpData(byte ballId, byte powerupId, PoweredUpData poweredUp)
         {
             return Converter.EncodeBallPoweredUpData(ballId, powerupId, poweredUp.ToByteArray());
         }
-        public void DecodeBallPoweredUpData(byte[] data, out byte ballId, out byte powerUpId, out PowerUppedData poweredUp)
+        public void DecodeBallPoweredUpData(byte[] data, out byte ballId, out byte powerUpId, out PoweredUpData poweredUp)
         {
             Converter.DecodeBallPoweredUpData(data, out ballId, out powerUpId, out byte[] poweredUpArray);
-            poweredUp = PowerUppedData.FromByteArray(poweredUpArray);
+            poweredUp = PoweredUpData.FromByteArray(poweredUpArray);
         }
 
         public byte[] EncodePaddlePoweredUpData(byte paddleId, byte ballId, byte[] powerUppedData)
@@ -173,14 +173,14 @@ namespace PongRoyale_client
         {
             Converter.DecodePaddlePoweredUpData(data, out paddleId, out ballId, out powerUppedData);
         }
-        public byte[] EncodePaddlePoweredUpData(byte paddleId, byte ballId, PowerUppedData powerUppedData)
+        public byte[] EncodePaddlePoweredUpData(byte paddleId, byte ballId, PoweredUpData powerUppedData)
         {
             return Converter.EncodePaddlePoweredUpData(paddleId, ballId, powerUppedData.ToByteArray());
         }
-        public void DecodePaddlePoweredUpData(byte[] data, out byte paddleId, out byte ballId, out PowerUppedData powerUppedData)
+        public void DecodePaddlePoweredUpData(byte[] data, out byte paddleId, out byte ballId, out PoweredUpData powerUppedData)
         {
             Converter.DecodePaddlePoweredUpData(data, out paddleId, out ballId, out byte[] powerUppedDataArray);
-            powerUppedData = PowerUppedData.FromByteArray(powerUppedDataArray);
+            powerUppedData = PoweredUpData.FromByteArray(powerUppedDataArray);
         }
     }
 }

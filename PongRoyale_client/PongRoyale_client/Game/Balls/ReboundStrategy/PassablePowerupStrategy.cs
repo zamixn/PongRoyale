@@ -15,7 +15,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
         {
             var ballDirection = b.Direction;
 
-            var powerup = (obj as Powerup);
+            var powerup = (obj as PowerUp);
             ArenaFacade.Instance.BallHasCollectedPowerUp(powerup, b);
             return ballDirection;
         }

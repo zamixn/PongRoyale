@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.ArenaObjects.Powerups
 {
-    public class PowerUppedData
+    public class PoweredUpData
     {
         public const int BYTE_COUNT = 5;
 
@@ -19,7 +19,7 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
 
         public Vector2 RndDirection;
         public float RndSpeed;
-        public PowerUppedData()
+        public PoweredUpData()
         {
             RndDirection = Vector2.RandomInUnitCircle();
             RndSpeed = RandomNumber.NextFloat(0.01f, 2f);
@@ -48,10 +48,10 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
             return GetAsArray().Select(b => b ? (byte)1 : (byte)0).ToArray();
         }
 
-        public static PowerUppedData FromArray(bool[] array)
+        public static PoweredUpData FromArray(bool[] array)
         {
             int index = 0;
-            return new PowerUppedData()
+            return new PoweredUpData()
             {
                 MakeBallDeadly = array[index++],
                 ChangeBallSpeed = array[index++],
@@ -60,12 +60,12 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
                 ChangePaddleSpeed = array[index++],
             };
         }
-        public static PowerUppedData FromByteArray(byte[] array)
+        public static PoweredUpData FromByteArray(byte[] array)
         {
             return FromArray(array.Select(b => b == 1).ToArray());
         }
 
-        public static PowerUppedData RollRandom()
+        public static PoweredUpData RollRandom()
         {
             bool[] array = new bool[BYTE_COUNT];
             array[RandomNumber.NextInt(0, BYTE_COUNT)] = true;
@@ -79,7 +79,7 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
             return $"(MakeBallDeadly: {d[i++]}; ChangeBallSpeed: {d[i++]}; ChangeBallDirection: {d[i++]}; GivePlayerLife: {d[i++]}; ChangePaddleSpeed: {d[i++]})";
         }
 
-        public void Add(PowerUppedData data)
+        public void Add(PoweredUpData data)
         {
             MakeBallDeadly = MakeBallDeadly || data.MakeBallDeadly;
             ChangeBallSpeed = ChangeBallSpeed || data.ChangeBallSpeed;
@@ -88,7 +88,7 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
             ChangePaddleSpeed = ChangePaddleSpeed || data.ChangePaddleSpeed;
         }
 
-        public void Remove(PowerUppedData data)
+        public void Remove(PoweredUpData data)
         {
             MakeBallDeadly = MakeBallDeadly && !data.MakeBallDeadly;
             ChangeBallSpeed = ChangeBallSpeed && !data.ChangeBallSpeed;
