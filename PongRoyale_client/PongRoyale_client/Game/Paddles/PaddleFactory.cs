@@ -10,16 +10,16 @@ namespace PongRoyale_client.Game.Paddles
 {
     class PaddleFactory
     {
-        public static Paddle CreatePaddle(PaddleType type)
+        public static Paddle CreatePaddle(PaddleType type, byte id)
         {
             switch (type)
             {
                 case PaddleType.Normal:
-                    return new NormalPaddle();
+                    return new NormalPaddle(id);
                 case PaddleType.Long:
-                    return new LongPaddle();
+                    return new LongPaddle(id);
                 case PaddleType.Short:
-                    return new ShortPaddle();
+                    return new ShortPaddle(id);
                 default:
                     return null;
             }

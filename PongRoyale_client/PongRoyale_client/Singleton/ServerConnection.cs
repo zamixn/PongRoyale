@@ -155,6 +155,13 @@ namespace PongRoyale_client.Singleton
                         ArenaFacade.Instance.OnReceivedBallPowerUpMessage(ballId, powerupId, data);
                     });
                     break;
+                case NetworkMessage.MessageType.PaddlePowerUp:
+                    SafeInvoke.Instance.Invoke(() =>
+                    {
+                        Converter.DecodePaddlePoweredUpData(message.ByteContents, out byte paddleId, out byte ballId, out PowerUppedData data);
+                        ArenaFacade.Instance.OnReceivedTransferPowerUpessage(paddleId, ballId, data);
+                    });
+                    break;
                 default:
                     break;
             }

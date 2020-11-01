@@ -17,7 +17,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy
             var ballDirection = b.Direction;
             Vector2 bounceDir = SharedUtilities.GetBounceDirection(collisionNormal, ballDirection);
             Vector2 paddleDir = new Vector2(-collisionNormal.Y, collisionNormal.X);
-            p.TransferPowerUp(b.PoweredUpData);
+            ArenaFacade.Instance.TransferPowerUpToPaddle(p.Id, b.Id, b.PoweredUpData);
             return (bounceDir + Vector2.RandomInUnitCircle().Normalize() * 0.1f + paddleDir * 0.25f).Normalize();
         }
 

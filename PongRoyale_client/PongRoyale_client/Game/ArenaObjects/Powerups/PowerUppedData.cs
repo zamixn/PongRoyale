@@ -18,9 +18,11 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
         public bool ChangePaddleSpeed;
 
         public Vector2 RndDirection;
+        public float RndSpeed;
         public PowerUppedData()
         {
             RndDirection = Vector2.RandomInUnitCircle();
+            RndSpeed = RandomNumber.NextFloat(0.01f, 2f);
         }
 
         public float GetDurationOnBall()
@@ -29,6 +31,11 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
                    (ChangeBallSpeed ? 5f : 0) +
                    (ChangeBallDirection ? 1f : 0) +
                    (GivePlayerLife ? 5f : 0) +
+                   (ChangePaddleSpeed ? 5f : 0);
+        }
+        public float GetDurationOnPaddle()
+        {
+            return (GivePlayerLife ? 1f : 0) +
                    (ChangePaddleSpeed ? 5f : 0);
         }
 

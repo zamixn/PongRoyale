@@ -24,6 +24,7 @@ namespace PongRoyale_shared
             ObstacleSpawned = 8,
             PowerupSpawned = 9,
             BallPoweredUp = 10,
+            PaddlePowerUp = 11,
         }
 
         public byte SenderId;

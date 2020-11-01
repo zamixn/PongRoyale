@@ -164,5 +164,23 @@ namespace PongRoyale_client
             Converter.DecodeBallPoweredUpData(data, out ballId, out powerUpId, out byte[] poweredUpArray);
             poweredUp = PowerUppedData.FromByteArray(poweredUpArray);
         }
+
+        public byte[] EncodePaddlePoweredUpData(byte paddleId, byte ballId, byte[] powerUppedData)
+        {
+            return Converter.EncodePaddlePoweredUpData(paddleId, ballId, powerUppedData);
+        }
+        public void DecodePaddlePoweredUpData(byte[] data, out byte paddleId, out byte ballId, out byte[] powerUppedData)
+        {
+            Converter.DecodePaddlePoweredUpData(data, out paddleId, out ballId, out powerUppedData);
+        }
+        public byte[] EncodePaddlePoweredUpData(byte paddleId, byte ballId, PowerUppedData powerUppedData)
+        {
+            return Converter.EncodePaddlePoweredUpData(paddleId, ballId, powerUppedData.ToByteArray());
+        }
+        public void DecodePaddlePoweredUpData(byte[] data, out byte paddleId, out byte ballId, out PowerUppedData powerUppedData)
+        {
+            Converter.DecodePaddlePoweredUpData(data, out paddleId, out ballId, out byte[] powerUppedDataArray);
+            powerUppedData = PowerUppedData.FromByteArray(powerUppedDataArray);
+        }
     }
 }

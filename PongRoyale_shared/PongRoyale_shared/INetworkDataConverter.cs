@@ -40,5 +40,8 @@ namespace PongRoyale_shared
 
         byte[] EncodeBallPoweredUpData(byte ballId, byte powerUpId, byte[] poweredUp);
         void DecodeBallPoweredUpData(byte[] data, out byte ballId, out byte powerUpId, out byte[] poweredUp);
+
+        byte[] EncodePaddlePoweredUpData(byte paddleId, byte ballId, byte[] powerUppedData);
+        void DecodePaddlePoweredUpData(byte[] data, out byte paddleId, out byte ballId, out byte[] powerUppedData);
     }
 }

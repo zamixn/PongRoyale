@@ -209,5 +209,18 @@ namespace PongRoyale_shared
             for (int i = 0; i < poweredUp.Length; i++)
                 poweredUp[i] = data[i + 2];
         }
+
+        public byte[] EncodePaddlePoweredUpData(byte paddleId, byte ballId, byte[] powerUppedData)
+        {
+            return powerUppedData.PrependBytes(new byte[] { paddleId, ballId });
+        }
+        public void DecodePaddlePoweredUpData(byte[] data, out byte paddleId, out byte ballId, out byte[] powerUppedData)
+        {
+            paddleId = data[0];
+            ballId = data[1];
+            powerUppedData = new byte[data.Length - 2];
+            for (int i = 0; i < powerUppedData.Length; i++)
+                powerUppedData[i] = data[i + 2];
+        }
     }
 }

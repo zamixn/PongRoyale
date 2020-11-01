@@ -31,6 +31,6 @@ namespace PongRoyale_client.Game.Balls.Decorator
         byte GetId();
         Color GetColor();
         PowerUppedData GetPoweredUpData();
-        void RemovePowerUpData(PowerUppedData data);
+        IBall RemovePowerUpData(PowerUppedData data);
     }
 }

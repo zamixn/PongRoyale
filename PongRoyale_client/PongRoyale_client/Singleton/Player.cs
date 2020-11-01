@@ -69,6 +69,16 @@ namespace PongRoyale_client.Singleton
             ServerConnection.Instance.SendDataToServer(message);
         }
 
+        public void SendTranferPowerUpToPaddle(byte paddleId, byte ballId, PowerUppedData poweredUp)
+        {
+            if (!ServerConnection.Instance.IsConnected())
+                return;
+
+            var data = Converter.EncodePaddlePoweredUpData(paddleId, ballId, poweredUp);
+            NetworkMessage message = new NetworkMessage(Id, MessageType.PaddlePowerUp, data);
+            ServerConnection.Instance.SendDataToServer(message);
+        }
+
         public void SendObstacleSpawnedMessage(byte id, Obstacle obs)
         {
             if (!ServerConnection.Instance.IsConnected())

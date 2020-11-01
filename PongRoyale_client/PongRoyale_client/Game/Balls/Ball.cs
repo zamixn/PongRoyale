@@ -220,9 +220,10 @@ namespace PongRoyale_client.Game.Balls
                 result = new DeadlyBallDecorator(this);
             return result;
         }
-        public void RemovePowerUpData(PowerUppedData data)
+        public IBall RemovePowerUpData(PowerUppedData data)
         {
             PoweredUpData.Remove(data);
+            return this;
         }
 
         public byte GetId()

@@ -99,9 +99,9 @@ namespace PongRoyale_client.Game.Balls.Decorator
             return Ball.GetPoweredUpData();
         }
 
-        public void RemovePowerUpData(PowerUppedData data)
+        public IBall RemovePowerUpData(PowerUppedData data)
         {
-            Ball.RemovePowerUpData(data);
+            return Ball.RemovePowerUpData(data);
         }
     }
 }

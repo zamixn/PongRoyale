@@ -72,7 +72,7 @@ namespace PongRoyale_client.Game
             foreach (var player in players.Values)
             {
                 PaddleType pType = player.PaddleType;
-                Paddle paddle = PaddleFactory.CreatePaddle(pType);
+                Paddle paddle = PaddleFactory.CreatePaddle(pType, player.Id);
                 paddle.SetPosition(SharedUtilities.RadToDeg(angle));
                 PlayerPaddles.Add(player.Id, paddle);
                 player.SetLife(paddle.Life);
@@ -138,17 +138,36 @@ namespace PongRoyale_client.Game
                 // remove after a duration
                 SafeInvoke.Instance.DelayedInvoke(data.GetDurationOnBall(), () =>
                 {
-                    RemoveBallPowerUp(ball, data);
+                    RemoveBallPowerUp(poweredUpBall, data);
                 });
                 (pwp as Powerup).Use();
             }
         }
-
-
-        private void RemoveBallPowerUp(IBall ball, PowerUppedData data)
+        private void RemoveBallPowerUp(IBall poweredUpBall, PowerUppedData data)
         {
-            DoAfterGameLoop.Add(() => ArenaBalls[ball.GetId()] = ball);
-            ball.RemovePowerUpData(data);
+            DoAfterGameLoop.Add(() => ArenaBalls[poweredUpBall.GetId()] = poweredUpBall.RemovePowerUpData(data));
+        }
+
+        public void TransferPowerUpToPaddle(byte paddleId, byte ballId, PowerUppedData powerUppedData)
+        {
+            if (powerUppedData.IsValid())
+            {
+                if (Player.Instance.IsRoomMaster)
+                    Player.Instance.SendTranferPowerUpToPaddle(paddleId, ballId, powerUppedData);
+                OnReceivedTransferPowerUpessage(paddleId, ballId, powerUppedData);
+
+            }
+        }
+        public void OnReceivedTransferPowerUpessage(byte paddleId, byte ballId, PowerUppedData powerUppedData)
+        {
+            if (PlayerPaddles.TryGetValue(paddleId, out Paddle paddle))
+            {
+                paddle.TransferPowerUp(powerUppedData);
+            }
+            if (ArenaBalls.TryGetValue(ballId, out IBall ball))
+            {
+                ball.RemovePowerUpData(powerUppedData);
+            }
         }
 
         public void DestroyGame()
@@ -296,7 +315,10 @@ namespace PongRoyale_client.Game
             // note: order matters here
 
             if (IsPaused)
+            {
+                CleanUp();
                 return;
+            }
 
             LocalPaddle.LocalUpdate();
 
