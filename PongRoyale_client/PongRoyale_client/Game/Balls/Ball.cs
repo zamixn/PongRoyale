@@ -237,16 +237,16 @@ namespace PongRoyale_client.Game.Balls
         }
 
         #region collisions
-        public void OnCollision(Paddle coll, ArenaObject obj)
+        public void OnCollision(Paddle paddle, ArenaObject arenaObject)
         {
             Vector2 center = ArenaFacade.Instance.ArenaDimensions.Center;
             float radius = ArenaFacade.Instance.ArenaDimensions.Radius;
             Vector2 collisionNormal = null;
 
             IReboundStrategy reboundStrategy = null;
-            if (coll != null)// collision with a paddle
+            if (paddle != null)// collision with a paddle
             {
-                float paddleAngle = coll.GetCenterAngle();
+                float paddleAngle = paddle.GetCenterAngle();
                 Vector2 paddleCenter = Utilities.GetPointOnCircle(center, radius, paddleAngle);
                 collisionNormal = (center - paddleCenter).Normalize();
 
@@ -256,23 +256,23 @@ namespace PongRoyale_client.Game.Balls
                         reboundStrategy = new BallDeadlyStrategy();
                         break;
                     case BallType.Normal:
-                        if (coll.CurrentAngularSpeed < 0)
+                        if (paddle.CurrentAngularSpeed < 0)
                             reboundStrategy = new PaddleMovingLeft();
-                        else if (coll.CurrentAngularSpeed > 0)
+                        else if (paddle.CurrentAngularSpeed > 0)
                             reboundStrategy = new PaddleMovingRight();
                         else //if (coll.AngularSpeed == 0)
                             reboundStrategy = new PaddleNotMoving();
                         break;
                 }
             }
-            else if (obj != null)// collision with an arena object
+            else if (arenaObject != null)// collision with an arena object
             {
-                reboundStrategy = obj.GetReboundStrategy();
+                reboundStrategy = arenaObject.GetReboundStrategy();
                 var offset = (Direction * Diameter * 0.5f);
                 Vector2 impactPos = Position + offset;
-                collisionNormal = obj.GetCollisionNormal(impactPos, Direction);
+                collisionNormal = arenaObject.GetCollisionNormal(impactPos, Direction);
             }
-            Rebound(reboundStrategy, collisionNormal, coll, obj);
+            Rebound(reboundStrategy, collisionNormal, paddle, arenaObject);
         }
 
         private void Rebound(IReboundStrategy reboundStrategy, Vector2 surfaceNormal, Paddle p, ArenaObject obj)

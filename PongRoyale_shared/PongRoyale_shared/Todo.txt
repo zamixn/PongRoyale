@@ -1,15 +1,21 @@
-﻿
-* Prototype : use on network message, to clone in server/client (need both shallow and deep cloning)
+﻿Done:
 
-* Decorator : use to change how the ball looks while it has a power up picked up
+Singleton,			
+Factory,			
+Abstract Factory,	
+Strategy,			
+Observer,			
+Builder,			
+Decorator,			
+Adapter,			
+Facade,				
 
 
-* Command redo
+Need to do:
 
-
-
-
-
+Prototype,			(easiest to do, probably Dovydas turėtų bent šitą padaryt. (use on network message, to clone in server/client (need both shallow and deep cloning)))
+Command,			(No idea kaip/kur sita idet, Danielius/Dovydas turetu padaryt)
+Bridge,				(Danielius turetu padaryt, nes jau pradejes buvo i think)
 
 
 

@@ -28,9 +28,9 @@ namespace PongRoyale_client.Game.Balls.Decorator
         bool CheckOutOfBounds(float startAngle, Dictionary<byte, Paddle> paddles, out byte paddleId);
 
         IBall ApplyPowerup(PoweredUpData data);
+        IBall RemovePowerUpData(PoweredUpData data);
         byte GetId();
         Color GetColor();
         PoweredUpData GetPoweredUpData();
-        IBall RemovePowerUpData(PoweredUpData data);
     }
 }
