@@ -31,7 +31,7 @@ namespace PongRoyale_client.Menu
         {
             if (ServerConnection.Instance.IsConnected())
             {
-                Player.Instance.SendStartGameMessage();
+                ServerConnection.Instance.SendStartGameMessage();
             }
             else
                 ChatController.Instance.LogError("Could not start the game");
@@ -62,7 +62,7 @@ namespace PongRoyale_client.Menu
                         ChatController.Instance.ClearChat();
                         ChatController.Instance.ClearInput();
                         ChatController.Instance.LogInfo("Connected to server.");
-                        ChatController.Instance.LogInfo($"Welcome to the chat: {Player.Instance.PlayerName}!");
+                        ChatController.Instance.LogInfo($"Welcome to the chat: {ServerConnection.Instance.PlayerName}!");
 
                     },
                     onException: (ex) =>

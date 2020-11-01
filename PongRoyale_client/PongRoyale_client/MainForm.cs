@@ -72,7 +72,7 @@ namespace PongRoyale_client
         {
             if (ServerConnection.Instance.IsConnected() /*&& !ArenaFacade.Instance.IsPaused*/)
             {
-                Player.Instance.SyncWithServer();
+                ServerConnection.Instance.SyncWithServer();
             }
         }
 

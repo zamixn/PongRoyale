@@ -40,12 +40,12 @@ namespace PongRoyale_client.Singleton
 
         public void OnChatInputSubmitted()
         {
-            string playerName = Player.Instance.PlayerName;
+            string playerName = ServerConnection.Instance.PlayerName;
             string input = Input.Text;
 
             if (ValidateChatInput(input))
             {
-                Player.Instance.SendChatMessage(input);
+                ServerConnection.Instance.SendChatMessage(input);
                 Input.Clear();
             }
         }
@@ -59,8 +59,8 @@ namespace PongRoyale_client.Singleton
         {
             if (ValidateChatInput(message))
             {
-                string playerName = Player.ConstructName(playerId);
-                if (Player.Instance.IdMatches(playerId))
+                string playerName = ServerConnection.ConstructName(playerId);
+                if (ServerConnection.Instance.IdMatches(playerId))
                 {
                     Output.AppendText("[me] ", InfoColor, NormalFont);
                 }

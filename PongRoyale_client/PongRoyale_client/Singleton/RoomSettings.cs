@@ -35,7 +35,7 @@ namespace PongRoyale_client.Singleton
         }
         public string GetPlayerWonName()
         {
-            return Player.ConstructName(GetPlayerWonId());
+            return ServerConnection.ConstructName(GetPlayerWonId());
         }
         public void SetPlayerWon(byte id)
         {

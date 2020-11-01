@@ -160,7 +160,7 @@ namespace PongRoyale_client.Game
             float angleDelta = (float)(Math.PI * 2 / RoomSettings.Instance.Players.Count);
             foreach (var player in RoomSettings.Instance.Players)
             {
-                if (Player.Instance.IdMatches(player.Key))
+                if (ServerConnection.Instance.IdMatches(player.Key))
                     g.DrawArc(pp, Origin.X, Origin.Y, Diameter, Diameter, SharedUtilities.RadToDeg(angle), SharedUtilities.RadToDeg(angleDelta));
                 g.DrawLine(p, Center, Utilities.GetPointOnCircle(Center, Radius, angle));
                 angle += angleDelta;

@@ -76,7 +76,7 @@ namespace PongRoyale_client.Game
                 paddle.SetPosition(SharedUtilities.RadToDeg(angle));
                 PlayerPaddles.Add(player.Id, paddle);
                 player.SetLife(paddle.Life);
-                if (Player.Instance.IdMatches(player.Id))
+                if (ServerConnection.Instance.IdMatches(player.Id))
                     LocalPaddle = paddle;
                 paddle.AddClampAngles(SharedUtilities.RadToDeg(angle - deltaAngle / 2), SharedUtilities.RadToDeg(angle + deltaAngle / 2));
                 angle += deltaAngle;
@@ -103,12 +103,12 @@ namespace PongRoyale_client.Game
             ArenaObjects.Add(id, obj);
             obj.SetId(id);
 
-            if (Player.Instance.IsRoomMaster)
+            if (ServerConnection.Instance.IsRoomMaster)
             {
                 if(obj is Obstacle)
-                    Player.Instance.SendObstacleSpawnedMessage(id, obj as Obstacle);
+                    ServerConnection.Instance.SendObstacleSpawnedMessage(id, obj as Obstacle);
                 else if(obj is Powerup)
-                    Player.Instance.SendPowerupSpawnedMessage(id, obj as Powerup);
+                    ServerConnection.Instance.SendPowerupSpawnedMessage(id, obj as Powerup);
 
             }
         }
@@ -122,8 +122,8 @@ namespace PongRoyale_client.Game
             if (!p.isUsedUp)
             {
                 var data = p.PowerUppedData;
-                if (Player.Instance.IsRoomMaster)
-                    Player.Instance.SendBallPoweredUpMessage(b.GetId(), p.Id, data);
+                if (ServerConnection.Instance.IsRoomMaster)
+                    ServerConnection.Instance.SendBallPoweredUpMessage(b.GetId(), p.Id, data);
                 OnReceivedBallPowerUpMessage(b.GetId(), p.Id, data);
             }
         }
@@ -152,8 +152,8 @@ namespace PongRoyale_client.Game
         {
             if (powerUppedData.IsValid())
             {
-                if (Player.Instance.IsRoomMaster)
-                    Player.Instance.SendTranferPowerUpToPaddle(paddleId, ballId, powerUppedData);
+                if (ServerConnection.Instance.IsRoomMaster)
+                    ServerConnection.Instance.SendTranferPowerUpToPaddle(paddleId, ballId, powerUppedData);
                 OnReceivedTransferPowerUpessage(paddleId, ballId, powerUppedData);
 
             }
@@ -259,7 +259,7 @@ namespace PongRoyale_client.Game
                 // fix for round reset not sending due to connection being overfilled
                 // delay round reset message so that paddle and ball sync messages have time to clear up
                 SafeInvoke.Instance.DelayedInvoke(0.5f, () => 
-                    Player.Instance.SendRoundReset(ballTypes, ballIds)
+                    ServerConnection.Instance.SendRoundReset(ballTypes, ballIds)
                 );
             }
             else
@@ -306,7 +306,7 @@ namespace PongRoyale_client.Game
 
             if (AlivePaddleCount <= 1 && StartingAlivePaddleCount > AlivePaddleCount)
             {
-                Player.Instance.SendEndGameMessage();
+                ServerConnection.Instance.SendEndGameMessage();
             }
         }
 
@@ -322,7 +322,7 @@ namespace PongRoyale_client.Game
 
             LocalPaddle.LocalUpdate();
 
-            if (Player.Instance.IsRoomMaster)
+            if (ServerConnection.Instance.IsRoomMaster)
             {
                 foreach (var spawner in Spawners)
                 {
@@ -341,7 +341,7 @@ namespace PongRoyale_client.Game
                     break;
             }
 
-            if (Player.Instance.IsRoomMaster)
+            if (ServerConnection.Instance.IsRoomMaster)
             {
                 foreach (var kvp in ArenaBalls)
                 {
