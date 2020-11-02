@@ -8,7 +8,7 @@ using System.Text;
 
 namespace PongRoyale_shared
 {
-    public class NetworkMessage
+    public class NetworkMessage : IClonable<NetworkMessage>
     {
         public const int MAX_MESSAGE_BYTE_LENGTH = 64;
         public enum MessageType : byte
@@ -36,6 +36,20 @@ namespace PongRoyale_shared
             SenderId = senderId;
             Type = type;
             ByteContents = contents;
+        }
+
+        public NetworkMessage ShallowClone()
+        {
+            return (NetworkMessage)this.MemberwiseClone();
+        }
+
+        public NetworkMessage DeepClone()
+        {
+            NetworkMessage clone = (NetworkMessage)this.MemberwiseClone();
+            clone.SenderId = SenderId;
+            clone.Type = Type;
+            clone.ByteContents = ByteContents.ToArray();
+            return clone;
         }
 
         public byte[] ToBytes()

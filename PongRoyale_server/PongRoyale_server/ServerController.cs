@@ -146,17 +146,21 @@ namespace PongRoyale_server
                 case NetworkMessage.MessageType.PowerupSpawned:
                 case NetworkMessage.MessageType.BallPoweredUp:
                 case NetworkMessage.MessageType.PaddlePowerUp:
-                    return new NetworkMessage(sender.Id, networkMessage.Type, networkMessage.ByteContents);
+                    return networkMessage.ShallowClone();
                 case NetworkMessage.MessageType.GameStart:
                     {
+                        NetworkMessage message = networkMessage.DeepClone();
                         byte[] playerIds = Players.Select(p => p.Id).ToArray();
                         byte[] paddleTypes = RandomNumber.GetArray(playerIds.Length,
                             () => RandomNumber.NextByte((byte)PaddleType.Normal, (byte)(PaddleType.Short + 1)));
                         byte ballType = (byte)BallType.Normal;
-                        return new NetworkMessage(sender.Id, NetworkMessage.MessageType.GameStart, Converter.EncodeGameStartMessage(playerIds, paddleTypes, ballType, RoomMaster.Id));
+                        byte[] byteArray = Converter.EncodeGameStartMessage(playerIds, paddleTypes, ballType, RoomMaster.Id);
+                        message.ByteContents = byteArray;
+                        return message;
                     }
                 case NetworkMessage.MessageType.RoundReset:
                     {
+                        NetworkMessage message = networkMessage.DeepClone();
                         Converter.DecodeRoundOverData(networkMessage.ByteContents, out BallType[] oldBalls, out byte[] oldIds, out byte[] playerIDs, out byte[] playerLifes);
 
                         int ballCount = SharedUtilities.Clamp(
@@ -170,7 +174,9 @@ namespace PongRoyale_server
                                 (BallType)RandomNumber.NextByte((byte)BallType.Normal, (byte)(BallType.Deadly + 1));
                             newIds[i] = (byte)i;
                         }
-                        return new NetworkMessage(sender.Id, NetworkMessage.MessageType.RoundReset, Converter.EncodeRoundOverData(newBallTypes, newIds, playerIDs, playerLifes));
+                        byte[] byteArray = Converter.EncodeRoundOverData(newBallTypes, newIds, playerIDs, playerLifes);
+                        message.ByteContents = byteArray;
+                        return message;
                     }
                 default:
                     Debug.WriteLine($"Exception: could not get repsonse to message of type {networkMessage.Type}");
