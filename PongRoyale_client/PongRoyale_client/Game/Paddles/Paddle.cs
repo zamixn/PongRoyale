@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.ArenaObjects.Powerups;
+using PongRoyale_client.Game.Paddles;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -35,6 +36,7 @@ namespace PongRoyale_client.Game
         public float Thickness { get; private set; }
         public int Life { get; protected set; }
         public byte Id { get; protected set; }
+        public IPaddleColor PaddleColor;
 
         public PoweredUpData PowerUppedData { get; protected set; }
 
@@ -47,6 +49,7 @@ namespace PongRoyale_client.Game
             Thickness = settings.Thickness;
             Life = settings.Life;
             CurrentAngularSpeed = 0;
+            PaddleColor = settings.PaddleColor;
         }
 
         public void AddClampAngles(float minAngle, float maxAngle)
