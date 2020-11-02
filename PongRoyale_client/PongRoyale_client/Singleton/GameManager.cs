@@ -19,11 +19,7 @@ namespace PongRoyale_client.Singleton
         public void SetGameState(GameState state)
         {
             CurrentGameState = state;
-
-            foreach (var observer in GameStateObservers)
-            {
-                observer.Update();
-            }
+            Notify();
         }
 
         public float DeltaTime { get; private set; }
@@ -34,6 +30,14 @@ namespace PongRoyale_client.Singleton
 
 
         #region game state observer
+        private void Notify()
+        {
+            foreach (var observer in GameStateObservers)
+            {
+                observer.Update();
+            }
+        }
+
         private List<GameStateObserver> GameStateObservers = new List<GameStateObserver>();
         public void RegisterObserver(GameStateObserver observer)
         {
