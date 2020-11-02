@@ -78,9 +78,7 @@
     <Compile Include="Game\ArenaObjects\Builders\IArenaObjectBuilder.cs" />
     <Compile Include="Game\ArenaObjects\Builders\ObstacleBuilder.cs" />
     <Compile Include="Game\ArenaObjects\Builders\PowerUpBuilder.cs" />
-    <Compile Include="Game\Command\BallMoveCommand.cs" />
-    <Compile Include="Game\Command\Command.cs" />
-    <Compile Include="Game\Command\LifeLostCommand.cs" />
+    <Compile Include="Game\Input\Command\MoveCommand.cs" />
     <Compile Include="Game\ArenaFacade.cs" />
     <Compile Include="Game\GameplayScreen.cs">
       <SubType>Component</SubType>
@@ -89,7 +87,15 @@
       <DependentUpon>GameplayScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\GameData.cs" />
-    <Compile Include="Game\InputManager.cs" />
+    <Compile Include="Game\Input\Command\UndoMoveUpCommand.cs" />
+    <Compile Include="Game\Input\Command\UndoMoveRightCommand.cs" />
+    <Compile Include="Game\Input\Command\UndoMoveLeftCommand.cs" />
+    <Compile Include="Game\Input\Command\UndoMoveDownCommand.cs" />
+    <Compile Include="Game\Input\Command\MoveDownCommand.cs" />
+    <Compile Include="Game\Input\Command\MoveLeftCommand.cs" />
+    <Compile Include="Game\Input\Command\MoveRightCommand.cs" />
+    <Compile Include="Game\Input\Command\MoveUpCommand.cs" />
+    <Compile Include="Game\Input\InputManager.cs" />
     <Compile Include="Game\ArenaObjects\Obstacles\Obstacle.cs" />
     <Compile Include="Game\ArenaObjects\Obstacles\ObstacleSpawner.cs" />
     <Compile Include="Game\ArenaObjects\ArenaObjectType.cs" />

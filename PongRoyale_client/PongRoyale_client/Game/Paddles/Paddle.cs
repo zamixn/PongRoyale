@@ -142,6 +142,11 @@ namespace PongRoyale_client.Game
                     Life++;
                     SafeInvoke.Instance.DelayedInvoke(PowerUppedData.GetDurationOnPaddle(), () => PowerUppedData.GivePlayerLife = false);
                 }
+                if(data.UndoPlayerMove)
+                {
+                    PowerUppedData.UndoPlayerMove = true;
+                    SafeInvoke.Instance.DelayedInvoke(PowerUppedData.GetDurationOnPaddle(), () => PowerUppedData.UndoPlayerMove = false);
+                }
             }
         }
     }

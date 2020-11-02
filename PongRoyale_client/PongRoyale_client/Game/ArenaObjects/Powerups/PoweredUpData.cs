@@ -9,13 +9,14 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
 {
     public class PoweredUpData
     {
-        public const int BYTE_COUNT = 5;
+        public const int BYTE_COUNT = 6;
 
         public bool MakeBallDeadly;
         public bool ChangeBallSpeed;
         public bool ChangeBallDirection;
         public bool GivePlayerLife;
         public bool ChangePaddleSpeed;
+        public bool UndoPlayerMove;
 
         public Vector2 RndDirection;
         public float RndSpeed;
@@ -31,17 +32,19 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
                    (ChangeBallSpeed ? 5f : 0) +
                    (ChangeBallDirection ? 1f : 0) +
                    (GivePlayerLife ? 5f : 0) +
-                   (ChangePaddleSpeed ? 5f : 0);
+                   (ChangePaddleSpeed ? 5f : 0) +
+                   (UndoPlayerMove ? 5f : 0);
         }
         public float GetDurationOnPaddle()
         {
             return (GivePlayerLife ? 1f : 0) +
-                   (ChangePaddleSpeed ? 5f : 0);
+                   (ChangePaddleSpeed ? 5f : 0) +
+                   (UndoPlayerMove ? 1f : 0);
         }
 
         public bool[] GetAsArray()
         {
-            return new bool[] { MakeBallDeadly, ChangeBallSpeed, ChangeBallDirection, GivePlayerLife, ChangePaddleSpeed };
+            return new bool[] { MakeBallDeadly, ChangeBallSpeed, ChangeBallDirection, GivePlayerLife, ChangePaddleSpeed, UndoPlayerMove };
         }
         public byte[] ToByteArray()
         {
@@ -58,6 +61,7 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
                 ChangeBallDirection = array[index++],
                 GivePlayerLife = array[index++],
                 ChangePaddleSpeed = array[index++],
+                UndoPlayerMove = array[index++]
             };
         }
         public static PoweredUpData FromByteArray(byte[] array)
@@ -76,7 +80,7 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
         {
             var d = ToByteArray();
             var i = 0;
-            return $"(MakeBallDeadly: {d[i++]}; ChangeBallSpeed: {d[i++]}; ChangeBallDirection: {d[i++]}; GivePlayerLife: {d[i++]}; ChangePaddleSpeed: {d[i++]})";
+            return $"(MakeBallDeadly: {d[i++]}; ChangeBallSpeed: {d[i++]}; ChangeBallDirection: {d[i++]}; GivePlayerLife: {d[i++]}; ChangePaddleSpeed: {d[i++]}); UndoPlayerMove: {d[i++]}";
         }
 
         public void Add(PoweredUpData data)
@@ -86,6 +90,7 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
             ChangeBallDirection = ChangeBallDirection || data.ChangeBallDirection;
             GivePlayerLife = GivePlayerLife || data.GivePlayerLife;
             ChangePaddleSpeed = ChangePaddleSpeed || data.ChangePaddleSpeed;
+            UndoPlayerMove = UndoPlayerMove || data.UndoPlayerMove;
         }
 
         public void Remove(PoweredUpData data)
@@ -95,11 +100,12 @@ namespace PongRoyale_client.Game.ArenaObjects.Powerups
             ChangeBallDirection = ChangeBallDirection && !data.ChangeBallDirection;
             GivePlayerLife = GivePlayerLife && !data.GivePlayerLife;
             ChangePaddleSpeed = ChangePaddleSpeed && !data.ChangePaddleSpeed;
+            UndoPlayerMove = UndoPlayerMove && !data.UndoPlayerMove;
         }
 
         public bool IsValid()
         {
-            return MakeBallDeadly || ChangeBallSpeed || ChangeBallDirection || GivePlayerLife || ChangePaddleSpeed;
+            return MakeBallDeadly || ChangeBallSpeed || ChangeBallDirection || GivePlayerLife || ChangePaddleSpeed || UndoPlayerMove;
         }
     }
 }
