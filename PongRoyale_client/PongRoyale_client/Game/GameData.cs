@@ -19,6 +19,7 @@ namespace PongRoyale_client.Game
             public float Speed;
             public float Thickness;
             public int Life;
+            public IPaddleColor PaddleColor;
         }
 
         public static readonly Dictionary<System.Type, PaddleSettings> PaddleSettingsDict =
@@ -28,19 +29,22 @@ namespace PongRoyale_client.Game
                 Size = 20,
                 Speed = 1.5f,
                 Thickness = 10,
-                Life = 3
+                Life = 3,
+                PaddleColor = new PaddleColorBlack()
             }},
             {typeof(LongPaddle), new PaddleSettings(){
                 Size = 35,
                 Speed = .8f,
                 Thickness = 13,
-                Life = 4
+                Life = 4,
+                PaddleColor = new PaddleColorBlack()
             }},
             {typeof(ShortPaddle), new PaddleSettings(){
                 Size = 13,
                 Speed = 2.25f,
                 Thickness = 7,
-                Life = 2
+                Life = 2,
+                PaddleColor = new PaddleColorRed()
             }}
         };
 

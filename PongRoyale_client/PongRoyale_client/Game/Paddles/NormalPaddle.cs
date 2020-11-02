@@ -15,7 +15,7 @@ namespace PongRoyale_client.Game.Paddles
 
         public override void Render(Graphics g, Pen p, PointF Origin, float Diameter)
         {
-            p.Color = Color.Black;
+            p.Color = PaddleColor.ApplyColor();
             base.Render(g, p, Origin, Diameter);
         }
     }
