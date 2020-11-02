@@ -87,10 +87,10 @@
       <DependentUpon>GameplayScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Game\GameData.cs" />
-    <Compile Include="Game\Input\Command\UndoMoveUpCommand.cs" />
-    <Compile Include="Game\Input\Command\UndoMoveRightCommand.cs" />
-    <Compile Include="Game\Input\Command\UndoMoveLeftCommand.cs" />
-    <Compile Include="Game\Input\Command\UndoMoveDownCommand.cs" />
+    <Compile Include="Game\Input\Command\StopMoveUpCommand.cs" />
+    <Compile Include="Game\Input\Command\StopMoveRightCommand.cs" />
+    <Compile Include="Game\Input\Command\StopMoveLeftCommand.cs" />
+    <Compile Include="Game\Input\Command\StopMoveDownCommand.cs" />
     <Compile Include="Game\Input\Command\MoveDownCommand.cs" />
     <Compile Include="Game\Input\Command\MoveLeftCommand.cs" />
     <Compile Include="Game\Input\Command\MoveRightCommand.cs" />
@@ -99,14 +99,14 @@
     <Compile Include="Game\ArenaObjects\Obstacles\Obstacle.cs" />
     <Compile Include="Game\ArenaObjects\Obstacles\ObstacleSpawner.cs" />
     <Compile Include="Game\ArenaObjects\ArenaObjectType.cs" />
-	<Compile Include="Game\Paddles\PaddleColorBlack.cs" />
+    <Compile Include="Game\Paddles\PaddleColorBlack.cs" />
     <Compile Include="Game\Paddles\PaddleColorBlue.cs" />
     <Compile Include="Game\Paddles\IPaddleColor.cs" />
     <Compile Include="Game\Paddles\LongPaddle.cs" />
     <Compile Include="Game\Paddles\NormalPaddle.cs" />
     <Compile Include="Game\Paddles\Paddle.cs" />
     <Compile Include="Game\Paddles\PaddleFactory.cs" />
-	<Compile Include="Game\Paddles\PaddleColorRed.cs" />
+    <Compile Include="Game\Paddles\PaddleColorRed.cs" />
     <Compile Include="Game\Paddles\ShortPaddle.cs" />
     <Compile Include="Game\AbstractFactory\PassableArenaObjectFactory.cs" />
     <Compile Include="Game\ArenaObjects\Powerups\PowerUp.cs" />

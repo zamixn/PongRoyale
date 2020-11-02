@@ -8,20 +8,20 @@ using System.Windows.Forms;
 
 namespace PongRoyale_client.Game.Input.Command
 {
-    class UndoMoveRightCommand : MoveCommand
+    class StopMoveUpCommand : MoveCommand
     {
-        public UndoMoveRightCommand(Dictionary<Keys, bool> buffer) : base(buffer)
+        public StopMoveUpCommand(Dictionary<Keys, bool> buffer) : base(buffer)
         {
         }
 
         public override void Execute()
         {
-            inputBuffer[Keys.Right] = false;
+            inputBuffer[Keys.Up] = false;
         }
 
         public override void Undo()
         {
-            inputBuffer[Keys.Right] = true;
+            inputBuffer[Keys.Up] = true;
         }
     }
 }

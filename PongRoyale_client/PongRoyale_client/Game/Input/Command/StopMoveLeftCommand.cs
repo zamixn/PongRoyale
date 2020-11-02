@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace PongRoyale_client.Game.Input.Command
 {
-    class UndoMoveLeftCommand : MoveCommand
+    class StopMoveLeftCommand : MoveCommand
     {
-        public UndoMoveLeftCommand(Dictionary<Keys, bool> buffer) : base(buffer)
+        public StopMoveLeftCommand(Dictionary<Keys, bool> buffer) : base(buffer)
         {
         }
 

@@ -148,6 +148,7 @@ namespace PongRoyale_client.Game
                 if(data.UndoPlayerMove)
                 {
                     PowerUppedData.UndoPlayerMove = true;
+                    InputManager.Instance.UndoLastInput();
                     SafeInvoke.Instance.DelayedInvoke(PowerUppedData.GetDurationOnPaddle(), () => PowerUppedData.UndoPlayerMove = false);
                 }
             }

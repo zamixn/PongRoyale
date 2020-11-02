@@ -14,7 +14,6 @@ namespace PongRoyale_client.Game
     public class InputManager : Singleton<InputManager>
     { 
         private Dictionary<Keys, bool> InputBuffer;
-
         private Dictionary<Keys, MoveCommand> InputDownBindings;
         private Dictionary<Keys, MoveCommand> InputUpBindings;
         private List<MoveCommand> Commands;
@@ -37,10 +36,10 @@ namespace PongRoyale_client.Game
             };
             InputUpBindings = new Dictionary<Keys, MoveCommand>()
             {
-                { Keys.Left, new UndoMoveLeftCommand(InputBuffer) },
-                { Keys.Right, new UndoMoveRightCommand(InputBuffer) },
-                { Keys.Up, new UndoMoveUpCommand(InputBuffer) },
-                { Keys.Down, new UndoMoveDownCommand(InputBuffer) }
+                { Keys.Left, new StopMoveLeftCommand(InputBuffer) },
+                { Keys.Right, new StopMoveRightCommand(InputBuffer) },
+                { Keys.Up, new StopMoveUpCommand(InputBuffer) },
+                { Keys.Down, new StopMoveDownCommand(InputBuffer) }
             };
         }
 
