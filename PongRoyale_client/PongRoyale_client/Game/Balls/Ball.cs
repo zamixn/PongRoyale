@@ -73,7 +73,7 @@ namespace PongRoyale_client.Game.Balls
         public virtual void LocalMove()
         {
             bool pressed = false;
-            if (InputManager.Instance.IsKeyDown(Keys.Left))
+            /*if (InputManager.Instance.IsKeyDown(Keys.Left))
             {
                 Direction = pressed ? Direction + Vector2.Left : Vector2.Left;
                 Direction = Direction.Normalize();
@@ -96,7 +96,7 @@ namespace PongRoyale_client.Game.Balls
                 Direction = pressed ? Direction + Vector2.Down : Vector2.Down;
                 Direction = Direction.Normalize();
                 pressed = true;
-            }
+            }*/
 
             float actualSpeed = Speed;
             if (PoweredUpData.ChangeBallDirection)

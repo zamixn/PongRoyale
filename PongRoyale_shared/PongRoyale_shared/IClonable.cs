@@ -6,6 +6,7 @@ namespace PongRoyale_shared
 {
     public interface IClonable<T>
     {
-        T Clone();
+        T DeepClone();
+        T ShallowClone();
     }
 }
