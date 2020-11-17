@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PongRoyale_server", "PongRo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PongRoyale_shared", "..\PongRoyale_shared\PongRoyale_shared\PongRoyale_shared.csproj", "{219BFDB9-AA06-4B8C-B284-D542787BA744}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedUnitTests", "ServerUnitTests\SharedUnitTests.csproj", "{23D8EA7C-E3CB-47A2-A979-470E40A25D95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{219BFDB9-AA06-4B8C-B284-D542787BA744}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{219BFDB9-AA06-4B8C-B284-D542787BA744}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{219BFDB9-AA06-4B8C-B284-D542787BA744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23D8EA7C-E3CB-47A2-A979-470E40A25D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23D8EA7C-E3CB-47A2-A979-470E40A25D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23D8EA7C-E3CB-47A2-A979-470E40A25D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23D8EA7C-E3CB-47A2-A979-470E40A25D95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
