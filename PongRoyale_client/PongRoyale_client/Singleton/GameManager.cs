@@ -28,6 +28,18 @@ namespace PongRoyale_client.Singleton
             DeltaTime = dTime;
         }
 
+        public static void StartLocalGame()
+        {
+            byte[] playerIds = new byte[] { 0 };
+            PaddleType[] paddleTypes = new PaddleType[] { 
+                //(PaddleType)RandomNumber.RandomNumb((int)PaddleType.Normal, (int)PaddleType.Short + 1)
+                PaddleType.Normal
+            };
+            BallType ballType = BallType.Normal;
+
+            RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, playerIds[0]);
+            Instance.SetGameState(GameState.InGame);
+        }
 
         #region game state observer
         private void Notify()

@@ -61,6 +61,7 @@ namespace PongRoyale_client.Game.Balls
                     break;
             }
 
+            ball.Id = id;
             ball.Position = position;
             ball.Speed = speed;
             ball.Direction = direction;
@@ -72,7 +73,7 @@ namespace PongRoyale_client.Game.Balls
 
         public virtual void LocalMove()
         {
-            bool pressed = false;
+            //bool pressed = false;
             /*if (InputManager.Instance.IsKeyDown(Keys.Left))
             {
                 Direction = pressed ? Direction + Vector2.Left : Vector2.Left;

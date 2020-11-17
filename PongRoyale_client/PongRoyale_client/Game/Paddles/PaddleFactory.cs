@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Paddles
 {
-    class PaddleFactory
+    public class PaddleFactory
     {
         public static Paddle CreatePaddle(PaddleType type, byte id)
         {

@@ -39,17 +39,10 @@ namespace PongRoyale_client.Menu
 
         private void StartLocalButton_Click(object sender, EventArgs e)
         {
-            byte[] playerIds = new byte[] { 0 };
-            PaddleType[] paddleTypes = new PaddleType[] { 
-                //(PaddleType)RandomNumber.RandomNumb((int)PaddleType.Normal, (int)PaddleType.Short + 1)
-                PaddleType.Normal
-            };
-            BallType ballType = BallType.Normal;
-
-            RoomSettings.Instance.SetRoomSettings(playerIds, paddleTypes, ballType, playerIds[0]);
-            GameManager.Instance.SetGameState(GameState.InGame);
+            GameManager.StartLocalGame();
         }
 
+        
         private void ConnectToServerButton_Click(object sender, EventArgs e)
         {
 

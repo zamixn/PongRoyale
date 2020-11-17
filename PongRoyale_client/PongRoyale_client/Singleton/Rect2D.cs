@@ -88,5 +88,13 @@ namespace PongRoyale_client.Singleton
         {
             return $"(pos={Origin}; size={Size})";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Rect2D))
+                return false;
+            else
+                return ((Rect2D)obj).Size.Equals(Size) && ((Rect2D)obj).Origin.Equals(Origin);
+        }
     }
 }
