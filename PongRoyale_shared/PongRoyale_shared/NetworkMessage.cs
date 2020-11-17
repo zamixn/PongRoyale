@@ -79,5 +79,23 @@ namespace PongRoyale_shared
         {
             return SenderId != 0;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is NetworkMessage))
+                return false;
+
+            NetworkMessage m = obj as NetworkMessage;
+            return (m.Type == Type && m.SenderId == SenderId && Enumerable.SequenceEqual(m.ByteContents, ByteContents));
+        }
+
+        public bool RefEquals(object obj)
+        {
+            if (!(obj is NetworkMessage))
+                return false;
+
+            NetworkMessage m = obj as NetworkMessage;
+            return (m.Type == Type && m.SenderId == SenderId && m.ByteContents == ByteContents);
+        }
     }
 }
