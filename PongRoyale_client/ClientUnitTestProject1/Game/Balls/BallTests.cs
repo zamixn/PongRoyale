@@ -61,12 +61,6 @@ namespace PongRoyale_client.Game.Balls.Tests
         }
 
         [TestMethod()]
-        public void RenderTest()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
         public void CreateBallTest()
         {
             byte testId = (byte)0;

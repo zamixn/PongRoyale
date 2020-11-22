@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Balls
 {
-    class DeadlyBall : Ball
+    public class DeadlyBall : Ball
     {
         public override void LocalMove()
         {

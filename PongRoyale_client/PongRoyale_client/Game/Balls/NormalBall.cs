@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Balls
 {
-    class NormalBall : Ball
+    public class NormalBall : Ball
     {
 
         public override Color GetColor()

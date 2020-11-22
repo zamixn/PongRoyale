@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game
 {
-    class PassableArenaObjectFactory : AbstractArenaObjectFactory
+    public class PassableArenaObjectFactory : AbstractArenaObjectFactory
     {
         public override Obstacle CreateObstacle(IArenaObjectBuilder builder)
         {
