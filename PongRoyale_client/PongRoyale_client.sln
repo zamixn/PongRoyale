@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PongRoyale_client", "PongRo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PongRoyale_shared", "..\PongRoyale_shared\PongRoyale_shared\PongRoyale_shared.csproj", "{33753F5F-04E4-401E-8F68-9F188A38FBF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUnitTestProject1", "ClientUnitTestProject1\ClientUnitTestProject1.csproj", "{A2235569-8222-4719-9B9C-56FB3C6BC50D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientUnitTestProject", "ClientUnitTestProject1\ClientUnitTestProject.csproj", "{A2235569-8222-4719-9B9C-56FB3C6BC50D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

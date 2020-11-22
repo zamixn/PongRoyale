@@ -14,12 +14,13 @@ namespace PongRoyale_server
         public ByteNetworkDataConverter Converter = new ByteNetworkDataConverter();
         public List<ServerSidePlayer> Players = new List<ServerSidePlayer>();
         public ServerSidePlayer RoomMaster;
+        public TcpListener listener;
         public bool AcceptPlayers;
         private readonly object Lock = new object();
 
         public void Start()
         {
-            TcpListener listener = new TcpListener(System.Net.IPAddress.Any, 6969);
+            listener = new TcpListener(System.Net.IPAddress.Any, 6969);
             listener.Start();
             AcceptPlayers = true;
             while (AcceptPlayers)

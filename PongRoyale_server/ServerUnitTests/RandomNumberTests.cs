@@ -62,7 +62,7 @@ namespace PongRoyale_shared.Tests
         [TestMethod()]
         public void GetArrayTest()
         {
-            int [] a = RandomNumber.GetArray<int>(100, () => 1);
+            int[] a = RandomNumber.GetArray<int>(100, () => 1);
             Assert.AreEqual(a.Length, 100);
         }
     }
