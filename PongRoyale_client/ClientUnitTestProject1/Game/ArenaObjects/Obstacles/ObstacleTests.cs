@@ -36,7 +36,7 @@ namespace PongRoyale_client.Game.Obstacles.Tests
         {
             Obstacle obstacle = new Obstacle(20, 20, 30, 10, 10);
 
-            Rect2D bounds = new Rect2D( 20 - 10 / 2f, 20 - 10 / 2f, 10, 10);
+            Rect2D bounds = new Rect2D(20 - 10 / 2f, 20 - 10 / 2f, 10, 10);
 
             Assert.AreEqual(bounds, obstacle.GetBounds());
         }
@@ -49,6 +49,18 @@ namespace PongRoyale_client.Game.Obstacles.Tests
             Obstacle obstacle = factory.CreateObstacle(objBuilder);
 
             Assert.AreEqual(ArenaObjectType.Passable, obstacle.Type);
+        }
+
+        [TestMethod()]
+        public void RenderTest()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod()]
+        public void GetCollisionNormalTest()
+        {
+            throw new NotImplementedException();
         }
     }
 }

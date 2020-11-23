@@ -19,7 +19,8 @@ namespace PongRoyale_client.Game
 {
     public abstract class Paddle
     {
-        private float MinAngle, MaxAngle;
+        public float MinAngle { private set; get; }
+        public float MaxAngle { private set; get; }
 
         private float _angPos;
         public float AngularPosition {

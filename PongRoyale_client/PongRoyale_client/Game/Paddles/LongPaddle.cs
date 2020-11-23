@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game
 {
-    class LongPaddle : Paddle
+    public class LongPaddle : Paddle
     {
         public LongPaddle(byte id) : base(GameData.PaddleSettingsDict[typeof(LongPaddle)], id)
         {
