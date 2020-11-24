@@ -37,7 +37,7 @@ namespace PongRoyale_client.Game
         public Dictionary<byte, IBall> ArenaBalls { get; private set; } = new Dictionary<byte, IBall>();
         public Dictionary<byte, ArenaObject> ArenaObjects { get; private set; } = new Dictionary<byte, ArenaObject>();
 
-        private List<Action> DoAfterGameLoop;
+        private List<Action> DoAfterGameLoop = new List<Action>();
 
         public bool IsInitted { get; private set; }
 
@@ -49,7 +49,11 @@ namespace PongRoyale_client.Game
         public void InitGame(Dictionary<byte, NetworkPlayer> players, GameplayScreen gameScreen)
         {
             GameScreen = gameScreen;
+            InitLogic(players);
+        }
 
+        public void InitLogic(Dictionary<byte, NetworkPlayer> players)
+        {
             PlayerCount = players.Count;
 
             DoAfterGameLoop = new List<Action>();
@@ -100,7 +104,6 @@ namespace PongRoyale_client.Game
                     ServerConnection.Instance.SendObstacleSpawnedMessage(id, obj as Obstacle);
                 else if(obj is PowerUp)
                     ServerConnection.Instance.SendPowerupSpawnedMessage(id, obj as PowerUp);
-
             }
         }
         public void OnArenaObjectExpired(byte id)
@@ -146,7 +149,6 @@ namespace PongRoyale_client.Game
                 if (ServerConnection.Instance.IsRoomMaster)
                     ServerConnection.Instance.SendTranferPowerUpToPaddle(paddleId, ballId, poweredUpData);
                 OnReceivedTransferPowerUpMessage(paddleId, ballId, poweredUpData);
-
             }
         }
         public void OnReceivedTransferPowerUpMessage(byte paddleId, byte ballId, PoweredUpData poweredUpData)
@@ -163,8 +165,12 @@ namespace PongRoyale_client.Game
 
         public void DestroyGame()
         {
-            IsInitted = false;
             GameScreen = null;
+            DestroyGameLogic();
+        }
+        public void DestroyGameLogic()
+        {
+            IsInitted = false;
             PlayerPaddles.Clear();
             ArenaBalls.Clear();
             ArenaObjects.Clear();
