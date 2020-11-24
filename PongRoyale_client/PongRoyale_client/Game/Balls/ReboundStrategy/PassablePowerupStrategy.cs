@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Balls.ReboundStrategy
 {
-    class PassablePowerupStrategy : IReboundStrategy
+    public class PassablePowerupStrategy : IReboundStrategy
     {
         public Vector2 ReboundDirection(Ball b, Vector2 collisionNormal, Paddle p, ArenaObject obj)
         {
