@@ -32,9 +32,18 @@ namespace PongRoyale_client.Extensions.Tests
         }
 
         [TestMethod()]
-        public void IsInsideAngleTest()
+        [DataRow(10, 0, 20)]
+        public void IsInsideAngleTest(float a, float min, float max)
         {
-            Assert.IsTrue(Utilities.IsInsideAngle(10, 0, 20) == true && Utilities.IsInsideAngle(21, 0, 20) == false && Utilities.IsInsideAngle(1, 10, 20) == false);
+            Assert.IsTrue(Utilities.IsInsideAngle(a, min, max) );
+        }
+
+        [TestMethod()]
+        [DataRow(21, 0, 20)]
+        [DataRow(1, 10, 20)]
+        public void IsInsideAngleTest1(float a, float min, float max)
+        {
+            Assert.IsFalse(Utilities.IsInsideAngle(a, min, max));
         }
 
         [TestMethod()]
