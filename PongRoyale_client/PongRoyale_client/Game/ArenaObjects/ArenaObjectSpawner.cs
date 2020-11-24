@@ -13,7 +13,7 @@ namespace PongRoyale_client.Game
     {
         protected float SpawnInterval;
         protected float LastSpawnTime;
-        protected float Time = 0;
+        public float Time { get; protected set; } = 0;
         protected ArenaObjectSpawnerParams Params;
         protected AbstractArenaObjectFactory[] Factories;
 

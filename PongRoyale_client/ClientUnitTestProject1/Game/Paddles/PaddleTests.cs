@@ -75,6 +75,17 @@ namespace PongRoyale_client.Game.Tests
         }
 
         [TestMethod()]
+        public void MoveTest1()
+        {
+            Paddle paddle = new Paddles.NormalPaddle(0);
+            float a = paddle.AngularPosition;
+            paddle.AddClampAngles(0, 100);
+            paddle.TransferPowerUp(new PoweredUpData() { ChangePaddleSpeed = true});
+            paddle.Move(1);
+            Assert.IsFalse(paddle.AngularPosition == a);
+        }
+
+        [TestMethod()]
         public void TransferPowerUpTest()
         {
             PoweredUpData data = new PoweredUpData();

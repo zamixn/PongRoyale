@@ -15,8 +15,23 @@ namespace PongRoyale_client.Game.Tests
         {
             ArenaObject obj = new Obstacles.Obstacle(0, 0, 0, 0, 0);
             obj.SetId(132);
-
             Assert.AreEqual(132, obj.Id);
+        }
+
+        [TestMethod()]
+        public void UpdateTest()
+        {
+            ArenaObject obj = new Obstacles.Obstacle(0, 0, 0, 0, 0);
+            obj.Update();
+            Assert.IsTrue(obj.CurrentColor.Equals(Color.Transparent));
+        }
+
+        [TestMethod()]
+        public void ForceDestroyTest()
+        {
+            ArenaObject obj = new Obstacles.Obstacle(0, 0, 0, 0, 0);
+            obj.ForceDestroy();
+            Assert.IsTrue(obj.IsDead());
         }
     }
 }
