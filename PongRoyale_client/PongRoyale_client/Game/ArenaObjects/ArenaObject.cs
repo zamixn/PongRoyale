@@ -28,10 +28,10 @@ namespace PongRoyale_client.Game
         public Color Color { get; set; }
         public Color CurrentColor { get; set; }
         public ArenaObjectType Type { get; private set; }
-        protected float TimeAlive { get; set; } = 0;
-        protected bool IsAppearing { get; set; } = true;
-        protected bool IsDisappearing { get; set; } = true;
-        protected bool IsBeingDestroyed { get; set; } = false;
+        protected float TimeAlive = 0;
+        protected bool IsAppearing = true;
+        protected bool IsDisappearing = true;
+        protected bool IsBeingDestroyed = false;
 
 
         public ArenaObject()
