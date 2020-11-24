@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
+using PongRoyale_client.Game.Paddles;
+using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,20 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy.Tests
     [TestClass()]
     public class BallDeadlyStrategyTests
     {
+        [TestInitialize()]
+        public void Initialize()
+        {
+            GameManager.StartLocalGame();
+            ArenaFacade.Instance.UpdateDimensions(new Vector2(451, 451), new Vector2(225.5, 225.5), 200.5f);
+            ArenaFacade.Instance.PlayerPaddles.Add(0, new NormalPaddle(0));
+        }
+
+        [TestCleanup()]
+        public void Cleanup() 
+        { 
+            ArenaFacade.Instance.PlayerPaddles.Clear(); 
+        }
+
         [TestMethod()]
         public void ReboundDirectionTest()
         {
@@ -22,16 +38,12 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy.Tests
         [TestMethod()]
         public void ReboundDirectionTest1()
         {
-            Assert.ThrowsException<System.ArgumentNullException>(() =>
-            {
-                BallDeadlyStrategy strategy = new BallDeadlyStrategy();
-                Paddle paddle = new Paddles.NormalPaddle(10);
-                Vector2 vector = new Vector2(10, 10);
-                Obstacles.Obstacle obstacle = new Obstacles.Obstacle(10, 10, 10, 5, 5);
-                Ball b = Ball.CreateBall(0, PongRoyale_shared.BallType.Deadly, vector, 10, vector, 10);
-                Vector2 result = strategy.ReboundDirection(b, vector, paddle, obstacle);
-            });
-
+            BallDeadlyStrategy strategy = new BallDeadlyStrategy();
+            Paddle paddle = ArenaFacade.Instance.PlayerPaddles[0];
+            Vector2 vector = new Vector2(10, 10);
+            Obstacles.Obstacle obstacle = new Obstacles.Obstacle(10, 10, 10, 5, 5);
+            Ball b = Ball.CreateBall(0, PongRoyale_shared.BallType.Deadly, vector, 10, vector, 10);
+            Vector2 result = strategy.ReboundDirection(b, vector, paddle, obstacle);
         }
 
         [TestMethod()]
