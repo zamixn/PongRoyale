@@ -29,12 +29,14 @@ namespace PongRoyale_server.Tests
         [TestMethod()]
         public void GetNewPlayerIDTest()
         {
+            ServerController.Instance.Clean();
             int playerId = ServerController.Instance.GetNewPlayerID();
             Assert.AreEqual(100, playerId);
         }
         [TestMethod()]
         public void GetNewPlayerIDTest1()
         {
+            ServerController.Instance.Clean();
             ServerSidePlayer player = new ServerSidePlayer(100, null);
             ServerController.Instance.AddNewPlayer(player);
             int playerId = ServerController.Instance.GetNewPlayerID();
@@ -63,7 +65,7 @@ namespace PongRoyale_server.Tests
         [TestMethod()]
         public void HandleClientConnectedTest()
         {
-
+            ServerController.Instance.Clean();
             Assert.ThrowsException<System.InvalidOperationException>(() =>
             {
                 TcpClient client = new TcpClient();

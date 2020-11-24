@@ -18,6 +18,11 @@ namespace PongRoyale_server
         public bool AcceptPlayers;
         private readonly object Lock = new object();
 
+        public void Clean()
+        {
+            Players = new List<ServerSidePlayer>();
+        }
+
         public void Start()
         {
             listener = new TcpListener(System.Net.IPAddress.Any, 6969);
