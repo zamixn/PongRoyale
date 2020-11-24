@@ -2,10 +2,10 @@
 using PongRoyale_client.Game.Builders;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Singleton;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Numerics;
 using System.Text;
 
 namespace PongRoyale_client.Game.Obstacles.Tests
@@ -50,17 +50,25 @@ namespace PongRoyale_client.Game.Obstacles.Tests
 
             Assert.AreEqual(ArenaObjectType.Passable, obstacle.Type);
         }
-
         [TestMethod()]
-        public void RenderTest()
+        public void GetReboundStrategyTest1()
         {
-            throw new NotImplementedException();
+            NonPassableArenaObjectFactory factory = new NonPassableArenaObjectFactory();
+            ObstacleBuilder objBuilder = new ObstacleBuilder().AddDuration(10).AddHeigth(10).AddPosX(10).AddWidth(10).AddPosY(10);
+            Obstacle obstacle = factory.CreateObstacle(objBuilder);
+
+            Assert.AreEqual(ArenaObjectType.NonPassable, obstacle.Type);
         }
 
         [TestMethod()]
         public void GetCollisionNormalTest()
         {
-            throw new NotImplementedException();
+            Obstacle obstacle = new Obstacle(10, 10, 10, 10, 10);
+            Vector2 vector = new Vector2(10, 10);
+
+            Vector2 collision = obstacle.GetCollisionNormal(vector, vector);
+
+            Assert.AreEqual(vector.Normalize(), collision);
         }
     }
 }
