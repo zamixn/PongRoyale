@@ -49,7 +49,7 @@ namespace PongRoyale_client
 
         public void StartGame()
         {
-            ArenaFacade.Instance.InitGame(GameScreen);
+            ArenaFacade.Instance.InitGame(RoomSettings.Instance.Players, GameScreen);
             GameLoop.Start();
             SyncLoop.Start();
         }

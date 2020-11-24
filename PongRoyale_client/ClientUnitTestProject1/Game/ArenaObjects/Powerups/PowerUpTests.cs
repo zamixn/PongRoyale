@@ -55,6 +55,8 @@ namespace PongRoyale_client.Game.Powerups.Tests
 
             Assert.AreEqual(ArenaObjectType.Passable, powerUp.Type);
         }
+
+        [TestMethod()]
         public void GetReboundStrategyTest1()
         {
             NonPassableArenaObjectFactory factory = new NonPassableArenaObjectFactory();
@@ -62,6 +64,19 @@ namespace PongRoyale_client.Game.Powerups.Tests
             PowerUp powerUp = factory.CreatePowerup(objBuilder);
 
             Assert.AreEqual(ArenaObjectType.NonPassable, powerUp.Type);
+        }
+
+        [TestMethod()]
+        [DataRow(ArenaObjectType.NonPassable)]
+        [DataRow(ArenaObjectType.Passable)]
+        public void GetReboundStrategyTest(ArenaObjectType type)
+        {
+            PowerUpBuilder builder = new PowerUpBuilder();
+            PowerUp a = builder.CreateObject() as PowerUp;
+            a.SetTypeParams(type);
+            var str = a.GetReboundStrategy();
+
+            Assert.IsTrue(a.Type == type);
         }
     }
 }

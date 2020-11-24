@@ -1,9 +1,7 @@
-﻿using PongRoyale_client.Extensions;
-using PongRoyale_client.Game.ArenaObjects;
+﻿
 using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Game.Balls.Decorator;
-using PongRoyale_client.Game.Builders;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Paddles;
 using PongRoyale_client.Game.Powerups;
@@ -11,12 +9,7 @@ using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace PongRoyale_client.Game
 {
@@ -38,11 +31,11 @@ namespace PongRoyale_client.Game
 
         public int PlayerCount { get; private set; }
 
-        public Dictionary<byte, Paddle> PlayerPaddles { get; private set; }
+        public Dictionary<byte, Paddle> PlayerPaddles { get; private set; } = new Dictionary<byte, Paddle>();
         public int StartingAlivePaddleCount { get; private set; }
         public int AlivePaddleCount { get; private set; }
-        public Dictionary<byte, IBall> ArenaBalls { get; private set; }
-        public Dictionary<byte, ArenaObject> ArenaObjects { get; private set; }
+        public Dictionary<byte, IBall> ArenaBalls { get; private set; } = new Dictionary<byte, IBall>();
+        public Dictionary<byte, ArenaObject> ArenaObjects { get; private set; } = new Dictionary<byte, ArenaObject>();
 
         private List<Action> DoAfterGameLoop;
 
@@ -53,11 +46,10 @@ namespace PongRoyale_client.Game
 
         public bool IsPaused { get; private set; }
 
-        public void InitGame(GameplayScreen gameScreen)
+        public void InitGame(Dictionary<byte, NetworkPlayer> players, GameplayScreen gameScreen)
         {
             GameScreen = gameScreen;
 
-            var players = RoomSettings.Instance.Players;
             PlayerCount = players.Count;
 
             DoAfterGameLoop = new List<Action>();

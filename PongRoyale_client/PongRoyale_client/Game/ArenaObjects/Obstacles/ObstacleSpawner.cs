@@ -27,6 +27,7 @@ namespace PongRoyale_client.Game.Obstacles
 
             var obstacleBuilder = new ObstacleBuilder().AddHeigth(width).AddWidth(height).AddDuration(duration).AddPos(pos);
             var obstacle = Factories[RandomNumber.NextInt(0, Factories.Length)].CreateObstacle(obstacleBuilder);
+
             ArenaFacade.Instance.OnArenaObjectCreated(obstacle);
 
             SpawnInterval = Params.RollInterval();
