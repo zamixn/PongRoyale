@@ -61,14 +61,21 @@ namespace PongRoyale_client.Game.Obstacles.Tests
         }
 
         [TestMethod()]
-        public void GetCollisionNormalTest()
+        [DataRow(10, 10, 10, 10, 10, 10, 10, 1, 1)]   // point is in bounds
+        [DataRow(10, 10, 10, 10, 10, 100, 100, 1, 1)]   // point outside of bounds
+        [DataRow(10, 10, 50, 50, 10, 5, 100, 1, 1)]   // point x is in bounds
+        [DataRow(10, 10, 50, 50, 10, 100, 5, 1, 1)]   // point y is in bounds
+        [DataRow(10, 10, 50, 50, 10, 40, 100, 1, 1)]   // point x is in bounds
+        [DataRow(10, 10, 50, 50, 10, 100, 40, 1, 1)]   // point y is in bounds
+        public void GetCollisionNormalTest(float posX, float posY, float duration, float width, float height, float impactPointX, float impactPointY, float impactDirectionX, float impactDirectionY)
         {
-            Obstacle obstacle = new Obstacle(10, 10, 10, 10, 10);
-            Vector2 vector = new Vector2(10, 10);
+            Obstacle obstacle = new Obstacle(posX, posY, duration, width, height);
+            Vector2 impactPoint = new Vector2(impactPointX, impactPointY);
+            Vector2 impactDirection = new Vector2(impactDirectionX, impactDirectionY);
 
-            Vector2 collision = obstacle.GetCollisionNormal(vector, vector);
+            Vector2 collision = obstacle.GetCollisionNormal(impactPoint, impactDirection);
 
-            Assert.AreEqual(vector.Normalize(), collision);
+            Assert.AreEqual(Math.Round(impactPoint.Normalize().Magnitude(), 2), Math.Round(collision.Magnitude(), 2));
         }
     }
 }

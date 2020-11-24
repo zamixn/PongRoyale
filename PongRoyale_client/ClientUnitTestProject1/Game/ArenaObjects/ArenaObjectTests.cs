@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PongRoyale_client.Game;
+using PongRoyale_client.Singleton;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,6 +22,7 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void UpdateTest()
         {
+            GameManager.Instance.SetTimeSinceLastFrame(0);
             ArenaObject obj = new Obstacles.Obstacle(0, 0, 0, 0, 0);
             obj.Update();
             Assert.IsTrue(obj.CurrentColor.Equals(Color.Transparent));

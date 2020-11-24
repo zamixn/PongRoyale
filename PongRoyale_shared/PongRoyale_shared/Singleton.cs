@@ -11,9 +11,10 @@ namespace PongRoyale_shared
     {
         private static readonly T instance = new T();
 
+
         public static T Instance { 
-            get { 
-                return instance; 
+            get {
+                return instance;
             } 
         }
     }

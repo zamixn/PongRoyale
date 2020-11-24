@@ -42,7 +42,7 @@ namespace PongRoyale_client
 
         public int DecodeInt(byte[] b, int index = 0)
         {
-            return DecodeInt(b, index);
+            return Converter.DecodeInt(b, index);
         }
 
         public void DecodeRoundOverData(byte[] data, out BallType[] ballTypes, out byte[] ids, out byte[] playerIds, out byte[] playerLifes)

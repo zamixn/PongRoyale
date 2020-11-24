@@ -15,17 +15,10 @@ namespace PongRoyale_client.Tests
     {
         private NetworkDataAdapter Converter;
 
-        [TestMethod()]
-        public void NetworkDataAdapterTest()
-        {
-            throw new NotImplementedException();
-        }
-
-
         [TestInitialize()]
         public void Initialize()
         {
-            Converter = new NetworkDataAdapter();
+           Converter = new NetworkDataAdapter(new ByteNetworkDataConverter());
         }
 
         [TestCleanup()]
@@ -255,7 +248,7 @@ namespace PongRoyale_client.Tests
         {
             byte pId = 5;
             byte bId = 4;
-            var pData = new PoweredUpData() { ChangeBallDirection = true};
+            var pData = new PoweredUpData() { ChangeBallDirection = true };
 
             var data = Converter.EncodePaddlePoweredUpData(pId, bId, pData);
             Converter.DecodePaddlePoweredUpData(data, out byte _pId, out byte _bId, out PoweredUpData _pData);
