@@ -51,19 +51,6 @@ namespace PongRoyale_shared.Tests
         {
             Assert.IsTrue(SharedUtilities.Max(1f, 10f) == 10f);
         }
-
-        [TestMethod()]
-        public void GetBounceDirectionTest()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod()]
-        public void GetSurfaceNormalOfLineTest()
-        {
-            throw new NotImplementedException();
-        }
-
         [TestMethod()]
         public void LerpTest()
         {

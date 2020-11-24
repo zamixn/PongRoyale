@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Paddles
 {
-    class PaddleColorBlue : IPaddleColor
+    public class PaddleColorBlue : IPaddleColor
     {
         public Color ApplyColor()
         {
