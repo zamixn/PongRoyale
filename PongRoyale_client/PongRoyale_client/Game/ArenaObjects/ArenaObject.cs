@@ -64,9 +64,14 @@ namespace PongRoyale_client.Game
                 ArenaFacade.Instance.OnArenaObjectExpired(Id);
         }
 
-        protected void ForceDestroy()
+        public void ForceDestroy()
         {
             TimeAlive = Duration;
+        }
+
+        public bool IsDead()
+        {
+            return TimeAlive >= Duration;
         }
 
         public abstract Vector2 GetCollisionNormal(Vector2 impactPoint, Vector2 impactDirection);
