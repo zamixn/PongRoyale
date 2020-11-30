@@ -38,6 +38,7 @@ namespace PongRoyale_client.Game
         public int Life { get; protected set; }
         public byte Id { get; protected set; }
         public IPaddleColor PaddleColor;
+        public PaddleType PType;
 
         public PoweredUpData PowerUppedData { get; protected set; }
 
@@ -51,6 +52,7 @@ namespace PongRoyale_client.Game
             Life = settings.Life;
             CurrentAngularSpeed = 0;
             PaddleColor = settings.PaddleColor;
+            PType = settings.PType;
         }
 
         public void AddClampAngles(float minAngle, float maxAngle)

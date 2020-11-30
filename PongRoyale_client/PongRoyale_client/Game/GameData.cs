@@ -1,6 +1,7 @@
 ﻿using PongRoyale_client.Game.ArenaObjects;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Paddles;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -20,6 +21,7 @@ namespace PongRoyale_client.Game
             public float Thickness;
             public int Life;
             public IPaddleColor PaddleColor;
+            public PaddleType PType;
         }
 
         public static readonly Dictionary<System.Type, PaddleSettings> PaddleSettingsDict =
@@ -30,21 +32,24 @@ namespace PongRoyale_client.Game
                 Speed = 1.5f,
                 Thickness = 10,
                 Life = 3,
-                PaddleColor = new PaddleColorBlack()
+                PaddleColor = new PaddleColorBlack(),
+                PType = PaddleType.Normal
             }},
             {typeof(LongPaddle), new PaddleSettings(){
                 Size = 35,
                 Speed = .8f,
                 Thickness = 13,
                 Life = 4,
-                PaddleColor = new PaddleColorBlack()
+                PaddleColor = new PaddleColorBlack(),
+                PType = PaddleType.Long
             }},
             {typeof(ShortPaddle), new PaddleSettings(){
                 Size = 13,
                 Speed = 2.25f,
                 Thickness = 7,
                 Life = 2,
-                PaddleColor = new PaddleColorRed()
+                PaddleColor = new PaddleColorRed(),
+                PType = PaddleType.Short
             }}
         };
 

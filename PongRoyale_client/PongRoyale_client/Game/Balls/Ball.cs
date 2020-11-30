@@ -1,6 +1,7 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Balls.Decorator;
+using PongRoyale_client.Game.Balls.Iterator;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Balls.TemplateMethod;
 using PongRoyale_client.Game.Command;
@@ -137,15 +138,28 @@ namespace PongRoyale_client.Game.Balls
 
         public virtual void CheckCollisionWithPaddles(Dictionary<byte, Paddle> paddles)
         {
+            PaddleArrayList paddleArrayList = new PaddleArrayList();
+            paddleArrayList.AddPaddles(paddles.Values.ToArray());
+            PaddleIterator paddleIterator = new PaddleIterator(paddleArrayList);
             Vector2 center = ArenaFacade.Instance.ArenaDimensions.Center;
             Vector2 directionFromCenter = (Position - center);
             float angle = Vector2.SignedAngleDeg(Vector2.Right, directionFromCenter);
             float distance = ArenaFacade.Instance.ArenaDimensions.GetDistanceFromCenter(Position) + Diameter / 2f;
             float arenaRadius = ArenaFacade.Instance.ArenaDimensions.Radius;
 
-            foreach (var kvp in paddles)
+            //foreach (var kvp in paddles)
+            //{
+            //    var p = kvp.Value;
+            //    float offsetDistance = distance + p.Thickness / 2;
+            //    float pAngle1 = p.AngularPosition;
+            //    float pAngle2 = (p.AngularPosition + p.AngularSize);
+            //    if (offsetDistance > arenaRadius)
+            //        if (Utilities.IsInsideAngle(angle, pAngle1, pAngle2))
+            //            OnCollision(p, null);
+            //}
+            for (Paddle i = (Paddle)paddleIterator.First(); paddleIterator.HasNext(); i = (Paddle)paddleIterator.Next())
             {
-                var p = kvp.Value;
+                var p = i;
                 float offsetDistance = distance + p.Thickness / 2;
                 float pAngle1 = p.AngularPosition;
                 float pAngle2 = (p.AngularPosition + p.AngularSize);
@@ -157,14 +171,28 @@ namespace PongRoyale_client.Game.Balls
 
         public virtual void CheckCollisionWithArenaObjects(Dictionary<byte, ArenaObject> objects)
         {
-
-            foreach (var obj in objects.Values)
+            if (objects.Count > 0)
             {
-                if (obj.Intersects(GetBounds()))
-                    OnCollision(null, obj);
+                ArenaObjectArray arenaObjectArray = new ArenaObjectArray();
+                arenaObjectArray.AddAObjects(objects.Values.ToArray());
+                ArenaObjectIterator aObjectIterator = new ArenaObjectIterator(arenaObjectArray);
+                //foreach (var obj in objects.Values)
+                //{
+                //    if (obj.Intersects(GetBounds()))
+                //        OnCollision(null, obj);
 
-                if (ArenaFacade.Instance.IsPaused)
-                    break;
+                //    if (ArenaFacade.Instance.IsPaused)
+                //        break;
+                //}
+                for (ArenaObject i = (ArenaObject)aObjectIterator.First(); aObjectIterator.HasNext(); i = (ArenaObject)aObjectIterator.Next())
+                {
+                    var obj = i;
+                    if (obj.Intersects(GetBounds()))
+                        OnCollision(null, obj);
+
+                    if (ArenaFacade.Instance.IsPaused)
+                        break;
+                }
             }
         }
 
