@@ -1,6 +1,7 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Obstacles;
+using PongRoyale_client.Game.Renderable;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game
 {
-    public abstract class ArenaObject
+    public abstract class ArenaObject : RenderableComponent
     {
         public byte Id { get; private set; }
         public void SetId(byte id)
@@ -38,8 +39,6 @@ namespace PongRoyale_client.Game
         {
             CurrentColor = Color.Transparent;
         }
-
-        public abstract void Render(Graphics g, Pen p, Brush b);
 
         public virtual void Update()
         {

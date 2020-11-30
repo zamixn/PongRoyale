@@ -1,27 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game.Renderable
 {
-    class RenderableComposite : RenderableComponent
+    public class RenderableComposite : RenderableComponent
     {
         private List<RenderableComponent> components = new List<RenderableComponent>();
+
         public override void Add(RenderableComponent component)
         {
-            throw new NotImplementedException();
+            components.Add(component);
         }
 
         public override void Remove(RenderableComponent component)
         {
-            throw new NotImplementedException();
+            components.Remove(component);
         }
 
-        public override void Render()
+        public override void Render(Graphics g, Pen p, Brush b)
         {
-            throw new NotImplementedException();
+            foreach(RenderableComponent c in components)
+                c.Render(g, p, b);
         }
     }
 }

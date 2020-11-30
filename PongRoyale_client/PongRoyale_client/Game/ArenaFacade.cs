@@ -5,6 +5,7 @@ using PongRoyale_client.Game.Balls.Decorator;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Paddles;
 using PongRoyale_client.Game.Powerups;
+using PongRoyale_client.Game.Renderable;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -13,7 +14,7 @@ using System.Linq;
 
 namespace PongRoyale_client.Game
 {
-    public class ArenaFacade : Singleton<ArenaFacade>, IRenderable
+    public class ArenaFacade : Singleton<ArenaFacade>
     {
         public ArenaDimensions ArenaDimensions { get; private set; }
         public void UpdateDimensions(Vector2 size, Vector2 center, float radius)
@@ -30,6 +31,8 @@ namespace PongRoyale_client.Game
         private List<ArenaObjectSpawner> Spawners;
 
         public int PlayerCount { get; private set; }
+
+        public RenderableComposite RootRenderable;
 
         public Dictionary<byte, Paddle> PlayerPaddles { get; private set; } = new Dictionary<byte, Paddle>();
         public int StartingAlivePaddleCount { get; private set; }
@@ -361,11 +364,6 @@ namespace PongRoyale_client.Game
                 a?.Invoke();
             }
             DoAfterGameLoop.Clear();
-        }
-
-        void IRenderable.Render()
-        {
-            throw new NotImplementedException();
         }
     }
 }

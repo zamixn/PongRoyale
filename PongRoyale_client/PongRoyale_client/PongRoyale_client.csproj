@@ -114,7 +114,6 @@
     <Compile Include="Game\ArenaObjects\Obstacles\Obstacle.cs" />
     <Compile Include="Game\ArenaObjects\Obstacles\ObstacleSpawner.cs" />
     <Compile Include="Game\ArenaObjects\ArenaObjectType.cs" />
-    <Compile Include="Game\Renderable\IRenderable.cs" />
     <Compile Include="Game\Paddles\PaddleColorBlack.cs" />
     <Compile Include="Game\Paddles\PaddleColorBlue.cs" />
     <Compile Include="Game\Paddles\IPaddleColor.cs" />
