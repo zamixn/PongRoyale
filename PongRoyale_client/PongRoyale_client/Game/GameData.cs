@@ -1,6 +1,7 @@
 ﻿using PongRoyale_client.Game.ArenaObjects;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Paddles;
+using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

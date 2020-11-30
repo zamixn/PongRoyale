@@ -38,7 +38,7 @@ namespace PongRoyale_client.Game
         public int Life { get; protected set; }
         public byte Id { get; protected set; }
         public IPaddleColor PaddleColor => Settings.PaddleColor;
-
+        public PaddleType PType => Settings.PType;
         public PaddleSettings Settings { get; protected set; }
 
         public PoweredUpData PowerUppedData { get; protected set; }

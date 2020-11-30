@@ -71,6 +71,12 @@
     <Compile Include="Game\Balls\Decorator\DeadlyBallDecorator.cs" />
     <Compile Include="Game\Balls\Decorator\BallSpeedDecorator.cs" />
     <Compile Include="Game\Balls\IBall.cs" />
+    <Compile Include="Game\Balls\Iterator\Aggregator.cs" />
+    <Compile Include="Game\Balls\Iterator\ArenaObjectArray.cs" />
+    <Compile Include="Game\Balls\Iterator\ArenaObjectIterator.cs" />
+    <Compile Include="Game\Balls\Iterator\MyIterator.cs" />
+    <Compile Include="Game\Balls\Iterator\PaddleArrayList.cs" />
+    <Compile Include="Game\Balls\Iterator\PaddleIterator.cs" />
     <Compile Include="Game\Balls\NormalBall.cs" />
     <Compile Include="Game\Balls\ReboundStrategy\BallDeadlyStrategy.cs" />
     <Compile Include="Game\Balls\ReboundStrategy\IReboundStrategy.cs" />

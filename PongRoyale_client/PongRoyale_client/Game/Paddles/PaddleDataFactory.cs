@@ -14,6 +14,7 @@ namespace PongRoyale_client.Game.Paddles
         public float Thickness;
         public int Life;
         public IPaddleColor PaddleColor;
+        public PaddleType PType;
     }
 
     class PaddleDataFactory
@@ -37,7 +38,8 @@ namespace PongRoyale_client.Game.Paddles
                         Speed = 1.5f,
                         Thickness = 10,
                         Life = 3,
-                        PaddleColor = new PaddleColorBlack()
+                        PaddleColor = new PaddleColorBlack(),
+                        PType = PaddleType.Normal
                     };
                         break;
                     case PaddleType.Long: settings = new PaddleSettings()
@@ -46,7 +48,8 @@ namespace PongRoyale_client.Game.Paddles
                         Speed = .8f,
                         Thickness = 13,
                         Life = 4,
-                        PaddleColor = new PaddleColorBlack()
+                        PaddleColor = new PaddleColorBlack(),
+                        PType = PaddleType.Long
                     };
                         break;
                     case PaddleType.Short: settings = new PaddleSettings()
@@ -55,7 +58,8 @@ namespace PongRoyale_client.Game.Paddles
                         Speed = 2.25f,
                         Thickness = 7,
                         Life = 2,
-                        PaddleColor = new PaddleColorRed()
+                        PaddleColor = new PaddleColorRed(),
+                        PType = PaddleType.Short
                     };
                         break;
                     default:
