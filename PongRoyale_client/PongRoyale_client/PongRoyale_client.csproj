@@ -84,6 +84,9 @@
     <Compile Include="Game\ArenaObjects\Builders\IArenaObjectBuilder.cs" />
     <Compile Include="Game\ArenaObjects\Builders\ObstacleBuilder.cs" />
     <Compile Include="Game\ArenaObjects\Builders\PowerUpBuilder.cs" />
+    <Compile Include="Game\Balls\TemplateMethod\ReboundFromArenaObject.cs" />
+    <Compile Include="Game\Balls\TemplateMethod\ReboundFromPaddle.cs" />
+    <Compile Include="Game\Balls\TemplateMethod\ReboundTemplate.cs" />
     <Compile Include="Game\Input\Command\MoveCommand.cs" />
     <Compile Include="Game\ArenaFacade.cs" />
     <Compile Include="Game\GameplayScreen.cs">

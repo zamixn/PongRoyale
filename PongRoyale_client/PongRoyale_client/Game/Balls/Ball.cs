@@ -2,6 +2,7 @@
 using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Balls.Decorator;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
+using PongRoyale_client.Game.Balls.TemplateMethod;
 using PongRoyale_client.Game.Command;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
@@ -244,31 +245,34 @@ namespace PongRoyale_client.Game.Balls
             float radius = ArenaFacade.Instance.ArenaDimensions.Radius;
             Vector2 collisionNormal = null;
 
+
             IReboundStrategy reboundStrategy = null;
             if (paddle != null)// collision with a paddle
             {
                 float paddleAngle = paddle.GetCenterAngle();
                 Vector2 paddleCenter = Utilities.GetPointOnCircle(center, radius, paddleAngle);
                 collisionNormal = (center - paddleCenter).Normalize();
-
-                switch (bType)
-                {
-                    case BallType.Deadly:
-                        reboundStrategy = new BallDeadlyStrategy();
-                        break;
-                    case BallType.Normal:
-                        if (paddle.CurrentAngularSpeed < 0)
-                            reboundStrategy = new PaddleMovingLeft();
-                        else if (paddle.CurrentAngularSpeed > 0)
-                            reboundStrategy = new PaddleMovingRight();
-                        else //if (coll.AngularSpeed == 0)
-                            reboundStrategy = new PaddleNotMoving();
-                        break;
-                }
+                ReboundTemplate rbTemplate = new ReboundFromPaddle(paddle.CurrentAngularSpeed, bType, null, Obstacles.ArenaObjectType.NonPassable);
+                reboundStrategy = rbTemplate.ChooseStrategy();
+                //switch (bType)
+                //{
+                //    case BallType.Deadly:
+                //        reboundStrategy = new BallDeadlyStrategy();
+                //        break;
+                //    case BallType.Normal:
+                //        if (paddle.CurrentAngularSpeed < 0)
+                //            reboundStrategy = new PaddleMovingLeft();
+                //        else if (paddle.CurrentAngularSpeed > 0)
+                //            reboundStrategy = new PaddleMovingRight();
+                //        else //if (coll.AngularSpeed == 0)
+                //            reboundStrategy = new PaddleNotMoving();
+                //        break;
+                //}
             }
             else if (arenaObject != null)// collision with an arena object
             {
-                reboundStrategy = arenaObject.GetReboundStrategy();
+                ReboundTemplate rbTemplate = new ReboundFromArenaObject(0, BallType.Normal, arenaObject, arenaObject.Type);
+                reboundStrategy = rbTemplate.ChooseStrategy();
                 var offset = (Direction * Diameter * 0.5f);
                 Vector2 impactPos = Position + offset;
                 collisionNormal = arenaObject.GetCollisionNormal(impactPos, Direction);
