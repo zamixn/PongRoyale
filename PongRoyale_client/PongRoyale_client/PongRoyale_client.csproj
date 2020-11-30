@@ -120,6 +120,7 @@
     <Compile Include="Game\Paddles\LongPaddle.cs" />
     <Compile Include="Game\Paddles\NormalPaddle.cs" />
     <Compile Include="Game\Paddles\Paddle.cs" />
+    <Compile Include="Game\Paddles\PaddleDataFactory.cs" />
     <Compile Include="Game\Paddles\PaddleFactory.cs" />
     <Compile Include="Game\Paddles\PaddleColorRed.cs" />
     <Compile Include="Game\Paddles\ShortPaddle.cs" />

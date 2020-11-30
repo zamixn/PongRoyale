@@ -15,11 +15,11 @@ namespace PongRoyale_client.Game.Paddles
             switch (type)
             {
                 case PaddleType.Normal:
-                    return new NormalPaddle(id);
+                    return new NormalPaddle(id, PaddleDataFactory.GetPaddleData(type));
                 case PaddleType.Long:
-                    return new LongPaddle(id);
+                    return new LongPaddle(id, PaddleDataFactory.GetPaddleData(type));
                 case PaddleType.Short:
-                    return new ShortPaddle(id);
+                    return new ShortPaddle(id, PaddleDataFactory.GetPaddleData(type));
                 default:
                     return null;
             }

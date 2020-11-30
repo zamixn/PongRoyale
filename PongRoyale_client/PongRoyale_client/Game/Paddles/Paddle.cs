@@ -31,14 +31,15 @@ namespace PongRoyale_client.Game
                 CurrentAngularSpeed = posChange.Clamp(-MaxAngularSpeed, MaxAngularSpeed);
                 _angPos = value;
             } }
-        public float AngularSize { get; protected set; }
-        public float MaxAngularSpeed { get; protected set; }
+        public float AngularSize => Settings.Size;
+        public float MaxAngularSpeed => Settings.Speed;
         public float CurrentAngularSpeed { get; protected set; }
-        public float Thickness { get; private set; }
+        public float Thickness => Settings.Thickness;
         public int Life { get; protected set; }
         public byte Id { get; protected set; }
-        public IPaddleColor PaddleColor;
-        public PaddleType PType;
+        public IPaddleColor PaddleColor => Settings.PaddleColor;
+        public PaddleType PType => Settings.PType;
+        public PaddleSettings Settings { get; protected set; }
 
         public PoweredUpData PowerUppedData { get; protected set; }
 
@@ -46,13 +47,9 @@ namespace PongRoyale_client.Game
         {
             Id = id;
             PowerUppedData = new PoweredUpData();
-            AngularSize = settings.Size;
-            MaxAngularSpeed = settings.Speed;
-            Thickness = settings.Thickness;
             Life = settings.Life;
             CurrentAngularSpeed = 0;
-            PaddleColor = settings.PaddleColor;
-            PType = settings.PType;
+            Settings = settings;
         }
 
         public void AddClampAngles(float minAngle, float maxAngle)

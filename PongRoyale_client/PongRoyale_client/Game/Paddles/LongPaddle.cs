@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_client.Game.Paddles;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace PongRoyale_client.Game
 {
     public class LongPaddle : Paddle
     {
-        public LongPaddle(byte id) : base(GameData.PaddleSettingsDict[typeof(LongPaddle)], id)
+        public LongPaddle(byte id, PaddleSettings settings) : base(settings, id)
         {
         }
 

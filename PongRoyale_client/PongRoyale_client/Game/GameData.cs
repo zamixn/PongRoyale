@@ -14,46 +14,6 @@ namespace PongRoyale_client.Game
 {
     public class GameData
     {
-        public class PaddleSettings
-        {
-            public int Size;
-            public float Speed;
-            public float Thickness;
-            public int Life;
-            public IPaddleColor PaddleColor;
-            public PaddleType PType;
-        }
-
-        public static readonly Dictionary<System.Type, PaddleSettings> PaddleSettingsDict =
-            new Dictionary<System.Type, PaddleSettings>()
-        {
-            {typeof(NormalPaddle), new PaddleSettings(){
-                Size = 20,
-                Speed = 1.5f,
-                Thickness = 10,
-                Life = 3,
-                PaddleColor = new PaddleColorBlack(),
-                PType = PaddleType.Normal
-            }},
-            {typeof(LongPaddle), new PaddleSettings(){
-                Size = 35,
-                Speed = .8f,
-                Thickness = 13,
-                Life = 4,
-                PaddleColor = new PaddleColorBlack(),
-                PType = PaddleType.Long
-            }},
-            {typeof(ShortPaddle), new PaddleSettings(){
-                Size = 13,
-                Speed = 2.25f,
-                Thickness = 7,
-                Life = 2,
-                PaddleColor = new PaddleColorRed(),
-                PType = PaddleType.Short
-            }}
-        };
-
-
         public static readonly float DefaultBallSpeed = 1.25f;
         public static readonly float DefaultBallSize = 20f;
 
