@@ -9,7 +9,7 @@ namespace PongRoyale_client.Game.Paddles
 {
     public class ShortPaddle : Paddle
     {
-        public ShortPaddle(byte id) : base(GameData.PaddleSettingsDict[typeof(ShortPaddle)], id)
+        public ShortPaddle(byte id, PaddleSettings settings) : base(settings, id)
         {
         }
 
