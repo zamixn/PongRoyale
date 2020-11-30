@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace PongRoyale_client.Game
 {
-    public class ArenaFacade : Singleton<ArenaFacade>
+    public class ArenaFacade : Singleton<ArenaFacade>, IRenderable
     {
         public ArenaDimensions ArenaDimensions { get; private set; }
         public void UpdateDimensions(Vector2 size, Vector2 center, float radius)
@@ -361,6 +361,11 @@ namespace PongRoyale_client.Game
                 a?.Invoke();
             }
             DoAfterGameLoop.Clear();
+        }
+
+        void IRenderable.Render()
+        {
+            throw new NotImplementedException();
         }
     }
 }
