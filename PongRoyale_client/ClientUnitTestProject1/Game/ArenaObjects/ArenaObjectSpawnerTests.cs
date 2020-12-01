@@ -17,7 +17,7 @@ namespace PongRoyale_client.Game.Tests
         {
             GameManager.StartLocalGame();
             ArenaFacade.Instance.UpdateDimensions(new Vector2(451, 451), new Vector2(225.5, 225.5), 200.5f);
-            ArenaFacade.Instance.PlayerPaddles.Add(0, new NormalPaddle(0));
+            ArenaFacade.Instance.PlayerPaddles.Add(0, new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal)));
         }
 
         [TestCleanup()]
@@ -26,7 +26,7 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void UpdateTest()
         {
-            ArenaFacade.Instance.UpdateDimensions(new PongRoyale_shared.Vector2(0, 0), new PongRoyale_shared.Vector2(0, 0), 10f);
+            ArenaFacade.Instance.UpdateDimensions(new Vector2(0, 0), new Vector2(0, 0), 10f);
             ArenaObjectSpawner spawner = new ObstacleSpawner(GameData.ObstacleSpawnerParams, new AbstractArenaObjectFactory[] { new NonPassableArenaObjectFactory()});
             GameManager.Instance.SetTimeSinceLastFrame(0.69f);
             spawner.Update();
