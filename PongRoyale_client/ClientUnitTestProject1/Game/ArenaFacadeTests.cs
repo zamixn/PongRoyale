@@ -23,7 +23,7 @@ namespace PongRoyale_client.Game.Tests
         {
             GameManager.StartLocalGame();
             ArenaFacade.Instance.UpdateDimensions(new Vector2(451, 451), new Vector2(225.5, 225.5), 200.5f);
-            ArenaFacade.Instance.PlayerPaddles.Add(0, new NormalPaddle(0));
+            ArenaFacade.Instance.PlayerPaddles.Add(0, new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal)));
         }
 
         [TestCleanup()]
@@ -36,8 +36,8 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void UpdateDimensionsTest()
         {
-            ArenaFacade.Instance.UpdateDimensions(new PongRoyale_shared.Vector2(0, 0), new PongRoyale_shared.Vector2(0, 0), 10f);
-            Assert.IsTrue(ArenaFacade.Instance.ArenaDimensions.Size.Equals(new PongRoyale_shared.Vector2(0, 0)) && ArenaFacade.Instance.ArenaDimensions.Center.Equals(new PongRoyale_shared.Vector2(0, 0)) &&
+            ArenaFacade.Instance.UpdateDimensions(new Vector2(0, 0), new Vector2(0, 0), 10f);
+            Assert.IsTrue(ArenaFacade.Instance.ArenaDimensions.Size.Equals(new Vector2(0, 0)) && ArenaFacade.Instance.ArenaDimensions.Center.Equals(new PongRoyale_shared.Vector2(0, 0)) &&
                 ArenaFacade.Instance.ArenaDimensions.Radius.Equals(10f));
         }
 
@@ -45,7 +45,7 @@ namespace PongRoyale_client.Game.Tests
         public void InitLogicTest()
         {
             ArenaFacade.Instance.InitLogic(new Dictionary<byte, NetworkPlayer>() {
-                { 0, new PongRoyale_shared.NetworkPlayer(0, 3, PaddleType.Normal) }
+                { 0, new NetworkPlayer(0, 3, PaddleType.Normal) }
             });
 
             Assert.IsFalse(ArenaFacade.Instance.IsPaused);

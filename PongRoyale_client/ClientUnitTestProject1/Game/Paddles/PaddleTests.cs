@@ -17,14 +17,14 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void PaddleTest()
         {
-            Paddle paddle = new LongPaddle(0);
-            Assert.IsTrue(paddle.AngularSize == GameData.PaddleSettingsDict[typeof(LongPaddle)].Size && paddle.Thickness == GameData.PaddleSettingsDict[typeof(LongPaddle)].Thickness);
+            Paddle paddle = new LongPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Long));
+            Assert.IsTrue(paddle.AngularSize == PaddleDataFactory.GetPaddleData(PaddleType.Long).Size && paddle.Thickness == PaddleDataFactory.GetPaddleData(PaddleType.Long).Thickness);
         }
 
         [TestMethod()]
         public void AddClampAnglesTest()
         {
-            Paddle paddle = new LongPaddle(0);
+            Paddle paddle = new LongPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Long));
             paddle.AddClampAngles(0, 10);
             Assert.IsTrue(paddle.MinAngle > paddle.MaxAngle);
         }
@@ -32,14 +32,14 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void GetCenterAngleTest()
         {
-            Paddle paddle = new Paddles.NormalPaddle(0);
+            Paddle paddle = new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal));
             Assert.IsTrue(SharedUtilities.DegToRad(paddle.AngularPosition + paddle.AngularSize / 2f) == paddle.GetCenterAngle());
         }
 
         [TestMethod()]
         public void AddLifeTest()
         {
-            Paddle paddle = new Paddles.NormalPaddle(0);
+            Paddle paddle = new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal));
             paddle.SetLife(0);
             paddle.AddLife(1);
             Assert.IsTrue(paddle.Life == 1);
@@ -48,9 +48,9 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void IsAliveTest()
         {
-            Paddle paddle = new Paddles.NormalPaddle(0);
+            Paddle paddle = new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal));
             paddle.SetLife(0);
-            Paddle paddle1 = new Paddles.NormalPaddle(0);
+            Paddle paddle1 = new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal));
             paddle1.SetLife(1);
             Assert.IsTrue(paddle.IsAlive() == false && paddle1.IsAlive() == true);
         }
@@ -58,7 +58,7 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void OnPosSyncTest()
         {
-            Paddle paddle = new Paddles.NormalPaddle(0);
+            Paddle paddle = new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal));
             float a = paddle.AngularPosition;
             paddle.OnPosSync(0);
             Assert.IsTrue(paddle.AngularPosition == a);
@@ -67,7 +67,7 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void MoveTest()
         {
-            Paddle paddle = new Paddles.NormalPaddle(0);
+            Paddle paddle = new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal));
             float a = paddle.AngularPosition;
             paddle.AddClampAngles(0, 100);
             paddle.Move(1);
@@ -77,7 +77,7 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void MoveTest1()
         {
-            Paddle paddle = new Paddles.NormalPaddle(0);
+            Paddle paddle = new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal));
             float a = paddle.AngularPosition;
             paddle.AddClampAngles(0, 100);
             paddle.TransferPowerUp(new PoweredUpData() { ChangePaddleSpeed = true});
@@ -92,7 +92,7 @@ namespace PongRoyale_client.Game.Tests
             data.ChangePaddleSpeed = true;
             data.GivePlayerLife = true;
             data.UndoPlayerMove = true;
-            Paddle paddle = new ShortPaddle(0);
+            Paddle paddle = new ShortPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Short));
             Assert.ThrowsException<System.TypeInitializationException>(()=> { paddle.TransferPowerUp(data); });
         }
     }

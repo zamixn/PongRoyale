@@ -17,7 +17,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy.Tests
         {
             GameManager.StartLocalGame();
             ArenaFacade.Instance.UpdateDimensions(new Vector2(451, 451), new Vector2(225.5, 225.5), 200.5f);
-            ArenaFacade.Instance.PlayerPaddles.Add(0, new NormalPaddle(0));
+            ArenaFacade.Instance.PlayerPaddles.Add(0, new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal)));
         }
 
         [TestCleanup()]
@@ -31,7 +31,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy.Tests
         {
             BallDeadlyStrategy strategy = new BallDeadlyStrategy();
             Vector2 vector = new Vector2(10, 10);
-            Ball b = Ball.CreateBall(0, PongRoyale_shared.BallType.Deadly, vector, 10, vector, 10);
+            Ball b = Ball.CreateBall(0, BallType.Deadly, vector, 10, vector, 10);
             Vector2 result = strategy.ReboundDirection(b, vector, null, null);
             Assert.AreEqual(vector, result);
         }
@@ -42,7 +42,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy.Tests
             Paddle paddle = ArenaFacade.Instance.PlayerPaddles[0];
             Vector2 vector = new Vector2(10, 10);
             Obstacles.Obstacle obstacle = new Obstacles.Obstacle(10, 10, 10, 5, 5);
-            Ball b = Ball.CreateBall(0, PongRoyale_shared.BallType.Deadly, vector, 10, vector, 10);
+            Ball b = Ball.CreateBall(0, BallType.Deadly, vector, 10, vector, 10);
             Vector2 result = strategy.ReboundDirection(b, vector, paddle, obstacle);
         }
 
@@ -51,7 +51,7 @@ namespace PongRoyale_client.Game.Balls.ReboundStrategy.Tests
         {
             BallDeadlyStrategy strategy = new BallDeadlyStrategy();
             Vector2 vector = new Vector2(10, 10);
-            Ball b = Ball.CreateBall(0, PongRoyale_shared.BallType.Deadly, vector, 10, vector, 10);
+            Ball b = Ball.CreateBall(0, BallType.Deadly, vector, 10, vector, 10);
             Vector2 result = strategy.ReboundPosition(b, vector, null, null);
             Assert.AreEqual(vector, result);
         }

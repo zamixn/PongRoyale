@@ -17,7 +17,7 @@ namespace PongRoyale_client.Game.Paddles
         public PaddleType PType;
     }
 
-    class PaddleDataFactory
+    public class PaddleDataFactory
     {
         static Dictionary<PaddleType, PaddleSettings> types = new Dictionary<PaddleType, PaddleSettings>();
 
