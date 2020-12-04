@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>PongRoyale_client</RootNamespace>
     <AssemblyName>PongRoyale_client</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -57,6 +57,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatInterpreter\CommandExpression.cs" />
+    <Compile Include="ChatInterpreter\FixFormatExpression.cs" />
+    <Compile Include="ChatInterpreter\IChatExpression.cs" />
+    <Compile Include="ChatInterpreter\ParserExpression.cs" />
+    <Compile Include="ChatInterpreter\ReplaceExpression.cs" />
+    <Compile Include="ChatInterpreter\AggregateExpression.cs" />
     <Compile Include="Game\ArenaDimenstions.cs" />
     <Compile Include="Extensions\MiscExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />
@@ -221,6 +227,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\icon.ico" />
+    <None Include="Resources\smile.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\PongRoyale_shared\PongRoyale_shared\PongRoyale_shared.csproj">

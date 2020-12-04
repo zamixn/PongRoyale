@@ -39,12 +39,13 @@
             this.ChatInput.Name = "ChatInput";
             this.ChatInput.Size = new System.Drawing.Size(190, 20);
             this.ChatInput.TabIndex = 8;
-            this.ChatInput.KeyDown += this.ChatInput_Submitted;
+            this.ChatInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChatInput_Submitted);
             // 
             // Chat
             // 
             this.Chat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.Chat.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Chat.Location = new System.Drawing.Point(3, 3);
             this.Chat.Name = "Chat";
             this.Chat.ReadOnly = true;

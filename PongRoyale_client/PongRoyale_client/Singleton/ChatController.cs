@@ -1,4 +1,5 @@
-﻿using PongRoyale_client.Extensions;
+﻿using PongRoyale_client.ChatInterpreter;
+using PongRoyale_client.Extensions;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,9 @@ namespace PongRoyale_client.Singleton
         private Color NormalColor;
         private Color ErrorColor;
         private Color InfoColor;
+
+        private IChatExpression TextInterpreter;
+
         public void Setup(RichTextBox output, TextBox input)
         {
             Output = output;
@@ -36,6 +40,28 @@ namespace PongRoyale_client.Singleton
             NormalColor = Output.SelectionColor;
             ErrorColor = Color.Red;
             InfoColor = Color.FromArgb(50, 50, 50);
+
+
+            FixFormatExpression textExpr = new FixFormatExpression(
+                new AggregateExpression(new List<IChatExpression>() {
+                    new ReplaceExpression(":smile:", "😃"),
+                    new ReplaceExpression(":D", "😄"),
+                    new ReplaceExpression(":grinning:", "😁"),
+                    new ReplaceExpression(":anime:", "😆"),
+                    new ReplaceExpression(":embarrased", "😅"),
+                    new ReplaceExpression(":rofl:", "🤣"),
+                    new ReplaceExpression(":crying:", "😂"),
+                    new ReplaceExpression(":)", "🙂"),
+                    new ReplaceExpression("(:", "🙃"),
+                    new ReplaceExpression(":upsidesmile:", "🙃"),
+                    new ReplaceExpression(":wink:", "😉"),
+                    new ReplaceExpression(":blush:", "😊"),
+                    new ReplaceExpression(":halo:", "😇"),
+                })
+            );
+            CommandExpression cmdExpr = new CommandExpression();
+
+            TextInterpreter = new ParserExpression(cmdExpr, textExpr);
         }
 
         public void OnChatInputSubmitted()
@@ -59,14 +85,18 @@ namespace PongRoyale_client.Singleton
         {
             if (ValidateChatInput(message))
             {
-                string playerName = ServerConnection.ConstructName(playerId);
-                if (ServerConnection.Instance.IdMatches(playerId))
+                message = TextInterpreter.Interpret(message);
+                if (!string.IsNullOrEmpty(message))
                 {
-                    Output.AppendText("[me] ", InfoColor, NormalFont);
+                    string playerName = ServerConnection.ConstructName(playerId);
+                    if (ServerConnection.Instance.IdMatches(playerId))
+                    {
+                        Output.AppendText("[me] ", InfoColor, NormalFont);
+                    }
+                    Output.AppendText($"{playerName}", NormalColor, BoldFont);
+                    Output.AppendText($": {message.TrimEnd('\0')}\r\n", NormalColor, NormalFont);
+                    Debug.WriteLine(message);
                 }
-                Output.AppendText($"{playerName}", NormalColor, BoldFont);
-                Output.AppendText($": {message.TrimEnd('\0')}\r\n", NormalColor, NormalFont);
-                Debug.WriteLine(message);
             }
         }
         private bool ValidateChatInput(string input)
