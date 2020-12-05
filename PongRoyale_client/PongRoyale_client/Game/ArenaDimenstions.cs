@@ -11,13 +11,15 @@ namespace PongRoyale_client
     {
         public Vector2 Size { get; private set; }
         public Vector2 Center { get; private set; }
+        public Vector2 RenderOrigin { get; private set; }
         public float Radius { get; private set; }
 
-        public ArenaDimensions(Vector2 size, Vector2 center, float radius)
+        public ArenaDimensions(Vector2 size, Vector2 center, Vector2 renderOrigin, float radius)
         {
             Size = size;
             Center = center;
             Radius = radius;
+            RenderOrigin = renderOrigin;
         }
 
 

@@ -25,6 +25,10 @@ namespace PongRoyale_client.Extensions
         {
             return new Vector2(p.X, p.Y);
         }
+        public static PointF ToPointF(this Vector2 p)
+        {
+            return new PointF(p.X, p.Y);
+        }
 
         public static bool IsInsideAngle(float a, float min, float max)
         {

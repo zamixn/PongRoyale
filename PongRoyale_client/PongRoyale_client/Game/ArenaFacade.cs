@@ -17,9 +17,9 @@ namespace PongRoyale_client.Game
     public class ArenaFacade : Singleton<ArenaFacade>
     {
         public ArenaDimensions ArenaDimensions { get; private set; }
-        public void UpdateDimensions(Vector2 size, Vector2 center, float radius)
+        public void UpdateDimensions(Vector2 size, Vector2 center, Vector2 renderOrigin, float radius)
         {
-            ArenaDimensions = new ArenaDimensions(size, center, radius);
+            ArenaDimensions = new ArenaDimensions(size, center, renderOrigin, radius);
         }
 
         private readonly Dictionary<ArenaObjectType, AbstractArenaObjectFactory> ArenaObjectFactories = new Dictionary<ArenaObjectType, AbstractArenaObjectFactory>()
