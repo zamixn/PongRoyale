@@ -22,7 +22,7 @@ namespace PongRoyale_client.Game.Tests
         public void Initialize()
         {
             GameManager.StartLocalGame();
-            ArenaFacade.Instance.UpdateDimensions(new Vector2(451, 451), new Vector2(225.5, 225.5), 200.5f);
+            ArenaFacade.Instance.UpdateDimensions(new Vector2(451, 451), new Vector2(225.5, 225.5), new Vector2(0, 0) ,200.5f);
             ArenaFacade.Instance.PlayerPaddles.Add(0, new NormalPaddle(0, PaddleDataFactory.GetPaddleData(PaddleType.Normal)));
         }
 
@@ -36,9 +36,10 @@ namespace PongRoyale_client.Game.Tests
         [TestMethod()]
         public void UpdateDimensionsTest()
         {
-            ArenaFacade.Instance.UpdateDimensions(new Vector2(0, 0), new Vector2(0, 0), 10f);
-            Assert.IsTrue(ArenaFacade.Instance.ArenaDimensions.Size.Equals(new Vector2(0, 0)) && ArenaFacade.Instance.ArenaDimensions.Center.Equals(new PongRoyale_shared.Vector2(0, 0)) &&
-                ArenaFacade.Instance.ArenaDimensions.Radius.Equals(10f));
+            ArenaFacade.Instance.UpdateDimensions(new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), 10f);
+            Assert.IsTrue(ArenaFacade.Instance.ArenaDimensions.Size.Equals(new Vector2(0, 0)) && ArenaFacade.Instance.ArenaDimensions.Center.Equals(new Vector2(0, 0)) 
+                && ArenaFacade.Instance.ArenaDimensions.RenderOrigin.Equals(new Vector2(0, 0)) 
+                && ArenaFacade.Instance.ArenaDimensions.Radius.Equals(10f));
         }
 
         [TestMethod()]

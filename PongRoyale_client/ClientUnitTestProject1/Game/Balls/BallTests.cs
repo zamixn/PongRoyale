@@ -21,7 +21,7 @@ namespace PongRoyale_client.Game.Balls.Tests
         public void Initialize()
         {
             GameManager.StartLocalGame();
-            ArenaFacade.Instance.UpdateDimensions(new Vector2(451, 451), new Vector2(225.5,225.5), 200.5f);
+            ArenaFacade.Instance.UpdateDimensions(new Vector2(451, 451), new Vector2(225.5,225.5), new Vector2(0, 0), 200.5f);
         }
 
         [TestCleanup()]

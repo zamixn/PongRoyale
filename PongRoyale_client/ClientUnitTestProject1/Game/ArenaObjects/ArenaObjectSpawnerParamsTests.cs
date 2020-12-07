@@ -49,7 +49,7 @@ namespace PongRoyale_client.Game.ArenaObjects.Tests
         [TestMethod()]
         public void RollPositionTest()
         {
-            ArenaFacade.Instance.UpdateDimensions(new Vector2(10, 10), new Vector2(0, 0), 10f);
+            ArenaFacade.Instance.UpdateDimensions(new Vector2(10, 10), new Vector2(0, 0), new Vector2(0, 0), 10f);
             ArenaObjectSpawnerParams p = new ArenaObjectSpawnerParams();
             Vector2 vec = p.RollPosition();
             var dims = ArenaFacade.Instance.ArenaDimensions;
