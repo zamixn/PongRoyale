@@ -30,12 +30,12 @@ namespace PongRoyale_client.Menu
                 onConnected: () =>
                 {
                     GameManager.Instance.SetGameState(GameState.InMainMenu_NotConnected);
-                    ChatController.Instance.LogInfo("Disconnected from server.");
+                    ChatManager.Instance.Proxy.LogInfo("Disconnected from server.");
                     GameManager.Instance.SetGameState(GameState.InMainMenu_NotConnected);
                 },
                 onException: (ex) =>
                 {
-                    ChatController.Instance.LogError("Failed to disconnect from server.");
+                    ChatManager.Instance.Proxy.LogError("Failed to disconnect from server.");
                 });
         }
     }

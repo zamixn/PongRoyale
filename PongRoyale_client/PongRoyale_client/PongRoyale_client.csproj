@@ -63,6 +63,9 @@
     <Compile Include="ChatInterpreter\ParserExpression.cs" />
     <Compile Include="ChatInterpreter\ReplaceExpression.cs" />
     <Compile Include="ChatInterpreter\AggregateExpression.cs" />
+    <Compile Include="Chat\ChatController.cs" />
+    <Compile Include="Chat\ChatControllerProxy.cs" />
+    <Compile Include="Chat\IChat.cs" />
     <Compile Include="Game\ArenaDimenstions.cs" />
     <Compile Include="Extensions\MiscExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />
@@ -183,7 +186,7 @@
     <Compile Include="Singleton\Rect2D.cs" />
     <Compile Include="Singleton\RoomSettings.cs" />
     <Compile Include="Singleton\SafeInvoke.cs" />
-    <Compile Include="Singleton\ChatController.cs" />
+    <Compile Include="Singleton\ChatManager.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\WinFormsExtensions.cs" />
     <Compile Include="MainForm.cs">

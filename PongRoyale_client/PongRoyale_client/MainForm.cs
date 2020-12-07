@@ -87,7 +87,7 @@ namespace PongRoyale_client
 
         private bool IsTextBoxSelected()
         {
-            return ChatController.Instance.IsInputSelected() || MainMenu.IsInputSelected();
+            return ChatManager.Instance.Proxy.IsInputSelected() || MainMenu.IsInputSelected();
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)

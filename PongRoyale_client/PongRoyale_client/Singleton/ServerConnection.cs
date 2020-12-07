@@ -208,13 +208,13 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.ConnectedToServer:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        ChatController.Instance.LogInfo($"Player: {ServerConnection.ConstructName(message.SenderId)} Joined the room");
+                        ChatManager.Instance.Proxy.LogInfo($"Player: {ServerConnection.ConstructName(message.SenderId)} Joined the room");
                     });
                     break;
                 case NetworkMessage.MessageType.Chat:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        ChatController.Instance.LogChatMessage(message.SenderId, Converter.DecodeString(message.ByteContents));
+                        ChatManager.Instance.Proxy.LogChatMessage(message.SenderId, Converter.DecodeString(message.ByteContents));
                     });
                     break;
                 case NetworkMessage.MessageType.PlayerSync:

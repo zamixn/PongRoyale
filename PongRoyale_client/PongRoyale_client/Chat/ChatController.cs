@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.ChatInterpreter;
 using PongRoyale_client.Extensions;
+using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PongRoyale_client.Singleton
+namespace PongRoyale_client.Chat
 {
-    public class ChatController : Singleton<ChatController>
+    class ChatController : IChat
     {
         private RichTextBox Output;
         private TextBox Input;
@@ -27,8 +28,7 @@ namespace PongRoyale_client.Singleton
         private Color InfoColor;
 
         private IChatExpression TextInterpreter;
-
-        public void Setup(RichTextBox output, TextBox input)
+        public ChatController(RichTextBox output, TextBox input)
         {
             Output = output;
             Input = input;
@@ -63,7 +63,6 @@ namespace PongRoyale_client.Singleton
 
             TextInterpreter = new ParserExpression(cmdExpr, textExpr);
         }
-
         public void OnChatInputSubmitted()
         {
             string playerName = ServerConnection.Instance.PlayerName;
@@ -99,7 +98,7 @@ namespace PongRoyale_client.Singleton
                 }
             }
         }
-        private bool ValidateChatInput(string input)
+        public bool ValidateChatInput(string input)
         {
             return !string.IsNullOrEmpty(input);
         }
@@ -111,7 +110,7 @@ namespace PongRoyale_client.Singleton
                 Output.AppendText($"Info: {info}\r\n", InfoColor, ItalicFont);
             }
         }
-        private bool ValidateChatInfo(string info)
+        public bool ValidateChatInfo(string info)
         {
             return !string.IsNullOrEmpty(info);
         }
@@ -124,7 +123,7 @@ namespace PongRoyale_client.Singleton
                 Output.AppendText($"Error: {error}\r\n", ErrorColor, ItalicFont);
             }
         }
-        private bool ValidateChatError(string error)
+        public bool ValidateChatError(string error)
         {
             return !string.IsNullOrEmpty(error);
         }

@@ -16,7 +16,7 @@ namespace PongRoyale_client.Menu
         public ChatUI()
         {
             InitializeComponent();
-            ChatController.Instance.Setup(Chat, ChatInput);
+            ChatManager.Instance.Setup(Chat, ChatInput);
         }
 
         private void ChatUI_Load(object sender, EventArgs e)
@@ -30,11 +30,11 @@ namespace PongRoyale_client.Menu
             if (e.KeyCode == Keys.Enter)
             {
                 if (ServerConnection.Instance.IsConnected())
-                    ChatController.Instance.OnChatInputSubmitted();
+                    ChatManager.Instance.Proxy.OnChatInputSubmitted();
                 else
                 {
-                    ChatController.Instance.LogError("Not connected to server!");
-                    ChatController.Instance.ClearInput();
+                    ChatManager.Instance.Proxy.LogError("Not connected to server!");
+                    ChatManager.Instance.Proxy.ClearInput();
                 }
             }
         }

@@ -20,7 +20,7 @@ namespace PongRoyale_client.ChatInterpreter
                 GameManager.Instance.SetGameState(ServerConnection.Instance.IsConnected() ? GameState.InMainMenu_Connected : GameState.InMainMenu_NotConnected);
             }
             else
-                ChatController.Instance.LogInfo("Invalid command");
+                ChatManager.Instance.Proxy.LogInfo("Invalid command");
             return "";
         }
     }

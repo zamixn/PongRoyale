@@ -34,7 +34,7 @@ namespace PongRoyale_client.Menu
                 ServerConnection.Instance.SendStartGameMessage();
             }
             else
-                ChatController.Instance.LogError("Could not start the game");
+                ChatManager.Instance.Proxy.LogError("Could not start the game");
         }
 
         private void StartLocalButton_Click(object sender, EventArgs e)
@@ -52,15 +52,15 @@ namespace PongRoyale_client.Menu
                     onConnected: () =>
                     {
                         GameManager.Instance.SetGameState(GameState.InMainMenu_Connected);
-                        ChatController.Instance.ClearChat();
-                        ChatController.Instance.ClearInput();
-                        ChatController.Instance.LogInfo("Connected to server.");
-                        ChatController.Instance.LogInfo($"Welcome to the chat: {ServerConnection.Instance.PlayerName}!");
+                        ChatManager.Instance.Proxy.ClearChat();
+                        ChatManager.Instance.Proxy.ClearInput();
+                        ChatManager.Instance.Proxy.LogInfo("Connected to server.");
+                        ChatManager.Instance.Proxy.LogInfo($"Welcome to the chat: {ServerConnection.Instance.PlayerName}!");
 
                     },
                     onException: (ex) =>
                     {
-                        ChatController.Instance.LogError("Failed to connect to server.");
+                        ChatManager.Instance.Proxy.LogError("Failed to connect to server.");
                     });
             }
             else
@@ -69,11 +69,11 @@ namespace PongRoyale_client.Menu
                     onConnected: () =>
                     {
                         GameManager.Instance.SetGameState(GameState.InMainMenu_NotConnected);
-                        ChatController.Instance.LogInfo("Disconnected from server.");
+                        ChatManager.Instance.Proxy.LogInfo("Disconnected from server.");
                     },
                     onException: (ex) =>
                     {
-                        ChatController.Instance.LogError("Failed to disconnect from server.");
+                        ChatManager.Instance.Proxy.LogError("Failed to disconnect from server.");
                     });
 
             }
