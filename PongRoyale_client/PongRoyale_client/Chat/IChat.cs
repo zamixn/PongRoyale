@@ -11,6 +11,7 @@ namespace PongRoyale_client.Chat
         void ClearInput();
         void ClearChat();
         void OnChatInputSubmitted();
+        void OnChatInputChanged();
         bool IsInputSelected();
         void LogChatMessage(byte playerId, string message);
         bool ValidateChatInput(string input);
@@ -18,5 +19,6 @@ namespace PongRoyale_client.Chat
         bool ValidateChatInfo(string info);
         void LogError(string error);
         bool ValidateChatError(string error);
+        void Undo();
     }
 }

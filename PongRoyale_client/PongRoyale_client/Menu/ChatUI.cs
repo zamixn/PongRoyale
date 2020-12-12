@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PongRoyale_client.Singleton;
+using System.Diagnostics;
 
 namespace PongRoyale_client.Menu
 {
@@ -37,6 +38,11 @@ namespace PongRoyale_client.Menu
                     ChatManager.Instance.Proxy.ClearInput();
                 }
             }
+        }
+
+        private void ChatInput_TextChanged(object sender, EventArgs e)
+        {
+            ChatManager.Instance.Proxy.OnChatInputChanged();
         }
     }
 }

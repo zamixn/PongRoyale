@@ -1,4 +1,5 @@
-﻿using PongRoyale_client.ChatInterpreter;
+﻿using PongRoyale_client.Chat.Memento;
+using PongRoyale_client.ChatInterpreter;
 using PongRoyale_client.Extensions;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
@@ -28,6 +29,11 @@ namespace PongRoyale_client.Chat
         private Color InfoColor;
 
         private IChatExpression TextInterpreter;
+
+        private ChatOriginator Originator;
+        private ChatCaretaker Caretaker;
+        private bool dontSaveMemento;
+
         public ChatController(RichTextBox output, TextBox input)
         {
             Output = output;
@@ -62,6 +68,9 @@ namespace PongRoyale_client.Chat
             CommandExpression cmdExpr = new CommandExpression();
 
             TextInterpreter = new ParserExpression(cmdExpr, textExpr);
+
+            Originator = new ChatOriginator();
+            Caretaker = new ChatCaretaker();
         }
         public void OnChatInputSubmitted()
         {
@@ -72,7 +81,19 @@ namespace PongRoyale_client.Chat
             {
                 ServerConnection.Instance.SendChatMessage(input);
                 Input.Clear();
+                Caretaker.ClearMementos();
             }
+        }
+
+        public void OnChatInputChanged()
+        {
+            if (!dontSaveMemento)
+            {
+                Debug.WriteLine(Input.Text);
+                Originator.SetState(Input.Text);
+                Caretaker.SaveMemento(Originator.CreateMemento());
+            }
+            dontSaveMemento = false;
         }
 
         public bool IsInputSelected()
@@ -126,6 +147,14 @@ namespace PongRoyale_client.Chat
         public bool ValidateChatError(string error)
         {
             return !string.IsNullOrEmpty(error);
+        }
+
+        public void Undo()
+        {
+            ChatMemento memento = Caretaker.GetMemento();
+            Originator.RestoreState(memento);
+            dontSaveMemento = true;
+            Input.Text = Originator.GetState();
         }
     }
 }

@@ -100,5 +100,23 @@ namespace PongRoyale_client.Chat
             }
             controller.ClearChat();
         }
+
+        public void Undo()
+        {
+            if (controller == null)
+            {
+                controller = new ChatController(output, this.input);
+            }
+            controller.Undo();
+        }
+
+        public void OnChatInputChanged()
+        {
+            if (controller == null)
+            {
+                controller = new ChatController(output, this.input);
+            }
+            controller.OnChatInputChanged();
+        }
     }
 }
