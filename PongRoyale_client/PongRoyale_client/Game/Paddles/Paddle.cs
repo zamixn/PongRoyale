@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Extensions;
+using PongRoyale_client.Game.ArenaObjects;
 using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Paddles;
 using PongRoyale_client.Singleton;
@@ -10,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static PongRoyale_client.Game.ArenaFacade;
@@ -42,6 +44,8 @@ namespace PongRoyale_client.Game
         public PaddleSettings Settings { get; protected set; }
 
         public PoweredUpData PowerUppedData { get; protected set; }
+        public IPaddleState state;
+        private List<CancellationTokenSource> tokens;
 
         public Paddle(PaddleSettings settings, byte id)
         {
@@ -50,8 +54,13 @@ namespace PongRoyale_client.Game
             Life = settings.Life;
             CurrentAngularSpeed = 0;
             Settings = settings;
+            state = new NoPowerState(this);
+            tokens = new List<CancellationTokenSource>();
         }
-
+        public void ChangeState(IPaddleState state)
+        {
+            this.state = state;
+        }
         public void AddClampAngles(float minAngle, float maxAngle)
         {
             MinAngle = minAngle;
@@ -132,26 +141,48 @@ namespace PongRoyale_client.Game
 
         public virtual void TransferPowerUp(PoweredUpData data)
         {
-            if (data.IsValid())
+            state.TransferPowerUp(data);
+        }
+        public void ApplySpeedPowerup()
+        {
+            PowerUppedData.ChangePaddleSpeed = true;
+            tokens.Add(SafeInvoke.Instance.DelayedCancellableToken(PowerUppedData.GetDurationOnPaddle(), () => ClearPowerups()));
+            
+        }
+        public void ApplyLifePowerup()
+        {
+            PowerUppedData.GivePlayerLife = true;
+            Life++;
+            tokens.Add(SafeInvoke.Instance.DelayedCancellableToken(PowerUppedData.GetDurationOnPaddle(), () => ClearPowerups()));
+        }
+        public void ApplyUndoPowerup()
+        {
+            PowerUppedData.UndoPlayerMove = true;
+            InputManager.Instance.UndoLastInput();
+            tokens.Add(SafeInvoke.Instance.DelayedCancellableToken(PowerUppedData.GetDurationOnPaddle(), () => ClearPowerups()));
+        }
+        public void CancellPowerupDisposal()
+        {
+            foreach (CancellationTokenSource t in tokens)
             {
-                if (data.ChangePaddleSpeed)
+                if (t != null)
                 {
-                    PowerUppedData.ChangePaddleSpeed = true;
-                    SafeInvoke.Instance.DelayedInvoke(PowerUppedData.GetDurationOnPaddle(), () => PowerUppedData.ChangePaddleSpeed = false);
-                }
-                if (data.GivePlayerLife)
-                {
-                    PowerUppedData.GivePlayerLife = true;
-                    Life++;
-                    SafeInvoke.Instance.DelayedInvoke(PowerUppedData.GetDurationOnPaddle(), () => PowerUppedData.GivePlayerLife = false);
-                }
-                if(data.UndoPlayerMove)
-                {
-                    PowerUppedData.UndoPlayerMove = true;
-                    InputManager.Instance.UndoLastInput();
-                    SafeInvoke.Instance.DelayedInvoke(PowerUppedData.GetDurationOnPaddle(), () => PowerUppedData.UndoPlayerMove = false);
+                    t.Cancel();
+                    t.Dispose();
                 }
             }
+            tokens.Clear();
+        }
+        public void ClearPowerups()
+        {
+            PowerUppedData.ChangePaddleSpeed = false;
+            PowerUppedData.GivePlayerLife = false;
+            PowerUppedData.UndoPlayerMove = false;
+            ChangeState(new NoPowerState(this));
+        }
+        public void ExtendPowerups()
+        {
+            tokens.Add(SafeInvoke.Instance.DelayedCancellableToken(PowerUppedData.GetDurationOnPaddle(), () => ClearPowerups()));
         }
     }
 }

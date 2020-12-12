@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,7 +16,14 @@ namespace PongRoyale_client.Singleton
         {
             Control = control;
         }
-
+        public CancellationTokenSource DelayedCancellableToken(float delay, Action action)
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+            var d = TimeSpan.FromSeconds(delay);
+            Task.Delay(d, token).ContinueWith(t => { if (!source.IsCancellationRequested) { action.Invoke(); } source.Dispose(); });
+            return source;
+        }
         public Task DelayedInvoke(float delay, Action action)
         {
             var d = TimeSpan.FromSeconds(delay);

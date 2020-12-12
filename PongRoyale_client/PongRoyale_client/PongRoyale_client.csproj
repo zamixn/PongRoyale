@@ -70,9 +70,13 @@
     <Compile Include="Extensions\MiscExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />
     <Compile Include="Game\AbstractFactory\AbstractArenaObjectFactory.cs" />
+    <Compile Include="Game\Paddles\NoPowerState.cs" />
+    <Compile Include="Game\Paddles\FullPowerState.cs" />
     <Compile Include="Game\ArenaObjects\ArenaObject.cs" />
     <Compile Include="Game\ArenaObjects\ArenaObjectSpawner.cs" />
     <Compile Include="Game\ArenaObjects\ArenaObjectSpawnerParams.cs" />
+    <Compile Include="Game\Paddles\HalfPowerState.cs" />
+    <Compile Include="Game\Paddles\IPaddleState.cs" />
     <Compile Include="Game\ArenaObjects\Powerups\PoweredUpData.cs" />
     <Compile Include="Game\ArenaObjects\Powerups\PowerUpSpawner.cs" />
     <Compile Include="Game\Balls\Ball.cs" />

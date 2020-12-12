@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -99,7 +100,10 @@ namespace PongRoyale_client
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-
+            //var source = SafeInvoke.Instance.DelayedCancellableToken(10, () => { Debug.WriteLine("Delaying invoke"); });
+            //source.Cancel();
+            //Debug.WriteLine("Print");
+            //source.Dispose();
         }
 
         // Game state observer
