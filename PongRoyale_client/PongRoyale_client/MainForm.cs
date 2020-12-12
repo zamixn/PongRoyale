@@ -83,6 +83,11 @@ namespace PongRoyale_client
             InputManager.Instance.OnKeyDown(keyData);
             if (!IsTextBoxSelected())
                 return true;
+            if ((keyData & Keys.Control) > 0 && (keyData & Keys.KeyCode) == Keys.Z)
+            {
+                ChatManager.Instance.Proxy.Undo();
+                return true;
+            }
             return base.ProcessCmdKey(ref msg, keyData);
         }
 

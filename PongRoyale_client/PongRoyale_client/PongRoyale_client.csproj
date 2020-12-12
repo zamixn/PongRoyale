@@ -65,7 +65,10 @@
     <Compile Include="ChatInterpreter\AggregateExpression.cs" />
     <Compile Include="Chat\ChatController.cs" />
     <Compile Include="Chat\ChatControllerProxy.cs" />
+    <Compile Include="Chat\Memento\ChatCaretaker.cs" />
+    <Compile Include="Chat\Memento\ChatMemento.cs" />
     <Compile Include="Chat\IChat.cs" />
+    <Compile Include="Chat\Memento\ChatOriginator.cs" />
     <Compile Include="Game\ArenaDimenstions.cs" />
     <Compile Include="Extensions\MiscExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />

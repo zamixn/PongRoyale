@@ -39,6 +39,7 @@
             this.ChatInput.Name = "ChatInput";
             this.ChatInput.Size = new System.Drawing.Size(190, 20);
             this.ChatInput.TabIndex = 8;
+            this.ChatInput.TextChanged += new System.EventHandler(this.ChatInput_TextChanged);
             this.ChatInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChatInput_Submitted);
             // 
             // Chat
