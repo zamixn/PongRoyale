@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_client.ChatInterpreter.ExpressionVisitor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,11 +16,11 @@ namespace PongRoyale_client.ChatInterpreter
             Expressions = expressions;
         }
 
-        public string Interpret(string input)
+        public string Interpret(string input, IExpressionVisitor visitor = null)
         {
             foreach (var expr in Expressions)
             {
-                input = expr.Interpret(input);
+                input = expr.Interpret(input, visitor);
             }
             return input;
         }

@@ -1,4 +1,5 @@
-﻿using PongRoyale_client.Singleton;
+﻿using PongRoyale_client.ChatInterpreter.ExpressionVisitor;
+using PongRoyale_client.Singleton;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace PongRoyale_client.ChatInterpreter
         {
         }
 
-        public string Interpret(string input)
+        public string Interpret(string input, IExpressionVisitor visitor = null)
         {
+
             if (input.Contains("stop"))
             {
                 GameManager.Instance.SetGameState(ServerConnection.Instance.IsConnected() ? GameState.InMainMenu_Connected : GameState.InMainMenu_NotConnected);

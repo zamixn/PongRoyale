@@ -33,5 +33,10 @@ namespace PongRoyale_client.Chat.Memento
             Mementos.Insert(0, m);
             return m;
         }
+
+        public bool HasMementos()
+        {
+            return Mementos.Count > 0;
+        }
     }
 }

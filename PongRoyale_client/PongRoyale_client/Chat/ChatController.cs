@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.Chat.Memento;
 using PongRoyale_client.ChatInterpreter;
+using PongRoyale_client.ChatInterpreter.ExpressionVisitor;
 using PongRoyale_client.Extensions;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
@@ -34,6 +35,12 @@ namespace PongRoyale_client.Chat
         private ChatCaretaker Caretaker;
         private bool dontSaveMemento;
 
+        private RedExpressionVisitor RedVisitor;
+        private BlueExpressionVisitor BlueVisitor;
+        private GreenExpressionVisitor GreenVisitor;
+        private YellowExpressionVisitor YellowVisitor;
+        private PurpleExpressionVisitor PurpleVisitor;
+
         public ChatController(RichTextBox output, TextBox input)
         {
             Output = output;
@@ -47,6 +54,11 @@ namespace PongRoyale_client.Chat
             ErrorColor = Color.Red;
             InfoColor = Color.FromArgb(50, 50, 50);
 
+            RedVisitor = new RedExpressionVisitor(output);
+            BlueVisitor = new BlueExpressionVisitor(output);
+            GreenVisitor = new GreenExpressionVisitor(output);
+            YellowVisitor = new YellowExpressionVisitor(output);
+            PurpleVisitor = new PurpleExpressionVisitor(output);
 
             FixFormatExpression textExpr = new FixFormatExpression(
                 new AggregateExpression(new List<IChatExpression>() {
@@ -66,8 +78,9 @@ namespace PongRoyale_client.Chat
                 })
             );
             CommandExpression cmdExpr = new CommandExpression();
+            ChangeColorExpression clrExpr = new ChangeColorExpression();
 
-            TextInterpreter = new ParserExpression(cmdExpr, textExpr);
+            TextInterpreter = new ParserExpression(clrExpr, cmdExpr, textExpr);
 
             Originator = new ChatOriginator();
             Caretaker = new ChatCaretaker();
@@ -105,7 +118,9 @@ namespace PongRoyale_client.Chat
         {
             if (ValidateChatInput(message))
             {
-                message = TextInterpreter.Interpret(message);
+                IExpressionVisitor visitor = GetVisitor(message);
+                message = TextInterpreter.Interpret(message, visitor);
+                Debug.WriteLine(message);
                 if (!string.IsNullOrEmpty(message))
                 {
                     string playerName = ServerConnection.ConstructName(playerId);
@@ -151,10 +166,29 @@ namespace PongRoyale_client.Chat
 
         public void Undo()
         {
-            ChatMemento memento = Caretaker.GetMemento();
-            Originator.RestoreState(memento);
-            dontSaveMemento = true;
-            Input.Text = Originator.GetState();
+            if (Caretaker.HasMementos())
+            {
+                ChatMemento memento = Caretaker.GetMemento();
+                Originator.RestoreState(memento);
+                dontSaveMemento = true;
+                Input.Text = Originator.GetState();
+            }
+        }
+
+        private IExpressionVisitor GetVisitor(string message)
+        {
+            IExpressionVisitor visitor = null;
+            if (message.Contains("!red"))
+                visitor = RedVisitor;
+            if (message.Contains("!blue"))
+                visitor = BlueVisitor;
+            if (message.Contains("!green"))
+                visitor = GreenVisitor;
+            if (message.Contains("!yellow"))
+                visitor = YellowVisitor;
+            if (message.Contains("!purple"))
+                visitor = PurpleVisitor;
+            return visitor;
         }
     }
 }

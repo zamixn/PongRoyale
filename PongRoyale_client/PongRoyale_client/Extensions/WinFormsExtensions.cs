@@ -24,6 +24,16 @@ namespace PongRoyale_client.Extensions
             box.SelectionColor = box.ForeColor;
         }
 
+        public static void AppendText(this RichTextBox box, string text, Color color)
+        {
+            box.SelectionStart = box.TextLength;
+            box.SelectionLength = 0;
+
+            box.SelectionColor = color;
+            box.AppendText(text);
+            box.SelectionColor = box.ForeColor;
+        }
+
         public static void DrawCircleAtCenter(this Graphics g, Pen p, Vector2 pos, float diameter)
         {
             g.DrawCircleAtCenter(p, pos.X, pos.Y, diameter);

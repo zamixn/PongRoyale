@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PongRoyale_client.ChatInterpreter.ExpressionVisitor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,14 +13,15 @@ namespace PongRoyale_client.ChatInterpreter
 
         private readonly char[] Punctuations = new char[] { '.', '?', '!' };
 
+        public string Input { get; private set; }
+
         public FixFormatExpression(IChatExpression expression)
         {
             Expression = expression;
         }
 
-        public string Interpret(string input)
+        public string Interpret(string input, IExpressionVisitor visitor = null)
         {
-
             if (input.Length > 0)
             {
                 input = new string(input.ToCharArray().TakeWhile(c => c != '\0').ToArray());
@@ -31,7 +33,7 @@ namespace PongRoyale_client.ChatInterpreter
                 input += ".";
             }
 
-            return Expression.Interpret(input);
+            return Expression.Interpret(input, visitor);
         }
     }
 }
