@@ -105,6 +105,10 @@ namespace PongRoyale_client.Game.Mediator
             {
                 return serverConnection.IdMatches((byte)data);
             }
+            else if (message == "IsPaused")
+            {
+                return arenaFacade.IsPaused;
+            }
             else
             {
                 throw new Exception("BadMessageSent");

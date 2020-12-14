@@ -27,7 +27,7 @@ namespace PongRoyale_client.Singleton
 
         private TcpClient TcpClient;
         private Thread ServerMessageHandler;
-        private IAbstractMediator Mediator = MainForm.Instance.Mediator;
+        private IAbstractMediator Mediator => MainForm.Instance.Mediator;
 
         #region Player
         public void SendChatMessage(string message)
