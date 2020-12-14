@@ -154,8 +154,9 @@
     <Compile Include="Game\AbstractFactory\PassableArenaObjectFactory.cs" />
     <Compile Include="Game\ArenaObjects\Powerups\PowerUp.cs" />
     <Compile Include="Game\AbstractFactory\NonPassableArenaObjectFactory.cs" />
-    <Compile Include="Game\Renderable\RenderableComposite.cs" />
-    <Compile Include="Game\Renderable\RenderableComponent.cs" />
+    <Compile Include="Game\Updatable\UpdateComponent.cs" />
+    <Compile Include="Game\Updatable\UpdateComposite.cs" />
+    <Compile Include="Game\Updatable\UpdateLeaf.cs" />
     <Compile Include="Game\RenderChain\BorderRenderLink.cs" />
     <Compile Include="Game\RenderChain\Debug\DebugBallCollisionsRenderLink.cs" />
     <Compile Include="Game\RenderChain\Debug\DebugObjNormalsRenderLink.cs" />

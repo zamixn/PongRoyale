@@ -12,7 +12,7 @@ namespace PongRoyale_client.Game.Balls.Decorator
 {
     public interface IBall
     {
-        void LocalMove();
+        void Update();
         void Render(Graphics g, Brush p);
 
         void SetPosition(Vector2 pos);

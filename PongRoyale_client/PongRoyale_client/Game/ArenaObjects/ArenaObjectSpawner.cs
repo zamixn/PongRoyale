@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Game.ArenaObjects;
+using PongRoyale_client.Game.Ranking;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game
 {
-    public abstract class ArenaObjectSpawner
+    public abstract class ArenaObjectSpawner : UpdateLeaf
     {
         protected float SpawnInterval;
         protected float LastSpawnTime;
@@ -25,13 +26,16 @@ namespace PongRoyale_client.Game
             LastSpawnTime = -SpawnInterval + Params.StartDelay;
         }
 
-        public virtual void Update()
+        public override void Update()
         {
-            Time += GameManager.Instance.DeltaTime; ;
-
-            if (CanSpawn())
+            if (ServerConnection.Instance.IsRoomMaster)
             {
-                Spawn();
+                Time += GameManager.Instance.DeltaTime; ;
+
+                if (CanSpawn())
+                {
+                    Spawn();
+                }
             }
         }
 

@@ -22,9 +22,9 @@ namespace PongRoyale_client.Game.Balls
             base.Render(g, b);
         }
 
-        public override void LocalMove()
+        public override void Update()
         {
-            base.LocalMove();
+            base.Update();
         }
     }
 }

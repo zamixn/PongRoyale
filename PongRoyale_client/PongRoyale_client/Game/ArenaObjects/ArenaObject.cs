@@ -1,7 +1,7 @@
 ﻿using PongRoyale_client.Extensions;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Obstacles;
-using PongRoyale_client.Game.Renderable;
+using PongRoyale_client.Game.Ranking;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace PongRoyale_client.Game
 {
-    public abstract class ArenaObject : RenderableComponent
+    public abstract class ArenaObject : UpdateLeaf
     {
         public byte Id { get; private set; }
         public void SetId(byte id)
@@ -40,7 +40,7 @@ namespace PongRoyale_client.Game
             CurrentColor = Color.Transparent;
         }
 
-        public virtual void Update()
+        public override void Update()
         {
             TimeAlive += GameManager.Instance.DeltaTime;
             if (IsAppearing)
@@ -62,6 +62,7 @@ namespace PongRoyale_client.Game
             if (IsBeingDestroyed)
                 ArenaFacade.Instance.OnArenaObjectExpired(Id);
         }
+        public abstract void Render(Graphics g, Pen p, Brush b);
 
         public void ForceDestroy()
         {

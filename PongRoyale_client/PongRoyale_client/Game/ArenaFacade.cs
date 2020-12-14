@@ -5,7 +5,7 @@ using PongRoyale_client.Game.Balls.Decorator;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Paddles;
 using PongRoyale_client.Game.Powerups;
-using PongRoyale_client.Game.Renderable;
+using PongRoyale_client.Game.Ranking;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -27,12 +27,11 @@ namespace PongRoyale_client.Game
             { ArenaObjectType.NonPassable, new NonPassableArenaObjectFactory() },
             { ArenaObjectType.Passable, new PassableArenaObjectFactory() }
         };
-
-        private List<ArenaObjectSpawner> Spawners;
+        private UpdateComponent UpdatableRoot;
+        private byte ObjectBranchId;
+        private byte BallBranchId;
 
         public int PlayerCount { get; private set; }
-
-        public RenderableComposite RootRenderable;
 
         public Dictionary<byte, Paddle> PlayerPaddles { get; private set; } = new Dictionary<byte, Paddle>();
         public int StartingAlivePaddleCount { get; private set; }
@@ -82,13 +81,28 @@ namespace PongRoyale_client.Game
             AlivePaddleCount = PlayerPaddles.Count;
             StartingAlivePaddleCount = AlivePaddleCount;
 
+            
+
+            UpdatableRoot = new UpdateComposite();
+            UpdatableRoot.Add(LocalPaddle.Id, LocalPaddle);
+            
+            UpdateComponent spawnerBranch = new UpdateComposite();
+            spawnerBranch.Add(spawnerBranch.GetNextId(), new ObstacleSpawner(GameData.ObstacleSpawnerParams, ArenaObjectFactories.Values.ToArray()));
+            spawnerBranch.Add(spawnerBranch.GetNextId(), new PowerUpSpawner(GameData.PowerUpSpawnerParams, ArenaObjectFactories.Values.ToArray()));
+            UpdatableRoot.Add(UpdatableRoot.GetNextId(), spawnerBranch);
+
+            UpdateComponent objectBranch = new UpdateComposite();
+            ObjectBranchId = UpdatableRoot.GetNextId();
+            UpdatableRoot.Add(ObjectBranchId, objectBranch);
+
+            UpdateComponent ballBranch = new UpdateComposite();
+            BallBranchId = UpdatableRoot.GetNextId();
+            UpdatableRoot.Add(BallBranchId, ballBranch);
+
             BallType bType = RoomSettings.Instance.BallType;
             Ball ball = Ball.CreateBall(0, bType, ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
             ArenaBalls.Add(0, ball);
-
-            Spawners = new List<ArenaObjectSpawner>();
-            Spawners.Add(new ObstacleSpawner(GameData.ObstacleSpawnerParams, ArenaObjectFactories.Values.ToArray()));
-            Spawners.Add(new PowerUpSpawner(GameData.PowerUpSpawnerParams, ArenaObjectFactories.Values.ToArray()));
+            ballBranch.Add(0, ball);
 
             IsInitted = true;
             PauseGame(false);
@@ -98,6 +112,7 @@ namespace PongRoyale_client.Game
         public void OnArenaObjectCreated(ArenaObject obj)
         {
             byte id = idTmp++;
+            UpdatableRoot.GetChild(ObjectBranchId).Add(id, obj);
             ArenaObjects.Add(id, obj);
             obj.SetId(id);
 
@@ -176,6 +191,7 @@ namespace PongRoyale_client.Game
             IsInitted = false;
             PlayerPaddles.Clear();
             ArenaBalls.Clear();
+            UpdatableRoot.Clear();
             ArenaObjects.Clear();
             LocalPaddle = null;
             PlayerCount = 0;
@@ -276,12 +292,15 @@ namespace PongRoyale_client.Game
             }
 
             ArenaBalls.Clear();
+            UpdatableRoot.GetChild(BallBranchId).Clear();
             for (int i = 0; i < newBalls.Length; i++)
             {
                 Ball ball = Ball.CreateBall(ballIds[i], newBalls[i], ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
                 ArenaBalls.Add(ballIds[i], ball);
+                UpdatableRoot.GetChild(BallBranchId).Add(ballIds[i], ball);
             }
             ArenaObjects.Clear();
+            UpdatableRoot.GetChild(ObjectBranchId).Clear();
             SafeInvoke.Instance.DelayedInvoke(0.5f, 
                 () => { PauseGame(false); });
         }
@@ -295,6 +314,7 @@ namespace PongRoyale_client.Game
         public void UpdateGameLoop()
         {
             UpdateGame();
+            CheckCollisions();
             Render();
 
             if (AlivePaddleCount <= 1 && StartingAlivePaddleCount > AlivePaddleCount)
@@ -306,40 +326,29 @@ namespace PongRoyale_client.Game
         private void UpdateGame()
         {
             // note: order matters here
-
             if (IsPaused)
             {
                 CleanUp();
                 return;
             }
+            UpdatableRoot.Update();
 
-            LocalPaddle.LocalUpdate();
+            CleanUp();
+        }
 
-            if (ServerConnection.Instance.IsRoomMaster)
-            {
-                foreach (var spawner in Spawners)
-                {
-                    spawner.Update();
-
-                    if (IsPaused)
-                        break;
-                }
-            }
-
-            foreach (var kvp in ArenaObjects)
-            {
-                kvp.Value.Update();
-
-                if (IsPaused)
-                    break;
-            }
-
+        private void Render()
+        {
+            GameScreen.Refresh();
+        }
+        private void CheckCollisions()
+        {
+            if (IsPaused)
+                return;
             if (ServerConnection.Instance.IsRoomMaster)
             {
                 foreach (var kvp in ArenaBalls)
                 {
                     var ball = kvp.Value;
-                    ball.LocalMove();
                     ball.CheckCollisionWithPaddles(PlayerPaddles);
                     ball.CheckCollisionWithArenaObjects(ArenaObjects);
                     if (ball.CheckOutOfBounds((float)(-Math.PI / 2), PlayerPaddles, out byte paddleId))
@@ -349,12 +358,6 @@ namespace PongRoyale_client.Game
                         break;
                 }
             }
-            CleanUp();
-        }
-
-        private void Render()
-        {
-            GameScreen.Refresh();
         }
 
         private void CleanUp()
