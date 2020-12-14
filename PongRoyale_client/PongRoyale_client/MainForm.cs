@@ -1,4 +1,5 @@
-﻿using PongRoyale_client.Game;
+﻿using PongRoyale_client.Chat;
+using PongRoyale_client.Game;
 using PongRoyale_client.Observers;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
@@ -26,6 +27,19 @@ namespace PongRoyale_client
 
         public MainForm()
         {
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+            //ChatController c = new ChatController(new RichTextBox(), new TextBox());
+            //sw.Stop();
+            //Debug.WriteLine("Time consumption: {0}", sw.ElapsedMilliseconds);
+
+            //GC.Collect();
+            //long available = GC.GetTotalMemory(false);
+            //Debug.WriteLine("Before initialization: {0:N0}", available);
+            //ChatController c = new ChatController(new RichTextBox(), new TextBox());
+            //available = GC.GetTotalMemory(false);
+            //Debug.WriteLine("After initialization: {0:N0}", available);
+
             Instance = this;
             new GameStateObserver(GameManager.Instance, this);
 
@@ -36,7 +50,6 @@ namespace PongRoyale_client
             SafeInvoke.Instance.Setup(this);
             MainMenu.ConnectToServerButton.Text = Constants.ConnectToServer;
             GameManager.Instance.SetGameState(GameState.InMainMenu_NotConnected);
-
             //tests            
             //UnitTests.NetworkMessageUnitTests.TestBallSyncEncodingAndDecoding();
         }
