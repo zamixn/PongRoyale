@@ -2,6 +2,7 @@
 using PongRoyale_client.Game.ArenaObjects;
 using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Paddles;
+using PongRoyale_client.Game.Ranking;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -19,7 +20,7 @@ using static PongRoyale_client.Game.GameData;
 
 namespace PongRoyale_client.Game
 {
-    public abstract class Paddle
+    public abstract class Paddle : UpdateLeaf
     {
         public float MinAngle { private set; get; }
         public float MaxAngle { private set; get; }
@@ -129,7 +130,7 @@ namespace PongRoyale_client.Game
             AngularPosition = SharedUtilities.Clamp(AngularPosition + posChange, MinAngle, MaxAngle);
         }
 
-        public virtual void LocalUpdate()
+        public override void Update()
         {
             if (InputManager.Instance.IsKeyDown(Keys.Left))
                 Move(-1);
