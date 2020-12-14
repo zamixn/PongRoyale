@@ -1,4 +1,5 @@
 ﻿using PongRoyale_client.Game;
+using PongRoyale_client.Game.Mediator;
 using PongRoyale_client.Observers;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
@@ -23,12 +24,13 @@ namespace PongRoyale_client
     { 
         public static MainForm Instance;
         private long FrameCount;
+        public IAbstractMediator Mediator;
 
         public MainForm()
         {
             Instance = this;
             new GameStateObserver(GameManager.Instance, this);
-
+            Mediator = new ConcreteMediator();
             InitializeComponent();
             GameLoop.Tick += new EventHandler(GameLoop_Tick);
             SyncLoop.Tick += new EventHandler(SyncLoop_Tick);
