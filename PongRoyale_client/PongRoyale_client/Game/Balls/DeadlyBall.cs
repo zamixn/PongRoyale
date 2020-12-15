@@ -10,9 +10,9 @@ namespace PongRoyale_client.Game.Balls
 {
     public class DeadlyBall : Ball
     {
-        public override void LocalMove()
+        public override void Update()
         {
-            base.LocalMove();
+            base.Update();
         }
 
         public override Color GetColor()

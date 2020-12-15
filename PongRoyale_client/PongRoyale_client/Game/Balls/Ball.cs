@@ -5,6 +5,7 @@ using PongRoyale_client.Game.Balls.Iterator;
 using PongRoyale_client.Game.Balls.ReboundStrategy;
 using PongRoyale_client.Game.Balls.TemplateMethod;
 using PongRoyale_client.Game.Command;
+using PongRoyale_client.Game.Ranking;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -18,7 +19,7 @@ using System.Windows.Forms;
 
 namespace PongRoyale_client.Game.Balls
 {
-    public abstract class Ball : IBall
+    public abstract class Ball : UpdateLeaf, IBall
     {
         public byte Id { get; protected set; }
         public BallType bType { get; protected set; }
@@ -73,7 +74,7 @@ namespace PongRoyale_client.Game.Balls
             return ball;
         }
 
-        public virtual void LocalMove()
+        public override void Update()
         {
             //bool pressed = false;
             /*if (InputManager.Instance.IsKeyDown(Keys.Left))
@@ -100,21 +101,23 @@ namespace PongRoyale_client.Game.Balls
                 Direction = Direction.Normalize();
                 pressed = true;
             }*/
+            if (ServerConnection.Instance.IsRoomMaster)
+            {
+                float actualSpeed = Speed;
+                if (PoweredUpData.ChangeBallDirection)
+                    Direction = Vector2.Lerp(Direction, PoweredUpData.RndDirection, GameManager.Instance.DeltaTime * 5);
+                if (PoweredUpData.ChangeBallSpeed)
+                    actualSpeed = Speed * 2f;
+                if (PoweredUpData.ChangePaddleSpeed)
+                    actualSpeed = Speed * 1.1f;
+                if (PoweredUpData.GivePlayerLife)
+                    actualSpeed = Speed * 1.1f;
+                if (PoweredUpData.MakeBallDeadly)
+                    actualSpeed = Speed * 1.1f;
 
-            float actualSpeed = Speed;
-            if (PoweredUpData.ChangeBallDirection)
-                Direction = Vector2.Lerp(Direction, PoweredUpData.RndDirection, GameManager.Instance.DeltaTime * 5);
-            if (PoweredUpData.ChangeBallSpeed)
-                actualSpeed = Speed * 2f;
-            if (PoweredUpData.ChangePaddleSpeed)
-                actualSpeed = Speed * 1.1f;
-            if (PoweredUpData.GivePlayerLife)
-                actualSpeed = Speed * 1.1f;
-            if (PoweredUpData.MakeBallDeadly)
-                actualSpeed = Speed * 1.1f;
 
-
-            Move(Direction * actualSpeed);
+                Move(Direction * actualSpeed);
+            }
         }
         public void SetPosition(Vector2 pos)
         {

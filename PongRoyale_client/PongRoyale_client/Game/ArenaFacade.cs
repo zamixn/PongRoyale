@@ -2,10 +2,11 @@
 using PongRoyale_client.Game.ArenaObjects.Powerups;
 using PongRoyale_client.Game.Balls;
 using PongRoyale_client.Game.Balls.Decorator;
+using PongRoyale_client.Game.Mediator;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Paddles;
 using PongRoyale_client.Game.Powerups;
-using PongRoyale_client.Game.Renderable;
+using PongRoyale_client.Game.Ranking;
 using PongRoyale_client.Singleton;
 using PongRoyale_shared;
 using System;
@@ -29,10 +30,12 @@ namespace PongRoyale_client.Game
         };
 
         private List<ArenaObjectSpawner> Spawners;
+        private IAbstractMediator Mediator;
+        private UpdateComponent UpdatableRoot;
+        private byte ObjectBranchId;
+        private byte BallBranchId;
 
         public int PlayerCount { get; private set; }
-
-        public RenderableComposite RootRenderable;
 
         public Dictionary<byte, Paddle> PlayerPaddles { get; private set; } = new Dictionary<byte, Paddle>();
         public int StartingAlivePaddleCount { get; private set; }
@@ -58,7 +61,7 @@ namespace PongRoyale_client.Game
         public void InitLogic(Dictionary<byte, NetworkPlayer> players)
         {
             PlayerCount = players.Count;
-
+            Mediator = MainForm.Instance.Mediator;
             DoAfterGameLoop = new List<Action>();
             PlayerPaddles = new Dictionary<byte, Paddle>();
             ArenaBalls = new Dictionary<byte, IBall>();
@@ -74,7 +77,7 @@ namespace PongRoyale_client.Game
                 paddle.SetPosition(SharedUtilities.RadToDeg(angle));
                 PlayerPaddles.Add(player.Id, paddle);
                 player.SetLife(paddle.Life);
-                if (ServerConnection.Instance.IdMatches(player.Id))
+                if (Mediator.GetBool("IdMatches", player.Id))
                     LocalPaddle = paddle;
                 paddle.AddClampAngles(SharedUtilities.RadToDeg(angle - deltaAngle / 2), SharedUtilities.RadToDeg(angle + deltaAngle / 2));
                 angle += deltaAngle;
@@ -82,13 +85,28 @@ namespace PongRoyale_client.Game
             AlivePaddleCount = PlayerPaddles.Count;
             StartingAlivePaddleCount = AlivePaddleCount;
 
+
+
+            UpdatableRoot = new UpdateComposite();
+            UpdatableRoot.Add(LocalPaddle.Id, LocalPaddle);
+
+            UpdateComponent spawnerBranch = new UpdateComposite();
+            spawnerBranch.Add(spawnerBranch.GetNextId(), new ObstacleSpawner(GameData.ObstacleSpawnerParams, ArenaObjectFactories.Values.ToArray()));
+            spawnerBranch.Add(spawnerBranch.GetNextId(), new PowerUpSpawner(GameData.PowerUpSpawnerParams, ArenaObjectFactories.Values.ToArray()));
+            UpdatableRoot.Add(UpdatableRoot.GetNextId(), spawnerBranch);
+
+            UpdateComponent objectBranch = new UpdateComposite();
+            ObjectBranchId = UpdatableRoot.GetNextId();
+            UpdatableRoot.Add(ObjectBranchId, objectBranch);
+
+            UpdateComponent ballBranch = new UpdateComposite();
+            BallBranchId = UpdatableRoot.GetNextId();
+            UpdatableRoot.Add(BallBranchId, ballBranch);
+
             BallType bType = RoomSettings.Instance.BallType;
             Ball ball = Ball.CreateBall(0, bType, ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
             ArenaBalls.Add(0, ball);
-
-            Spawners = new List<ArenaObjectSpawner>();
-            Spawners.Add(new ObstacleSpawner(GameData.ObstacleSpawnerParams, ArenaObjectFactories.Values.ToArray()));
-            Spawners.Add(new PowerUpSpawner(GameData.PowerUpSpawnerParams, ArenaObjectFactories.Values.ToArray()));
+            ballBranch.Add(0, ball);
 
             IsInitted = true;
             PauseGame(false);
@@ -98,15 +116,16 @@ namespace PongRoyale_client.Game
         public void OnArenaObjectCreated(ArenaObject obj)
         {
             byte id = idTmp++;
+            UpdatableRoot.GetChild(ObjectBranchId).Add(id, obj);
             ArenaObjects.Add(id, obj);
             obj.SetId(id);
 
-            if (ServerConnection.Instance.IsRoomMaster)
+            if (Mediator.GetBool("IsRoomMaster", null))
             {
                 if(obj is Obstacle)
-                    ServerConnection.Instance.SendObstacleSpawnedMessage(id, obj as Obstacle);
+                    Mediator.Notify("SendObstacleSpawnedMessage", new object[] { id, obj });
                 else if(obj is PowerUp)
-                    ServerConnection.Instance.SendPowerupSpawnedMessage(id, obj as PowerUp);
+                    Mediator.Notify("SendPowerupSpawnedMessage", new object[] { id, obj });
             }
         }
         public void OnArenaObjectExpired(byte id)
@@ -119,8 +138,8 @@ namespace PongRoyale_client.Game
             if (!p.isUsedUp)
             {
                 var data = p.PowerUppedData;
-                if (ServerConnection.Instance.IsRoomMaster)
-                    ServerConnection.Instance.SendBallPoweredUpMessage(b.GetId(), p.Id, data);
+                if (Mediator.GetBool("IsRoomMaster", null))
+                    Mediator.Notify("SendBallPoweredUpMessage", new object[] { b.GetId(), p.Id, data });
                 OnReceivedBallPowerUpMessage(b.GetId(), p.Id, data);
             }
         }
@@ -149,8 +168,8 @@ namespace PongRoyale_client.Game
         {
             if (poweredUpData.IsValid())
             {
-                if (ServerConnection.Instance.IsRoomMaster)
-                    ServerConnection.Instance.SendTranferPowerUpToPaddle(paddleId, ballId, poweredUpData);
+                if (Mediator.GetBool("IsRoomMaster", null))
+                    Mediator.Notify("SendPowerUpToPaddle", new object[] { paddleId, ballId, poweredUpData });
                 OnReceivedTransferPowerUpMessage(paddleId, ballId, poweredUpData);
             }
         }
@@ -176,6 +195,7 @@ namespace PongRoyale_client.Game
             IsInitted = false;
             PlayerPaddles.Clear();
             ArenaBalls.Clear();
+            UpdatableRoot.Clear();
             ArenaObjects.Clear();
             LocalPaddle = null;
             PlayerCount = 0;
@@ -246,13 +266,13 @@ namespace PongRoyale_client.Game
             var ballIds = ArenaBalls.Select(b => b.Key).ToArray();
             byte[] playerIds = RoomSettings.Instance.Players.Select(kvp => kvp.Key).ToArray();
             byte[] playerLifes = RoomSettings.Instance.Players.Select(kvp => kvp.Value.Life).ToArray();
-            if (ServerConnection.Instance.IsConnected())
+            if (Mediator.GetBool("IsConnected", null))
             {
                 PauseGame(true);
                 // fix for round reset not sending due to connection being overfilled
                 // delay round reset message so that paddle and ball sync messages have time to clear up
-                SafeInvoke.Instance.DelayedInvoke(0.5f, () => 
-                    ServerConnection.Instance.SendRoundReset(ballTypes, ballIds)
+                SafeInvoke.Instance.DelayedInvoke(0.5f, () =>
+                     Mediator.Notify("SendRoundReset", new object[] { ballTypes, ballIds })
                 );
             }
             else
@@ -276,13 +296,16 @@ namespace PongRoyale_client.Game
             }
 
             ArenaBalls.Clear();
+            UpdatableRoot.GetChild(BallBranchId).Clear();
             for (int i = 0; i < newBalls.Length; i++)
             {
                 Ball ball = Ball.CreateBall(ballIds[i], newBalls[i], ArenaDimensions.Center, GameData.DefaultBallSpeed, Vector2.RandomInUnitCircle(), GameData.DefaultBallSize);
                 ArenaBalls.Add(ballIds[i], ball);
+                UpdatableRoot.GetChild(BallBranchId).Add(ballIds[i], ball);
             }
             ArenaObjects.Clear();
-            SafeInvoke.Instance.DelayedInvoke(0.5f, 
+            UpdatableRoot.GetChild(ObjectBranchId).Clear();
+            SafeInvoke.Instance.DelayedInvoke(0.5f,
                 () => { PauseGame(false); });
         }
 
@@ -295,51 +318,41 @@ namespace PongRoyale_client.Game
         public void UpdateGameLoop()
         {
             UpdateGame();
+            CheckCollisions();
             Render();
 
             if (AlivePaddleCount <= 1 && StartingAlivePaddleCount > AlivePaddleCount)
             {
-                ServerConnection.Instance.SendEndGameMessage();
+                Mediator.Notify("SendEndGameMessages", null);
             }
         }
 
         private void UpdateGame()
         {
             // note: order matters here
-
             if (IsPaused)
             {
                 CleanUp();
                 return;
             }
+            UpdatableRoot.Update();
 
-            LocalPaddle.LocalUpdate();
+            CleanUp();
+        }
 
-            if (ServerConnection.Instance.IsRoomMaster)
-            {
-                foreach (var spawner in Spawners)
-                {
-                    spawner.Update();
-
-                    if (IsPaused)
-                        break;
-                }
-            }
-
-            foreach (var kvp in ArenaObjects)
-            {
-                kvp.Value.Update();
-
-                if (IsPaused)
-                    break;
-            }
-
-            if (ServerConnection.Instance.IsRoomMaster)
+        private void Render()
+        {
+            GameScreen.Refresh();
+        }
+        private void CheckCollisions()
+        {
+            if (IsPaused)
+                return;
+            if (Mediator.GetBool("IsRoomMaster", null))
             {
                 foreach (var kvp in ArenaBalls)
                 {
                     var ball = kvp.Value;
-                    ball.LocalMove();
                     ball.CheckCollisionWithPaddles(PlayerPaddles);
                     ball.CheckCollisionWithArenaObjects(ArenaObjects);
                     if (ball.CheckOutOfBounds((float)(-Math.PI / 2), PlayerPaddles, out byte paddleId))
@@ -349,12 +362,6 @@ namespace PongRoyale_client.Game
                         break;
                 }
             }
-            CleanUp();
-        }
-
-        private void Render()
-        {
-            GameScreen.Refresh();
         }
 
         private void CleanUp()

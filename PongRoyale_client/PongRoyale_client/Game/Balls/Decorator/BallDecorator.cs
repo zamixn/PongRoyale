@@ -54,9 +54,9 @@ namespace PongRoyale_client.Game.Balls.Decorator
             return Ball.GetPosition();
         }
 
-        public virtual void LocalMove()
+        public virtual void Update()
         {
-            Ball.LocalMove();
+            Ball.Update();
         }
 
         public virtual void Render(Graphics g, Brush p)

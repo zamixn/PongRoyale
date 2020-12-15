@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>PongRoyale_client</RootNamespace>
     <AssemblyName>PongRoyale_client</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -80,6 +80,8 @@
     <Compile Include="Extensions\MiscExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />
     <Compile Include="Game\AbstractFactory\AbstractArenaObjectFactory.cs" />
+    <Compile Include="Game\Mediator\IAbstractMediator.cs" />
+    <Compile Include="Game\Mediator\ConcreteMediator.cs" />
     <Compile Include="Game\Paddles\NoPowerState.cs" />
     <Compile Include="Game\Paddles\FullPowerState.cs" />
     <Compile Include="Game\ArenaObjects\ArenaObject.cs" />
@@ -154,8 +156,9 @@
     <Compile Include="Game\AbstractFactory\PassableArenaObjectFactory.cs" />
     <Compile Include="Game\ArenaObjects\Powerups\PowerUp.cs" />
     <Compile Include="Game\AbstractFactory\NonPassableArenaObjectFactory.cs" />
-    <Compile Include="Game\Renderable\RenderableComposite.cs" />
-    <Compile Include="Game\Renderable\RenderableComponent.cs" />
+    <Compile Include="Game\Updatable\UpdateComponent.cs" />
+    <Compile Include="Game\Updatable\UpdateComposite.cs" />
+    <Compile Include="Game\Updatable\UpdateLeaf.cs" />
     <Compile Include="Game\RenderChain\BorderRenderLink.cs" />
     <Compile Include="Game\RenderChain\Debug\DebugBallCollisionsRenderLink.cs" />
     <Compile Include="Game\RenderChain\Debug\DebugObjNormalsRenderLink.cs" />

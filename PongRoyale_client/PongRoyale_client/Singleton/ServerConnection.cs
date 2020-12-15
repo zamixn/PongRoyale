@@ -1,5 +1,6 @@
 ﻿using PongRoyale_client.Game;
 using PongRoyale_client.Game.ArenaObjects.Powerups;
+using PongRoyale_client.Game.Mediator;
 using PongRoyale_client.Game.Obstacles;
 using PongRoyale_client.Game.Powerups;
 using PongRoyale_shared;
@@ -26,6 +27,7 @@ namespace PongRoyale_client.Singleton
 
         private TcpClient TcpClient;
         private Thread ServerMessageHandler;
+        private IAbstractMediator Mediator => MainForm.Instance.Mediator;
 
         #region Player
         public void SendChatMessage(string message)
@@ -39,16 +41,16 @@ namespace PongRoyale_client.Singleton
 
         public void SyncWithServer()
         {
-            if (!ServerConnection.Instance.IsConnected() || ArenaFacade.Instance.IsPaused)
+            if (!ServerConnection.Instance.IsConnected() || Mediator.GetBool("IsPaused",null))
                 return;
 
-            Paddle localPlayer = ArenaFacade.Instance.LocalPaddle;
+            Paddle localPlayer = Mediator.PaddleGetter("GetPaddle", null);
             NetworkMessage message = new NetworkMessage(Id, MessageType.PlayerSync, Converter.EncodeFloat(localPlayer.AngularPosition));
             ServerConnection.Instance.SendDataToServer(message);
 
             if (IsRoomMaster)
             {
-                var balls = ArenaFacade.Instance.ArenaBalls;
+                var balls = Mediator.BallGetter("GetArenaBalls", null);
                 var ids = balls.Select(b => b.Key).ToArray();
                 var positions = balls.Select(b => b.Value.GetPosition()).ToArray();
                 var directions = balls.Select(b => b.Value.GetDirection()).ToArray();
@@ -220,13 +222,13 @@ namespace PongRoyale_client.Singleton
                 case NetworkMessage.MessageType.PlayerSync:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        ArenaFacade.Instance.PlayerSyncMessageReceived(message);
+                        Mediator.Notify("PlayerSyncMessageReceived", message);
                     });
                     break;
                 case NetworkMessage.MessageType.BallSync:
                     SafeInvoke.Instance.Invoke(() =>
                     {
-                        ArenaFacade.Instance.BallSyncMessageReceived(message);
+                        Mediator.Notify("BallSyncMessageReceived", message);
                     });
                     break;
                 case NetworkMessage.MessageType.GameStart:
@@ -250,35 +252,35 @@ namespace PongRoyale_client.Singleton
                     {
                         Converter.DecodeRoundOverData(message.ByteContents, 
                             out BallType[] ballTypes, out byte[] ballIds, out byte[] playerIds, out byte[] playerLifes);
-                        ArenaFacade.Instance.ResetRoundMessageReceived(ballTypes, ballIds, playerIds, playerLifes);
+                        Mediator.Notify("ResetRoundMessageReceived", new object[] { ballTypes, ballIds, playerIds, playerLifes });
                     });
                     break;
                 case NetworkMessage.MessageType.ObstacleSpawned:
                     SafeInvoke.Instance.Invoke(() =>
                     {
                         Obstacle obs = Converter.DecodeObstacleData(message.ByteContents, out byte id);
-                        ArenaFacade.Instance.ObstacleSpawnedMessageReceived(id, obs);
+                        Mediator.Notify("ObstacleSpawnedMessageReceived", new object[] { id, obs });
                     });
                     break;
                 case NetworkMessage.MessageType.PowerupSpawned:
                     SafeInvoke.Instance.Invoke(() =>
                     {
                         PowerUp pwu = Converter.DecodePowerupData(message.ByteContents, out byte id, out PoweredUpData data);
-                        ArenaFacade.Instance.PowerUpSpawnedMessageReceived(id, pwu, data);
+                        Mediator.Notify("PowerUpSpawnedMessageReceived", new object[] { id, pwu, data });
                     });
                     break;
                 case NetworkMessage.MessageType.BallPoweredUp:
                     SafeInvoke.Instance.Invoke(() =>
                     {
                         Converter.DecodeBallPoweredUpData(message.ByteContents, out byte ballId, out byte powerupId, out PoweredUpData data);
-                        ArenaFacade.Instance.OnReceivedBallPowerUpMessage(ballId, powerupId, data);
+                        Mediator.Notify("OnReceivedBallPowerUpMessage", new object[] { ballId, powerupId, data });
                     });
                     break;
                 case NetworkMessage.MessageType.PaddlePowerUp:
                     SafeInvoke.Instance.Invoke(() =>
                     {
                         Converter.DecodePaddlePoweredUpData(message.ByteContents, out byte paddleId, out byte ballId, out PoweredUpData data);
-                        ArenaFacade.Instance.OnReceivedTransferPowerUpMessage(paddleId, ballId, data);
+                        Mediator.Notify("OnReceivedTransferPowerUpMessage", new object[] { paddleId, ballId, data });
                     });
                     break;
                 default:
