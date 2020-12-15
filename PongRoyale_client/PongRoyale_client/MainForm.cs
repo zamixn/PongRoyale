@@ -37,6 +37,7 @@ namespace PongRoyale_client
             MainMenu.ConnectToServerButton.Text = Constants.ConnectToServer;
             GameManager.Instance.SetGameState(GameState.InMainMenu_NotConnected);
 
+            SpeedAnalysis.DoFlyweightSpeedAnalysis();
             //tests            
             //UnitTests.NetworkMessageUnitTests.TestBallSyncEncodingAndDecoding();
         }
